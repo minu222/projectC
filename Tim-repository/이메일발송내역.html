@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== 공통 레이아웃 ===== */
+      body {
+        margin: 0;
+        font-family: "Noto Sans KR", sans-serif;
+        background: #f7f9fc;
+        color: #333;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1e3a8a;
+        color: #fff;
+        padding: 12px 16px;
+        font-weight: 700;
+      }
+
+      .container {
+        display: flex;
+        height: calc(100vh - 50px);
+      }
+
+      .sidebar {
+        width: 260px;
+        background: #fff;
+        border-right: 1px solid #e5e7eb;
+        overflow: auto;
+      }
+
+      .menu,
+      .menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .menu > li > .submenu-toggle,
+      .menu > li > .link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 16px;
+        margin: 6px 10px;
+        border-radius: 8px;
+        background: #1e3a8a;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: background 0.2s, transform 0.2s;
+      }
+
+      .menu > li > .submenu-toggle:hover,
+      .menu > li > .link:hover {
+        background: #374eb8;
+        transform: translateX(2px);
+      }
+
+      .submenu > li > .submenu-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 14px;
+        margin: 4px 14px;
+        border-radius: 6px;
+        background: #f9fafb;
+        color: #111827;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #e5e7eb;
+        transition: background 0.2s;
+      }
+
+      .submenu > li > .submenu-toggle:hover {
+        background: #f1f5f9;
+      }
+
+      .submenu li ul li a {
+        display: block;
+        text-decoration: none;
+        color: #4b5563;
+        padding: 8px 14px;
+        margin: 2px 14px 2px 28px;
+        font-size: 13px;
+        border-radius: 4px;
+      }
+
+      .submenu li ul li a:hover {
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      .submenu {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease;
+      }
+
+      .submenu.open {
+        overflow: hidden;
+      }
+
+      .main {
+        flex: 1;
+        padding: 20px;
+        overflow: auto;
+      }
+
+      .content-box {
+        background: #fff;
+        border-radius: 6px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        min-height: 600px;
+      }
+
+      /* ===== 검색 박스 & 버튼 영역 ===== */
+      .search-area {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        background: #f9fafb;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .search-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .search-left label {
+        font-weight: 500;
+      }
+
+      .search-left select,
+      .search-left input {
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .search-left button {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 4px;
+        background: #1e3a8a;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .search-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-delete,
+      .btn-write {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        border: none;
+        text-decoration: none;
+      }
+
+      .btn-delete {
+        background: #e74c3c;
+        color: #fff;
+      }
+
+      .btn-write {
+        background: #3498db;
+        color: #fff;
+      }
+
+      /* ===== 테이블 ===== */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+
+      table thead {
+        background: #f1f3f5;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      table th {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <!-- 이메일 발송 내역 -->
+          <div class="header">
+            <h2>이메일 발송 내역</h2>
+          </div>
+
+          <!-- 검색 + 버튼 영역 -->
+          <form
+            class="search-area"
+            method="get"
+            th:action="@{/messages/search}"
+          >
+            <!-- 왼쪽: 검색 조건 -->
+            <div class="search-left">
+              <label>소속:</label>
+              <select name="group">
+                <option value="">전체</option>
+                <option value="teacher">강사</option>
+              </select>
+
+              <label>검색:</label>
+              <select name="type">
+                <option value="">전체</option>
+                <option value="userid">회원아이디</option>
+                <option value="title">제목</option>
+                <option value="sender">발송자</option>
+              </select>
+
+              <input name="keyword" placeholder="검색어 입력" type="text" />
+              <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i> 검색
+              </button>
+            </div>
+
+            <!-- 오른쪽: 버튼 영역 -->
+            <div class="search-actions">
+              <button class="btn-delete" type="button">
+                <i class="fa-solid fa-trash"></i> 선택 삭제
+              </button>
+              <a class="btn-write" th:href="@{/messages/write}"
+                ><i class="fa-solid fa-envelope"></i> 메일 쓰기</a
+              >
+            </div>
+          </form>
+
+          <!-- 발송 내역 테이블 -->
+          <table>
+            <thead>
+              <tr>
+                <th><input id="checkAll" type="checkbox" /></th>
+                <th>번호</th>
+                <th>소속</th>
+                <th>회원아이디</th>
+                <th>제목</th>
+                <th>발송자</th>
+                <th>발송일</th>
+                <th>발송건수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input class="row-check" type="checkbox" /></td>
+                <td>1</td>
+                <td>강사</td>
+                <td>user01</td>
+                <td>공지사항 안내</td>
+                <td>관리자</td>
+                <td>2025-09-08</td>
+                <td>50</td>
+              </tr>
+              <tr>
+                <td><input class="row-check" type="checkbox" /></td>
+                <td>2</td>
+                <td>강사</td>
+                <td>user02</td>
+                <td>업데이트 안내</td>
+                <td>관리자</td>
+                <td>2025-09-07</td>
+                <td>30</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // 사이드바 토글
+      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const submenu = btn.nextElementSibling;
+          if (!submenu || !submenu.classList.contains("submenu")) return;
+          const isOpen = submenu.classList.contains("open");
+          if (isOpen) {
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.classList.remove("open");
+            requestAnimationFrame(() => (submenu.style.height = "0px"));
+          } else {
+            submenu.classList.add("open");
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.addEventListener(
+              "transitionend",
+              () => {
+                if (submenu.classList.contains("open")) {
+                  submenu.style.height = "auto";
+                }
+              },
+              { once: true }
+            );
+          }
+        });
+      });
+
+      // 전체 선택 체크박스
+      document.addEventListener("DOMContentLoaded", () => {
+        const checkAll = document.getElementById("checkAll");
+        const rowChecks = document.querySelectorAll(".row-check");
+        checkAll.addEventListener("change", () => {
+          rowChecks.forEach((chk) => (chk.checked = checkAll.checked));
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Noto Sans KR", sans-serif;
+        background: #f7f9fc;
+        color: #333;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1e3a8a;
+        color: #fff;
+        padding: 12px 16px;
+        font-weight: 700;
+      }
+
+      .container {
+        display: flex;
+        height: calc(100vh - 50px);
+      }
+
+      .sidebar {
+        width: 260px;
+        background: #fff;
+        border-right: 1px solid #e5e7eb;
+        overflow: auto;
+      }
+
+      .menu,
+      .menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* 메인 메뉴 */
+      .menu > li > .submenu-toggle,
+      .menu > li > .link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 16px;
+        margin: 6px 10px;
+        border-radius: 8px;
+        background: #1e3a8a;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: background 0.2s, transform 0.2s;
+      }
+
+      .menu > li > .submenu-toggle:hover,
+      .menu > li > .link:hover {
+        background: #374eb8;
+        transform: translateX(2px);
+      }
+
+      /* 부제목 */
+      .submenu > li > .submenu-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 14px;
+        margin: 4px 14px;
+        border-radius: 6px;
+        background: #f9fafb;
+        color: #111827;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #e5e7eb;
+        transition: background 0.2s;
+      }
+
+      .submenu > li > .submenu-toggle:hover {
+        background: #f1f5f9;
+      }
+
+      /* 하위 내용 */
+      .submenu li ul li a {
+        display: block;
+        text-decoration: none;
+        color: #4b5563;
+        padding: 8px 14px;
+        margin: 2px 14px 2px 28px;
+        font-size: 13px;
+        border-radius: 4px;
+      }
+
+      .submenu li ul li a:hover {
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      /* 접고 펴기 애니메이션 */
+      .submenu {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease;
+      }
+
+      .submenu.open {
+        overflow: hidden;
+      }
+
+      .main {
+        flex: 1;
+        padding: 20px;
+        overflow: auto;
+      }
+
+      .content-box {
+        background: #fff;
+        border-radius: 6px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        min-height: 600px;
+      }
+
+      .filter-box {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+      }
+
+      .filter-box input,
+      .filter-box select {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      .filter-box button {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .filter-box button:hover {
+        background: #1d4ed8;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+
+      table thead {
+        background: #f0f0f0;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      table th {
+        font-weight: bold;
+      }
+
+      .btn-restore {
+        background: #2196f3;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 14px;
+        cursor: pointer;
+      }
+
+      .btn-restore:hover {
+        background: #1976d2;
+      }
+
+      .badge-red {
+        background: #e74c3c;
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>정보 휴지통</h2>
+          <div class="filter-box">
+            <label
+              >검색:
+              <select>
+                <option>- 전체 -</option>
+                <option>이름</option>
+                <option>아이디</option>
+                <option>구분</option>
+              </select>
+              <input placeholder="검색어 입력" type="text" />
+            </label>
+            <button>검색</button>
+            <div style="margin-left: auto">
+              <button class="btn-restore">♻ 선택 복원</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th><input id="checkAll" type="checkbox" /></th>
+                <th>No</th>
+                <th>구분</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>전화번호</th>
+                <th>삭제일</th>
+                <th>삭제 예정일</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item, stat : ${trashList}">
+                <td>
+                  <input
+                    class="row-check"
+                    th:value="${item.id}"
+                    type="checkbox"
+                  />
+                </td>
+                <td th:text="${stat.count}"></td>
+                <td th:text="${item.userType}"></td>
+                <td th:text="${item.refId}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.email}"></td>
+                <td th:text="${item.phone}"></td>
+                <td
+                  th:text="${#temporals.format(item.deletedAt, 'yyyy-MM-dd')}"
+                ></td>
+                <td
+                  th:text="${#temporals.format(item.expiresAt, 'yyyy-MM-dd')}"
+                ></td>
+                <td><span class="badge-red">탈퇴</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const submenu = btn.nextElementSibling;
+          if (!submenu || !submenu.classList.contains("submenu")) return;
+
+          const isOpen = submenu.classList.contains("open");
+          if (isOpen) {
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.classList.remove("open");
+            requestAnimationFrame(() => (submenu.style.height = "0px"));
+          } else {
+            submenu.classList.add("open");
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.addEventListener(
+              "transitionend",
+              () => {
+                if (submenu.classList.contains("open")) {
+                  submenu.style.height = "auto";
+                }
+              },
+              { once: true }
+            );
+          }
+        });
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const checkAll = document.getElementById("checkAll");
+        const rowChecks = document.querySelectorAll(".row-check");
+        checkAll.addEventListener("change", () => {
+          rowChecks.forEach((chk) => (chk.checked = checkAll.checked));
+        });
+      });
+    </script>
+  </body>
+</html>

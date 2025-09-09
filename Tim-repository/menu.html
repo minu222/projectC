@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e3a8a;
+      color: #fff;
+      padding: 16px 28px;
+      font-size: 20px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar {
+      padding-left: 10px;
+      padding-right: 20px;
+      width: 200px;
+      height: 380px;
+      background: #fff;
+      border-right: 1px solid #e5e7eb;
+    }
+    .menu {
+      height: 100%;
+    }
+    .menu,
+    .menu ul {
+      flex-direction: column;
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .menu li {
+      flex: 1;
+    }
+
+    .menu > li > .submenu-toggle,
+    .menu > li > .link {
+      padding-left: 20px;
+      margin-top: 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border-radius: 8px;
+      background: #1e3a8a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .menu > li > .submenu-toggle:hover,
+    .menu > li > .link:hover {
+      background: #374eb8;
+      transform: translateX(2px);
+    }
+
+    .submenu > li > .submenu-toggle {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 14px;
+      margin: 4px 14px;
+      border-radius: 6px;
+      background: #f9fafb;
+      color: #111827;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #e5e7eb;
+    }
+    .submenu li ul li a,
+    .submenu li a {
+      display: block;
+      padding: 8px 14px;
+      margin: 2px 14px 2px 28px;
+      font-size: 13px;
+      text-decoration: none;
+      color: #4b5563;
+      border-radius: 4px;
+    }
+    .submenu li ul li a:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .submenu {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s ease;
+    }
+    .submenu.open {
+      overflow: hidden;
+    }
+  </style>
+  <body>
+    <header class="topbar">
+      <div>DW Academy</div>
+      <div class="welcome" th:text="${adminName} + '님 환영합니다'">
+        운영자님 환영합니다 👋
+      </div>
+    </header>
+    <!-- menu.html -->
+    <aside class="sidebar">
+      <ul class="menu">
+        <li>
+          <a class="link" href="./Home.html"
+            ><i class="fa-solid fa-house"></i> 홈</a
+          >
+        </li>
+
+        <!-- 회원 정보 (그대로) -->
+        <li>
+          <span class="submenu-toggle"
+            ><i class="fas fa-users"></i> 회원 정보</span
+          >
+          <ul class="submenu">
+            <li>
+              <span class="submenu-toggle"
+                ><i class="fas fa-user-cog"></i> 회원 관리</span
+              >
+              <ul class="submenu">
+                <li>
+                  <a href="./강사정보.html"
+                    ><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a
+                  >
+                </li>
+                <li>
+                  <a href="./학생정보.html"
+                    ><i class="fas fa-user-graduate"></i> 학생 정보</a
+                  >
+                </li>
+                <li>
+                  <a href="./정보휴지통.html"
+                    ><i class="fas fa-trash-alt"></i> 정보 휴지통</a
+                  >
+                </li>
+                <li>
+                  <a href="./회원 상세 정보.html"
+                    ><i class="fas fa-id-card"></i> 회원 상세 정보</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <span class="submenu-toggle"
+                ><i class="fas fa-paper-plane"></i> 발송 관리</span
+              >
+              <ul class="submenu">
+                <li>
+                  <a href="./강사 메일쓰기.html"
+                    ><i class="fas fa-envelope"></i> 강사 메일 쓰기</a
+                  >
+                </li>
+                <li>
+                  <a href="./이메일발송내역.html"
+                    ><i class="fas fa-envelope-open-text"></i> 이메일 발송
+                    내역</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 교육과정 (한 단계) -->
+        <li>
+          <span class="submenu-toggle"
+            ><i class="fas fa-book-open"></i> 교육과정</span
+          >
+          <ul class="submenu">
+            <li>
+              <a href="#"><i class="fas fa-plus-square"></i> 강의실 등록</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-edit"></i> 강의실 수정</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-trash"></i> 강의실 삭제</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-users"></i> 강의실 학생 정보</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-folder-open"></i> 수업 자료 관리</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-file-alt"></i> 시험 문제 관리</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-calendar-check"></i> 출석 관리</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 결제 관리 (한 단계) -->
+        <li>
+          <span class="submenu-toggle"
+            ><i class="fas fa-credit-card"></i> 결제 관리</span
+          >
+          <ul class="submenu">
+            <li>
+              <a href="#"><i class="fas fa-list"></i> 주문 목록</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-money-check-alt"></i> 결제 관리</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 매출 관리 (한 단계) -->
+        <li>
+          <span class="submenu-toggle"
+            ><i class="fas fa-chart-line"></i> 매출 관리</span
+          >
+          <ul class="submenu">
+            <li>
+              <a href="#"><i class="fas fa-calendar"></i> 연별 매출 통계</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a>
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-chalkboard"></i> 과정 매출 통계</a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+  </body>
+</html>
