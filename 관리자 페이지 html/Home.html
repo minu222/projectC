@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>DW Academy - 관리자 메인</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <style>
+        /* ===== 기본 레이아웃 ===== */
+        body {
+            margin: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: #f4f6f9;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e3a8a;
+            color: #fff;
+            padding: 16px 28px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .container { display: flex; height: calc(100vh - 70px); }
+
+        /* ===== 사이드바 ===== */
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+        }
+
+        .menu, .menu ul { list-style: none; margin: 0; padding: 0; }
+
+        .menu > li > .submenu-toggle, .menu > li > .link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            margin: 6px 10px;
+            border-radius: 8px;
+            background: #1e3a8a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+        .menu > li > .submenu-toggle:hover, .menu > li > .link:hover {
+            background: #374eb8; transform: translateX(2px);
+        }
+
+        .submenu > li > .submenu-toggle {
+            display: flex; align-items: center; gap: 8px;
+            width: 100%; padding: 10px 14px; margin: 4px 14px;
+            border-radius: 6px; background: #f9fafb; color: #111827;
+            font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb;
+        }
+        .submenu li ul li a {
+            display: block; padding: 8px 14px; margin: 2px 14px 2px 28px;
+            font-size: 13px; text-decoration: none; color: #4b5563;
+            border-radius: 4px;
+        }
+        .submenu li ul li a:hover { background: #f3f4f6; color: #111827; }
+
+        .submenu { height: 0; overflow: hidden; transition: height .3s ease; }
+        .submenu.open { overflow: hidden; }
+
+        /* ===== 메인 ===== */
+        .dashboard {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* 📊 통계 카드 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 36px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        .card span {
+            display: block;
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: normal;
+            color: #6b7280;
+        }
+        .card:nth-child(1) { border-top: 5px solid #3b82f6; }
+        .card:nth-child(2) { border-top: 5px solid #10b981; }
+        .card:nth-child(3) { border-top: 5px solid #f59e0b; }
+        .card:nth-child(4) { border-top: 5px solid #6366f1; }
+        .card:nth-child(5) { border-top: 5px solid #ef4444; }
+        .card:nth-child(6) { border-top: 5px solid #1e3a8a; }
+
+        /* 📢 알림 */
+        .alerts {
+            background: #fff; padding: 28px; border-radius: 14px;
+            margin-bottom: 32px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .alerts h3 { margin: 0 0 16px; font-size: 20px; color: #1e3a8a; }
+
+        /* 🔍 검색 박스 */
+        .search-box { display: flex; gap: 14px; margin-bottom: 24px; }
+        .search-box input, .search-box select {
+            padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; flex: 1;
+        }
+        .search-box button {
+            padding: 12px 24px; border: none; border-radius: 8px;
+            background: #2563eb; color: #fff; font-weight: bold; cursor: pointer;
+        }
+        .search-box button:hover { background: #1d4ed8; }
+
+        /* 📋 테이블 */
+        .data-table {
+            width: 100%; border-collapse: collapse; background: #fff;
+            border-radius: 14px; overflow: hidden; margin-bottom: 32px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .data-table th, .data-table td { padding: 16px; text-align: center; font-size: 15px; }
+        .data-table th { background: #f1f5f9; font-weight: 600; color: #374151; }
+        .data-table tr:nth-child(even) { background: #f9fafb; }
+        .data-table tr:hover { background: #eef2ff; }
+
+        .badge { padding: 5px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; color: #fff; }
+        .badge.normal { background: #3b82f6; }
+        .badge.cancel { background: #ef4444; }
+        .badge.done { background: #10b981; }
+
+        /* 💰 매출 리포트 */
+        .sales-report {
+            background: #fff; border-radius: 14px; padding: 28px; margin-top: 28px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .sales-report h3 { margin-bottom: 20px; font-size: 20px; color: #1e3a8a; }
+        .chart-container { position: relative; width: 100%; max-width: 1800px; height: 500px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div>DW Academy</div>
+    <div class="welcome" th:text="${adminName} + '님 환영합니다'">운영자님 환영합니다 👋</div>
+</header>
+
+<div class="container">
+    <!-- 📂 사이드바 -->
+    <aside class="sidebar">
+        <ul class="menu">
+            <li><a class="link" th:href="@{/dashboard}"><i class="fa-solid fa-house"></i> 홈</a></li>
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-users"></i> 회원 정보</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-user-cog"></i> 회원 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/teachers}"><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a></li>
+                            <li><a th:href="@{/students}"><i class="fas fa-user-graduate"></i> 학생 정보</a></li>
+                            <li><a th:href="@{/members/trash}"><i class="fas fa-trash-alt"></i> 정보 휴지통</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-paper-plane"></i> 발송 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/messages/teacher/sms}"><i class="fas fa-sms"></i> 강사 SMS</a></li>
+                            <li><a th:href="@{/messages/student/sms}"><i class="fas fa-sms"></i> 회원 SMS</a></li>
+                            <li><a th:href="@{/messages/teacher/note}"><i class="fas fa-envelope"></i> 강사 쪽지</a></li>
+                            <li><a th:href="@{/messages/student/note}"><i class="fas fa-envelope"></i> 회원 쪽지</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <!-- 교육과정 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-book-open"></i> 교육과정</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-layer-group"></i> 교육 카테고리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/classroom/new}"><i class="fas fa-plus-square"></i> 강의실 등록</a></li>
+                            <li><a th:href="@{/classroom/edit}"><i class="fas fa-edit"></i> 강의실 수정</a></li>
+                            <li><a th:href="@{/classroom/delete}"><i class="fas fa-trash"></i> 강의실 삭제</a></li>
+                            <li><a th:href="@{/classroom/students}"><i class="fas fa-users"></i> 강의실 학생 정보</a></li>
+                            <li><a th:href="@{/materials}"><i class="fas fa-folder-open"></i> 수업 자료 관리</a></li>
+                            <li><a th:href="@{/exams}"><i class="fas fa-file-alt"></i> 시험 문제 관리</a></li>
+                            <li><a th:href="@{/attendance}"><i class="fas fa-calendar-check"></i> 출석 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <!-- 결제 관리 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-credit-card"></i> 결제 관리</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-shopping-cart"></i> 주문결제 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/orders}"><i class="fas fa-list"></i> 주문 목록</a></li>
+                            <li><a th:href="@{/payments/manage}"><i class="fas fa-money-check-alt"></i> 결제 관리</a></li>
+                            <li><a th:href="@{/coupons}"><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <!-- 매출 관리 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-chart-line"></i> 매출 관리</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-chart-pie"></i> 매출 통계</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/sales/year}"><i class="fas fa-calendar"></i> 연별 매출 통계</a></li>
+                            <li><a th:href="@{/sales/month}"><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a></li>
+                            <li><a th:href="@{/sales/course}"><i class="fas fa-chalkboard"></i> 과정 매출 통계</a></li>
+                            <li><a th:href="@{/sales/tax}"><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- 📂 메인 대시보드 -->
+    <main class="dashboard">
+        <!-- 📊 통계 카드 -->
+        <div class="stats">
+            <div class="card" th:text="${studentCount} + '명'">120명<span>총 회원(학생)</span></div>
+            <div class="card" th:text="${teacherCount} + '명'">35명<span>총 강사</span></div>
+            <div class="card" th:text="${courseCount} + '개'">25개<span>개설 과정</span></div>
+            <div class="card" th:text="${avgCompletion} + '%'">85%<span>평균 수료율</span></div>
+            <div class="card" th:text="${cancelRate} + '%'">12%<span>수강 취소율</span></div>
+            <div class="card" th:text="'₩' + ${monthRevenue}">₩12,530,000<span>이번 달 매출</span></div>
+        </div>
+
+        <!-- 📢 알림 -->
+        <div class="alerts">
+            <h3>📢 최근 알림 / 처리 필요</h3>
+            <ul>
+                <li th:each="notice : ${notices}" th:text="${notice}">강사 김민수 강의자료 업로드 요청</li>
+            </ul>
+        </div>
+
+        <!-- 🔍 검색 + 테이블 -->
+        <div class="search-box">
+            <input placeholder="과정명 검색" type="text">
+            <input placeholder="예: 2025/01" type="text">
+            <select>
+                <option>전체</option>
+                <option>정상</option>
+                <option>수강취소</option>
+                <option>수료</option>
+            </select>
+            <button>검색</button>
+        </div>
+
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>NO</th>
+                <th>년도/차수</th>
+                <th>과정명</th>
+                <th>소속</th>
+                <th>수강생</th>
+                <th>진도율</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>2025/01</td>
+                <td>스마트테스트</td>
+                <td>(주)위런소프트</td>
+                <td>홍길동</td>
+                <td>90%</td>
+                <td><span class="badge normal">정상</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2024/33</td>
+                <td>인터넷활용</td>
+                <td>(주)위런소프트</td>
+                <td>이영희</td>
+                <td>75%</td>
+                <td><span class="badge cancel">수강취소</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>2024/20</td>
+                <td>엑셀활용</td>
+                <td>(주)위런소프트</td>
+                <td>김민수</td>
+                <td>100%</td>
+                <td><span class="badge done">수료</span></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 💰 매출 리포트 -->
+        <div class="sales-report">
+            <h3>💰 이번 달 매출 리포트</h3>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // 서브메뉴 접기/펼치기
+    document.querySelectorAll('.submenu-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const submenu = btn.nextElementSibling;
+            if (!submenu || !submenu.classList.contains('submenu')) return;
+            const isOpen = submenu.classList.contains('open');
+            if (isOpen) {
+                submenu.style.height = submenu.scrollHeight + 'px';
+                submenu.classList.remove('open');
+                requestAnimationFrame(() => submenu.style.height = '0px');
+            } else {
+                submenu.classList.add('open');
+                submenu.style.height = submenu.scrollHeight + 'px';
+                submenu.addEventListener('transitionend', () => {
+                    if (submenu.classList.contains('open')) submenu.style.height = 'auto';
+                }, {once: true});
+            }
+        });
+    });
+
+    // 매출 차트
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["1일", "5일", "10일", "15일", "20일", "25일", "30일"],
+            datasets: [{
+                label: '일별 매출 (₩)',
+                data: [120000, 350000, 420000, 280000, 510000, 610000, 720000],
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => '₩' + v.toLocaleString() }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

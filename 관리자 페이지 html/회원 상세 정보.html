@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 상세 정보</title>
+    <style>
+        body {
+            font-family: "Noto Sans KR", sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .detail-box {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .detail-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            color: #1e3a8a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            font-size: 15px;
+        }
+        th {
+            width: 20%;
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        td input, td select, td textarea {
+            width: 95%;
+            padding: 6px;
+            font-size: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+        td button {
+            padding: 6px 12px;
+            font-size: 13px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn-reset { background: #3b82f6; color: #fff; }
+        .btn-unlock { background: #10b981; color: #fff; }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-save { background: #2563eb; color: #fff; }
+        .btn-close { background: #e5e7eb; color: #374151; }
+    </style>
+</head>
+<body>
+<div class="detail-box">
+    <div class="detail-header">회원 상세 정보</div>
+    <form id="detailForm" th:action="@{/admin/members/save}" method="post">
+        <input type="hidden" name="id" th:value="${member.id}">
+
+        <table>
+            <tr>
+                <th>이름</th>
+                <td th:text="${member.name}">이용우</td>
+            </tr>
+            <tr>
+                <th>아이디</th>
+                <td th:text="${member.username}">king</td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td>
+                    ********
+                    <button type="button" class="btn-reset">비밀번호 초기화</button>
+                    <small>(12345678a)</small>
+                </td>
+            </tr>
+            <tr>
+                <th>로그인 실패횟수</th>
+                <td>
+                    <span th:text="${member.loginFailCount} + '회'">0회</span>
+                    <button type="button" class="btn-unlock">풀어주기</button>
+                </td>
+            </tr>
+            <tr>
+                <th>구분 (권한)</th>
+                <td>
+                    <select name="role">
+                        <option value="USER" th:selected="${member.role == 'USER'}">일반 회원</option>
+                        <option value="TEACHER" th:selected="${member.role == 'TEACHER'}">강사</option>
+                        <option value="ADMIN" th:selected="${member.role == 'ADMIN'}">관리자</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input type="email" name="email" th:value="${member.email}"></td>
+            </tr>
+            <tr>
+                <th>휴대전화</th>
+                <td><input type="text" name="phone" th:value="${member.phone}"></td>
+            </tr>
+            <tr>
+                <th>유선전화</th>
+                <td><input type="text" name="tel" th:value="${member.tel}"></td>
+            </tr>
+            <tr>
+                <th>주소</th>
+                <td><input type="text" name="address" th:value="${member.address}"></td>
+            </tr>
+            <tr>
+                <th>회원 상태</th>
+                <td>
+                    <select name="status">
+                        <option value="정상" th:selected="${member.status == '정상'}">정상</option>
+                        <option value="휴면" th:selected="${member.status == '휴면'}">휴면</option>
+                        <option value="탈퇴" th:selected="${member.status == '탈퇴'}">탈퇴</option>
+                        <option value="수료" th:selected="${member.status == '수료'}">수료</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>메모</th>
+                <td>
+                    <textarea name="memo" rows="3" th:text="${member.memo}">내부 관리 메모</textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>회원가입일 / 최근접속일</th>
+                <td>
+                    <span th:text="${#dates.format(member.joinDate,'yyyy-MM-dd HH:mm')}"></span> /
+                    <span th:text="${#dates.format(member.lastLogin,'yyyy-MM-dd HH:mm')}"></span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="actions">
+            <button type="submit" class="btn-save">저장</button>
+            <button type="button" class="btn-close" onclick="window.close()">닫기</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 비밀번호 초기화 버튼
+    document.querySelector(".btn-reset").addEventListener("click", () => {
+        if(confirm("비밀번호를 기본값(12345678a)으로 초기화하시겠습니까?")) {
+            // Ajax로 초기화 요청
+            alert("비밀번호가 초기화되었습니다.");
+        }
+    });
+
+    // 로그인 실패 횟수 초기화
+    document.querySelector(".btn-unlock").addEventListener("click", () => {
+        if(confirm("로그인 실패 횟수를 초기화하시겠습니까?")) {
+            // Ajax로 초기화 요청
+            alert("로그인 실패 횟수가 초기화되었습니다.");
+        }
+    });
+</script>
+</body>
+</html>

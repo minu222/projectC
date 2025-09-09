@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>DW Academy</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: #f7f9fc;
+            color: #333
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e3a8a;
+            color: #fff;
+            padding: 12px 16px;
+            font-weight: 700
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 50px)
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            overflow: auto
+        }
+
+        .menu, .menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        /* 메인 메뉴 */
+        .menu > li > .submenu-toggle, .menu > li > .link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            margin: 6px 10px;
+            border-radius: 8px;
+            background: #1e3a8a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+            transition: background .2s, transform .2s;
+        }
+
+        .menu > li > .submenu-toggle:hover, .menu > li > .link:hover {
+            background: #374eb8;
+            transform: translateX(2px)
+        }
+
+        /* 부제목 */
+        .submenu > li > .submenu-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 14px;
+            margin: 4px 14px;
+            border-radius: 6px;
+            background: #f9fafb;
+            color: #111827;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+            transition: background .2s;
+        }
+
+        .submenu > li > .submenu-toggle:hover {
+            background: #f1f5f9
+        }
+
+        /* 하위 내용 */
+        .submenu li ul li a {
+            display: block;
+            text-decoration: none;
+            color: #4b5563;
+            padding: 8px 14px;
+            margin: 2px 14px 2px 28px;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        .submenu li ul li a:hover {
+            background: #f3f4f6;
+            color: #111827
+        }
+
+        /* 접고 펴기 애니메이션 */
+        .submenu {
+            height: 0;
+            overflow: hidden;
+            transition: height .3s ease;
+        }
+
+        .submenu.open {
+            overflow: hidden;
+        }
+
+        /* 메인 */
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .content-box {
+            background: #fff;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+
+        h2 {
+            margin: 0 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* 검색 필터 */
+        .filter-box {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .filter-box select, .filter-box input {
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filter-box button {
+            padding: 8px 14px;
+            border: none;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-box button:hover {
+            background: #1d4ed8;
+        }
+
+        .status-filter {
+            margin-left: auto;
+        }
+
+        .status-filter label {
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        /* 선택 탈퇴 버튼 */
+        .btn-delete {
+            background: #ef4444;
+            color: #fff;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, .25);
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .btn-delete:active {
+            transform: translateY(1px);
+        }
+
+        /* 테이블 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tr:hover {
+            background: #f0f9ff;
+            transition: 0.2s;
+        }
+
+        .badge {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .badge-green {
+            background: #10b981;
+        }
+
+        .badge-gray {
+            background: #6b7280; /* Tailwind gray-500 느낌 */
+        }
+
+        .badge-red {
+            background: #f44336;
+        }
+
+        /* ===== 포커스(깜박이/파란 링) 제거 패키지 ===== */
+        /* 터치 하이라이트 제거 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Firefox 내부 포커스 보더 제거 */
+        button::-moz-focus-inner, input::-moz-focus-inner {
+            border: 0;
+        }
+
+        /* 체크박스 전용: 크롬 계열 추가 보정 */
+        input[type="checkbox"] {
+            -webkit-appearance: checkbox;
+            appearance: checkbox;
+        }
+
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div>DW Academy</div>
+    <div class="welcome">운영자님 환영합니다</div>
+</header>
+<div class="container">
+    <aside class="sidebar">
+        <ul class="menu">
+            <!-- 홈 -->
+            <li><a class="link" th:href="@{/dashboard}"><i class="fa-solid fa-house"></i> 홈</a></li>
+
+            <!-- 회원 정보 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-users"></i> 회원 정보</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-user-cog"></i> 회원 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/teachers}"><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a></li>
+                            <li><a th:href="@{/students}"><i class="fas fa-user-graduate"></i> 학생 정보</a></li>
+                            <li><a th:href="@{/members/trash}"><i class="fas fa-trash-alt"></i> 정보 휴지통</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-paper-plane"></i> 발송 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/messages/teacher/email}"><i class="fas fa-envelope"></i> 강사 e-mail</a></li>
+                            <li><a th:href="@{/messages/student/email}"><i class="fas fa-envelope"></i> 회원 e-mail</a></li>
+                            <li><a th:href="@{/messages/teacher/sms}"><i class="fas fa-envelope"></i> 강사 쪽지</a></li>
+                            <li><a th:href="@{/messages/student/sms}"><i class="fas fa-envelope"></i> 회원 쪽지</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 교육과정 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-book-open"></i> 교육과정</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-layer-group"></i> 교육 카테고리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/classroom/new}"><i class="fas fa-plus-square"></i> 강의실 등록</a></li>
+                            <li><a th:href="@{/classroom/edit}"><i class="fas fa-edit"></i> 강의실 수정</a></li>
+                            <li><a th:href="@{/classroom/delete}"><i class="fas fa-trash"></i> 강의실 삭제</a></li>
+                            <li><a th:href="@{/classroom/students}"><i class="fas fa-users"></i> 강의실 학생 정보</a></li>
+                            <li><a th:href="@{/materials}"><i class="fas fa-folder-open"></i> 수업 자료 관리</a></li>
+                            <li><a th:href="@{/exams}"><i class="fas fa-file-alt"></i> 시험 문제 관리</a></li>
+                            <li><a th:href="@{/attendance}"><i class="fas fa-calendar-check"></i> 출석 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 결제 관리 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-credit-card"></i> 결제 관리</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-shopping-cart"></i> 주문결제 관리</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/orders}"><i class="fas fa-list"></i> 주문 목록</a></li>
+                            <li><a th:href="@{/payments/manage}"><i class="fas fa-money-check-alt"></i> 결제 관리</a></li>
+                            <li><a th:href="@{/coupons}"><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 매출 관리 -->
+            <li>
+                <span class="submenu-toggle"><i class="fas fa-chart-line"></i> 매출 관리</span>
+                <ul class="submenu">
+                    <li>
+                        <span class="submenu-toggle"><i class="fas fa-chart-pie"></i> 매출 통계</span>
+                        <ul class="submenu">
+                            <li><a th:href="@{/sales/year}"><i class="fas fa-calendar"></i> 연별 매출 통계</a></li>
+                            <li><a th:href="@{/sales/month}"><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a></li>
+                            <li><a th:href="@{/sales/course}"><i class="fas fa-chalkboard"></i> 과정 매출 통계</a></li>
+                            <li><a th:href="@{/sales/tax}"><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="main">
+        <div class="content-box">
+            <h2>강사 정보</h2>
+
+            <!-- 검색 필터 + 탈퇴 버튼 -->
+            <div class="filter-box">
+                <label>소속:
+                    <select>
+                        <option>- 전체 -</option>
+                        <option>DW</option>
+                        <option>JS</option>
+                    </select>
+                </label>
+                <label>검색:
+                    <select>
+                        <option>- 전체 -</option>
+                        <option>이름</option>
+                        <option>아이디</option>
+                    </select>
+                    <input placeholder="검색어 입력" type="text">
+                </label>
+                <button>검색</button>
+
+                <div class="status-filter">
+                    상태:
+                    <label><input checked name="status" type="radio"> 전체</label>
+                    <label><input name="status" type="radio"> 정상</label>
+                    <label><input name="status" type="radio"> 휴면</label>
+                    <label><input name="status" type="radio"> 탈퇴</label>
+                </div>
+
+                <div style="margin-left:auto;">
+                    <button class="btn-delete">🗑 선택 탈퇴</button>
+                </div>
+            </div>
+
+            <!-- 강사 리스트 (Thymeleaf 적용) -->
+            <table>
+                <thead>
+                <tr>
+                    <th><input id="checkAll" type="checkbox"></th>
+                    <th>No</th>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>전화번호</th>
+                    <th>가입일</th>
+                    <th>상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="teacher, stat : ${teachers}">
+                    <td><input class="row-check" th:value="${teacher.id}" type="checkbox"></td>
+                    <td th:text="${stat.count}"></td>
+                    <td><a th:href="@{'/admin/teachers/' + ${teacher.id}}" th:text="${teacher.username}"></a></td>
+                    <td th:text="${teacher.name}"></td>
+                    <td th:text="${teacher.email}"></td>
+                    <td th:text="${teacher.phone}"></td>
+                    <td th:text="${#temporals.format(teacher.createdAt, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <span class="badge badge-green" th:if="${teacher.active}">정상</span>
+                        <span class="badge badge-gray" th:if="${teacher.status == 'SLEEP'}">휴면</span>
+                        <span class="badge badge-red" th:if="${!teacher.active}">탈퇴</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</div>
+
+<script>
+    document.querySelectorAll('.submenu-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const submenu = btn.nextElementSibling;
+            if (!submenu || !submenu.classList.contains('submenu')) return;
+
+            const isOpen = submenu.classList.contains('open');
+            if (isOpen) {
+                submenu.style.height = submenu.scrollHeight + 'px';
+                submenu.classList.remove('open');
+                requestAnimationFrame(() => submenu.style.height = '0px');
+            } else {
+                submenu.classList.add('open');
+                submenu.style.height = submenu.scrollHeight + 'px';
+                submenu.addEventListener('transitionend', () => {
+                    if (submenu.classList.contains('open')) {
+                        submenu.style.height = 'auto';
+                    }
+                }, {once: true});
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkAll = document.getElementById("checkAll");
+        const rowChecks = document.querySelectorAll(".row-check");
+        checkAll.addEventListener("change", () => {
+            rowChecks.forEach(chk => chk.checked = checkAll.checked);
+        });
+    });
+</script>
+</body>
+</html>
