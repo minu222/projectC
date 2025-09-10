@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유게시판</title>
+    <link rel="stylesheet" href="css/게시판.css">
+</head>
+<body>
+
+
+
+<div class="container">
+    <div class="page-title">자유게시판</div>
+    <div class="sub-title">수강후기, 강사 후기, 문의게시판</div>
+
+    <!-- 검색 영역 -->
+    <div class="search-box">
+        <label>구분 선택</label>
+        <select>
+            <option value="all">전체</option>
+            <option value="teacher">강사</option>
+            <option value="admin">관리자</option>
+            <option value="member">회원</option>
+        </select>
+        <input type="text" placeholder="검색어를 입력하세요">
+        <button>검색</button>
+    </div>
+
+    <!-- 게시판 목록 -->
+    <table>
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td class="title">첫 번째 게시글입니다</td>
+            <td>홍길동</td>
+            <td>2025-09-10</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="title">테스트 게시글입니다</td>
+            <td>관리자</td>
+            <td>2025-09-09</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="title">강사 후기 모음</td>
+            <td>강사A</td>
+            <td>2025-09-08</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 글쓰기 버튼 -->
+    <a href="#" class="write-btn">글쓰기</a>
+</div>
+
+
+
+</body>
+</html>

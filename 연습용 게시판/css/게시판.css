@@ -1,0 +1,99 @@
+/* 메인 컨텐츠 */
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.sub-title {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* 검색창 */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.search-box select, .search-box input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-box button {
+    padding: 8px 16px;
+    background: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-box button:hover {
+    background: #e05500;
+}
+
+/* 게시판 테이블 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+th, td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    font-size: 14px;
+}
+
+th {
+    background: #f1f3f5;
+    font-weight: bold;
+}
+
+td.title {
+    text-align: left;
+    color: #0073e6;
+    cursor: pointer;
+}
+
+td.title:hover {
+    text-decoration: underline;
+}
+
+/* 글쓰기 버튼 */
+.write-btn {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 10px 18px;
+    background: #0073e6;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.write-btn:hover {
+    background: #005bb5;
+}
