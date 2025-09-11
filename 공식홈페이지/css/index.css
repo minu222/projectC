@@ -1,0 +1,129 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+/* ===== 배너 ===== */
+.banner {
+    background: url("https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=1920&auto=format&fit=crop") center/cover no-repeat;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+}
+
+/* ===== 공통 섹션 ===== */
+section {
+    max-width: 1400px;
+    margin: 70px auto;
+    padding: 0 20px;
+}
+
+section h2 {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+    color: #222;
+}
+
+/* ===== 카드 레이아웃 ===== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: #fff;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 19px;
+    margin: 0 0 10px;
+    color: #111;
+}
+
+.card p {
+    font-size: 15px;
+    color: #555;
+}
+
+
+
+/* 인기차트 */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.chart-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    border-top: 6px solid #ffb400; /* 기본 포인트 컬러 */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chart-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.chart-box:nth-child(1) { border-top-color: #007bff; } /* 인기글 = 파랑 */
+.chart-box:nth-child(2) { border-top-color: #ff5722; } /* 인기강사 = 주황 */
+.chart-box:nth-child(3) { border-top-color: #28a745; } /* 인기강의목록 = 초록 */
+
+.chart-box h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-left: 6px solid currentColor;
+    padding-left: 10px;
+    color: #333;
+}
+
+.chart-box ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.chart-box ol li {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #f9f9f9;
+    transition: background 0.2s;
+}
+
+.chart-box ol li:hover {
+    background: #f1f1f1;
+}
+
+
+
+
+
