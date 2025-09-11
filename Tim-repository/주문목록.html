@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>주문 목록</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>주문 목록</h2>
+
+          <div class="search-box orders-search">
+            <input type="text" placeholder="주문번호/이름" />
+            <select>
+              <option>전체</option>
+              <option>결제완료</option>
+              <option>환불</option>
+            </select>
+            <button class="btn-primary">검색</button>
+          </div>
+
+          <table class="data-table table-gap-top orders-table">
+            <thead>
+              <tr>
+                <th>주문번호</th>
+                <th>고객명</th>
+                <th>상품</th>
+                <th>금액</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>O-20250910-001</td>
+                <td>홍길동</td>
+                <td>자바 과정</td>
+                <td>₩350,000</td>
+                <td><span class="badge done">결제완료</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>주문 목록</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>주문 목록</h2>
+
+          <div class="search-box orders-search">
+            <input type="text" placeholder="주문번호/이름" />
+            <select>
+              <option>전체</option>
+              <option>결제완료</option>
+              <option>환불</option>
+            </select>
+            <button class="btn-primary">검색</button>
+          </div>
+
+          <table class="data-table table-gap-top orders-table">
+            <thead>
+              <tr>
+                <th>주문번호</th>
+                <th>고객명</th>
+                <th>상품</th>
+                <th>금액</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>O-20250910-001</td>
+                <td>홍길동</td>
+                <td>자바 과정</td>
+                <td>₩350,000</td>
+                <td><span class="badge done">결제완료</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>

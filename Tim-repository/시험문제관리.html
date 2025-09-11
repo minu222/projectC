@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>시험 문제 관리</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>시험 문제 관리</h2>
+
+          <div class="search-box exam-search">
+            <input type="text" placeholder="과정/키워드" />
+            <select>
+              <option>객관식</option>
+              <option>주관식</option>
+            </select>
+            <button class="btn-search">검색</button>
+            <button class="btn-submit">문항 추가</button>
+          </div>
+
+          <table class="data-table exam-table">
+            <thead>
+              <tr>
+                <th>NO</th>
+                <th>문항</th>
+                <th>유형</th>
+                <th>난이도</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>JSP의 역할은?</td>
+                <td>객관식</td>
+                <td>중</td>
+                <td><a href="#">수정</a> | <a href="#">삭제</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>

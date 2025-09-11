@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>결제 관리</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>결제 관리</h2>
+
+          <div class="search-box payments-search">
+            <input type="text" placeholder="주문번호/이메일" />
+            <select>
+              <option>전체</option>
+              <option>승인</option>
+              <option>취소</option>
+            </select>
+            <button class="btn-search">검색</button>
+          </div>
+
+          <table class="data-table payments-table">
+            <thead>
+              <tr>
+                <th>결제번호</th>
+                <th>주문번호</th>
+                <th>금액</th>
+                <th>방법</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>P-1001</td>
+                <td>O-20250910-001</td>
+                <td>₩350,000</td>
+                <td>카드</td>
+                <td><span class="badge normal">승인</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>

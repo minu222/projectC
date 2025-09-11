@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>과정 매출 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>과정 매출 통계</h2>
+
+          <div class="search-box sales-course-search">
+            <input type="text" placeholder="과정명" />
+            <button class="btn-search">조회</button>
+          </div>
+
+          <div class="chart-container sales-course-chart">
+            <canvas id="courseChart"></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+    <script>
+      const cctx = document.getElementById("courseChart").getContext("2d");
+      new Chart(cctx, {
+        type: "doughnut",
+        data: {
+          labels: ["자바", "파이썬", "리액트", "SQL"],
+          datasets: [{ label: "과정별 매출 비중", data: [35, 25, 20, 20] }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: "bottom" } },
+        },
+      });
+    </script>
+  </body>
+</html>

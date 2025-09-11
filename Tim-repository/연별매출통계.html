@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>연별 매출 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>연별 매출 통계</h2>
+
+          <div class="search-box sales-yearly-search">
+            <input type="number" placeholder="시작연도(예: 2021)" />
+            <input type="number" placeholder="종료연도(예: 2025)" />
+            <button class="btn-primary">조회</button>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="yearlyChart"></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+    <script>
+      const yctx = document.getElementById("yearlyChart").getContext("2d");
+      new Chart(yctx, {
+        type: "bar",
+        data: {
+          labels: ["2021", "2022", "2023", "2024", "2025"],
+          datasets: [
+            {
+              label: "연 매출(₩)",
+              data: [12000000, 15000000, 17500000, 21000000, 19500000],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (v) => "₩" + Number(v).toLocaleString() },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

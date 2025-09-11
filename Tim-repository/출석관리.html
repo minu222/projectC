@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>출석 관리</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>출석 관리</h2>
+
+          <div class="search-box attendance-search">
+            <input type="text" placeholder="과정명" />
+            <input type="date" />
+            <button class="btn-primary">조회</button>
+          </div>
+
+          <table class="data-table table-gap-top">
+            <thead>
+              <tr>
+                <th>NO</th>
+                <th>학생</th>
+                <th>상태</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>홍길동</td>
+                <td>
+                  <select>
+                    <option>출석</option>
+                    <option>지각</option>
+                    <option>결석</option>
+                  </select>
+                </td>
+                <td><input type="text" placeholder="사유" /></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="actions-row attendance-actions">
+            <button class="btn-secondary">임시저장</button>
+            <button class="btn-primary">출석 저장</button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>

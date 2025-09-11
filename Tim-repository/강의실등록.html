@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>강의실 등록</title>
+    <link rel="stylesheet" href="./공통css.css" />
+  </head>
+
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>강의실 등록</h2>
+          <form class="classroom-form">
+            <label>
+              강의실 코드
+              <input type="text" placeholder="예: A-101" class="form-input" />
+            </label>
+            <label>
+              수용 인원
+              <input type="number" placeholder="예: 30" class="form-input" />
+            </label>
+            <label class="full-row">
+              비고
+              <textarea
+                rows="6"
+                placeholder="프로젝터, 화이트보드 등"
+                class="form-textarea"
+              ></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="reset" class="btn-reset">초기화</button>
+              <button type="submit" class="btn-submit">등록</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+    <script src="menu-loader.js" defer></script>
+  </body>
+</html>

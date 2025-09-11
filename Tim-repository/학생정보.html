@@ -7,285 +7,106 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
-    <style>
-      body {
-        margin: 0;
-        font-family: "Noto Sans KR", sans-serif;
-        background: #f7f9fc;
-        color: #333;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #1e3a8a;
-        color: #fff;
-        padding: 12px 16px;
-        font-weight: 700;
-      }
-
-      .container {
-        display: flex;
-        height: calc(100vh - 50px);
-      }
-
-      /* 부제목 */
-
-      /* 하위 내용 */
-
-      /* 접고 펴기 애니메이션 */
-
-      /* 메인 */
-      .main {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-      }
-
-      .content-box {
-        background: #fff;
-        border-radius: 6px;
-        padding: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        min-height: 600px;
-      }
-
-      h2 {
-        margin: 0 0 20px;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      /* 검색 필터 */
-      .filter-box {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-      }
-
-      .filter-box select,
-      .filter-box input {
-        padding: 8px;
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        font-size: 14px;
-      }
-
-      .filter-box button {
-        padding: 8px 14px;
-        border: none;
-        background: #2563eb;
-        color: #fff;
-        font-weight: 600;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-
-      .filter-box button:hover {
-        background: #1d4ed8;
-      }
-
-      .status-filter {
-        margin-left: auto;
-      }
-
-      .status-filter label {
-        margin-right: 10px;
-        font-size: 14px;
-      }
-
-      /* 선택 탈퇴 버튼 */
-      .btn-delete {
-        background: #ef4444;
-        color: #fff;
-        padding: 8px 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.05s ease, background 0.2s ease,
-          box-shadow 0.2s ease;
-        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
-      }
-
-      .btn-delete:hover {
-        background: #dc2626;
-      }
-
-      .btn-delete:active {
-        transform: translateY(1px);
-      }
-
-      /* 테이블 */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-        margin-top: 10px;
-      }
-
-      th,
-      td {
-        border: 1px solid #e5e7eb;
-        padding: 10px;
-        text-align: center;
-      }
-
-      th {
-        background: #f1f5f9;
-        font-weight: 600;
-        color: #374151;
-      }
-
-      tr:nth-child(even) {
-        background: #fafafa;
-      }
-
-      tr:hover {
-        background: #f0f9ff;
-        transition: 0.2s;
-      }
-
-      .badge {
-        padding: 3px 6px;
-        border-radius: 4px;
-        font-size: 12px;
-        color: #fff;
-      }
-
-      .badge-green {
-        background: #10b981;
-      }
-
-      .badge-gray {
-        background: #6b7280; /* Tailwind gray-500 느낌 */
-      }
-
-      .badge-red {
-        background: #f44336;
-      }
-
-      /* ===== 포커스(깜박이/파란 링) 제거 패키지 ===== */
-      * {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      button::-moz-focus-inner,
-      input::-moz-focus-inner {
-        border: 0;
-      }
-
-      input[type="checkbox"] {
-        -webkit-appearance: checkbox;
-        appearance: checkbox;
-      }
-    </style>
+    <link rel="stylesheet" href="./공통css.css" />
   </head>
   <body>
-    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
-    <div class="container">
-      <!-- 메인 -->
-      <main class="main">
-        <div class="content-box">
-          <h2>학생 정보</h2>
+    <div class="content-box students-page">
+      <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+      <div class="container">
+        <!-- 메인 -->
+        <main class="main">
+          <div class="content-box">
+            <h2>학생 정보</h2>
 
-          <!-- 검색 필터 + 탈퇴 버튼 -->
-          <div class="filter-box">
-            <label
-              >소속:
-              <select>
-                <option>- 전체 -</option>
-                <option>DW</option>
-                <option>JS</option>
-              </select>
-            </label>
-            <label
-              >검색:
-              <select>
-                <option>- 전체 -</option>
-                <option>이름</option>
-                <option>아이디</option>
-              </select>
-              <input placeholder="검색어 입력" type="text" />
-            </label>
-            <button>검색</button>
+            <!-- 검색 필터 + 탈퇴 버튼 -->
+            <div class="filter-box">
+              <label
+                >소속:
+                <select>
+                  <option>- 전체 -</option>
+                  <option>DW</option>
+                  <option>JS</option>
+                </select>
+              </label>
+              <label
+                >검색:
+                <select>
+                  <option>- 전체 -</option>
+                  <option>이름</option>
+                  <option>아이디</option>
+                </select>
+                <input placeholder="검색어 입력" type="text" />
+              </label>
+              <button>검색</button>
 
-            <div class="status-filter">
-              상태:
-              <label><input checked name="status" type="radio" /> 전체</label>
-              <label><input name="status" type="radio" /> 정상</label>
-              <label><input name="status" type="radio" /> 휴면</label>
-              <label><input name="status" type="radio" /> 탈퇴</label>
+              <div class="status-filter">
+                상태:
+                <label><input checked name="status" type="radio" /> 전체</label>
+                <label><input name="status" type="radio" /> 정상</label>
+                <label><input name="status" type="radio" /> 휴면</label>
+                <label><input name="status" type="radio" /> 탈퇴</label>
+              </div>
+
+              <div style="margin-left: auto">
+                <button class="btn-delete">🗑 선택 탈퇴</button>
+              </div>
             </div>
 
-            <div style="margin-left: auto">
-              <button class="btn-delete">🗑 선택 탈퇴</button>
-            </div>
+            <!-- 학생 리스트 (Thymeleaf 적용) -->
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th><input id="checkAll" type="checkbox" /></th>
+                  <th>No</th>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th>이메일</th>
+                  <th>전화번호</th>
+                  <th>가입일</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="student, stat : ${students}">
+                  <td>
+                    <input
+                      class="row-check"
+                      th:value="${student.id}"
+                      type="checkbox"
+                    />
+                  </td>
+                  <td th:text="${stat.count}"></td>
+                  <td>
+                    <a
+                      th:href="@{'/admin/students/' + ${student.id}}"
+                      th:text="${student.username}"
+                    ></a>
+                  </td>
+                  <td th:text="${student.name}"></td>
+                  <td th:text="${student.email}"></td>
+                  <td th:text="${student.phone}"></td>
+                  <td
+                    th:text="${#temporals.format(student.createdAt, 'yyyy-MM-dd')}"
+                  ></td>
+                  <td>
+                    <span class="badge badge-green" th:if="${student.active}"
+                      >정상</span
+                    >
+                    <span
+                      class="badge badge-gray"
+                      th:if="${student.status == 'SLEEP'}"
+                      >휴면</span
+                    >
+                    <span class="badge badge-red" th:if="${!student.active}"
+                      >탈퇴</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <!-- 학생 리스트 (Thymeleaf 적용) -->
-          <table>
-            <thead>
-              <tr>
-                <th><input id="checkAll" type="checkbox" /></th>
-                <th>No</th>
-                <th>아이디</th>
-                <th>이름</th>
-                <th>이메일</th>
-                <th>전화번호</th>
-                <th>가입일</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="student, stat : ${students}">
-                <td>
-                  <input
-                    class="row-check"
-                    th:value="${student.id}"
-                    type="checkbox"
-                  />
-                </td>
-                <td th:text="${stat.count}"></td>
-                <td>
-                  <a
-                    th:href="@{'/admin/students/' + ${student.id}}"
-                    th:text="${student.username}"
-                  ></a>
-                </td>
-                <td th:text="${student.name}"></td>
-                <td th:text="${student.email}"></td>
-                <td th:text="${student.phone}"></td>
-                <td
-                  th:text="${#temporals.format(student.createdAt, 'yyyy-MM-dd')}"
-                ></td>
-                <td>
-                  <span class="badge badge-green" th:if="${student.active}"
-                    >정상</span
-                  >
-                  <span
-                    class="badge badge-gray"
-                    th:if="${student.status == 'SLEEP'}"
-                    >휴면</span
-                  >
-                  <span class="badge badge-red" th:if="${!student.active}"
-                    >탈퇴</span
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
 
     <script>
@@ -330,5 +151,6 @@
         }
       });
     </script>
+    <script src="menu-loader.js" defer></script>
   </body>
 </html>
