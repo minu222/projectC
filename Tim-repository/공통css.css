@@ -10,7 +10,6 @@ body {
   font-size: 16px;
 }
 .mneuu {
-  z-index: 1;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -208,15 +207,69 @@ body {
   align-items: center;
 }
 
-.taxes-table {
-  margin-top: 16px;
-}
-
 .taxes-actions {
-  display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 12px;
+}
+.data-table {
+  justify-content: space-between;
+  display: flex;
+
+  min-width: 600px;
+  width: max-content;
+  border: 0.5px solid rgb(94, 94, 94);
+  margin-top: 16px;
+  margin: 10px;
+  flex-direction: column;
+}
+
+.data-table thead tr {
+  align-items: center;
+  justify-content: center;
+  justify-content: space-between;
+  display: flex;
+}
+.data-table thead tr th {
+  padding: 10px;
+  border: 0.5px solid rgb(94, 94, 94);
+}
+.data-table thead tr th:nth-child(2) {
+  flex: 1;
+}
+.data-table thead tr th:first-child {
+  width: 10vw;
+}
+.data-table thead tr th:last-child {
+  width: 10vw;
+}
+
+.data-table tbody tr {
+  justify-content: space-between;
+  display: flex;
+  text-align: center;
+}
+.data-table tbody tr td:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;
+}
+.data-table tbody tr td:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.data-table tbody tr td:last-child {
+  word-wrap: break-word;
+  width: 10vw;
+}
+.data-table tbody tr td {
+  border: 0.5px solid rgb(94, 94, 94);
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 10px;
 }
 /* ===== 수업 자료 관리 ===== */
 .materials-search {
