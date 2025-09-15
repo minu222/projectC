@@ -1,0 +1,144 @@
+
+/* 메인 */
+
+
+h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 검색 필터 */
+.filter-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.filter-box select,
+.filter-box input {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.filter-box button {
+    padding: 8px 14px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-box button:hover {
+    background: #1d4ed8;
+}
+
+.status-filter {
+    margin-left: auto;
+}
+
+.status-filter label {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+/* 선택 탈퇴 버튼 */
+.btn-delete {
+    background: #ef4444;
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.05s ease, background 0.2s ease,
+    box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+.btn-delete:active {
+    transform: translateY(1px);
+}
+
+/* 테이블 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+th,
+td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #f1f5f9;
+    font-weight: 600;
+    color: #374151;
+}
+
+tr:nth-child(even) {
+    background: #fafafa;
+}
+
+tr:hover {
+    background: #f0f9ff;
+    transition: 0.2s;
+}
+
+.badge {
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #fff;
+}
+
+.badge-green {
+    background: #10b981;
+}
+
+.badge-gray {
+    background: #6b7280; /* Tailwind gray-500 느낌 */
+}
+
+.badge-red {
+    background: #f44336;
+}
+
+/* ===== 포커스(깜박이/파란 링) 제거 패키지 ===== */
+/* 터치 하이라이트 제거 */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Firefox 내부 포커스 보더 제거 */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+}
+
+/* 체크박스 전용: 크롬 계열 추가 보정 */
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
+    appearance: checkbox;
+}

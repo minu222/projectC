@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>menu.html</title>
+    <!-- 아이콘 CDN -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+      <link rel="stylesheet" th:href="@{/css/public.css}">
+      <link rel="stylesheet" th:href="@{/css/menu.css}">
+  </head>
+  <body>
+  <!-- templates/fragments/menu.html -->
+  <div th:fragment="menu">
+      <header class="topbar">
+          <div>DW Academy</div>
+      </header>
+
+      <div class="sidebar">
+          <ul class="menu">
+              <li>
+                  <a class="link" th:href="@{/home}">
+                      <i class="fa-solid fa-house"></i> 홈
+                  </a>
+              </li>
+
+              <!-- 회원 정보 -->
+              <li>
+        <span class="submenu-toggle">
+          <i class="fas fa-users"></i> 회원 정보
+        </span>
+                  <ul class="submenu">
+                      <li>
+            <span class="submenu-toggle">
+              <i class="fas fa-user-cog"></i> 회원 관리
+            </span>
+                          <ul class="submenu">
+                              <li><a th:href="@{/templates/information/instructor_info}"><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a></li>
+                              <li><a th:href="@{/templates/information/student_info}"><i class="fas fa-user-graduate"></i> 학생 정보</a></li>
+                              <li><a th:href="@{/trash/info_trash}"><i class="fas fa-trash-alt"></i> 정보 휴지통</a></li>
+                              <li><a th:href="@{/templates/information/user_detail_info}"><i class="fas fa-id-card"></i> 회원 상세 정보</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              </li>
+
+              <!-- 발송 관리 -->
+              <li>
+                  <span class="submenu-toggle"><i class="fas fa-paper-plane"></i> 발송 관리</span>
+                  <ul class="submenu">
+                      <li><a th:href="@{/mail/instructor_mail}"><i class="fas fa-envelope"></i> 강사 메일 쓰기</a></li>
+                      <li><a th:href="@{/mail/email_send_log}"><i class="fas fa-envelope-open-text"></i> 이메일 발송 내역</a></li>
+                  </ul>
+              </li>
+
+              <!-- 교육과정 -->
+              <li>
+                  <span class="submenu-toggle"><i class="fas fa-book-open"></i> 교육과정</span>
+                  <ul class="submenu">
+                      <li><a th:href="@{/classroom/classroom_register}"><i class="fas fa-plus-square"></i> 강의실 등록</a></li>
+                      <li><a th:href="@{/classroom/classroom_update}"><i class="fas fa-edit"></i> 강의실 수정</a></li>
+                      <li><a th:href="@{/classroom/classroom_delete}"><i class="fas fa-trash"></i> 강의실 삭제</a></li>
+                      <li><a th:href="@{/templates/information/student_info}"><i class="fas fa-users"></i> 강의실 학생 정보</a></li>
+                      <li><a th:href="@{/manager/class_material_manager}"><i class="fas fa-folder-open"></i> 수업 자료 관리</a></li>
+                      <li><a th:href="@{/manager/test_question_manager}"><i class="fas fa-file-alt"></i> 시험 문제 관리</a></li>
+                      <li><a th:href="@{/manager/attendance_manager}"><i class="fas fa-calendar-check"></i> 출석 관리</a></li>
+                  </ul>
+              </li>
+
+              <!-- 결제 관리 -->
+              <li>
+                  <span class="submenu-toggle"><i class="fas fa-credit-card"></i> 결제 관리</span>
+                  <ul class="submenu">
+                      <li><a th:href="@{/order/order_list}"><i class="fas fa-list"></i> 주문 목록</a></li>
+                      <li><a th:href="@{/manager/pay_manager}"><i class="fas fa-money-check-alt"></i> 결제 관리</a></li>
+                      <li><a th:href="@{/manager/coupon_manager}"><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a></li>
+                  </ul>
+              </li>
+
+              <!-- 매출 관리 -->
+              <li>
+                  <span class="submenu-toggle"><i class="fas fa-chart-line"></i> 매출 관리</span>
+                  <ul class="submenu">
+                      <li><a th:href="@{/statistics/annual_sales_statistics}"><i class="fas fa-calendar"></i> 연별 매출 통계</a></li>
+                      <li><a th:href="@{/statistics/monthly_sales_statistics}"><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a></li>
+                      <li><a th:href="@{/statistics/course_sales_statistics}"><i class="fas fa-chalkboard"></i> 과정 매출 통계</a></li>
+                      <li><a th:href="@{/manager/tax_manager}"><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </div>
+  </div>
+
+
+  <!-- (필요 시) 서브메뉴 토글 스크립트 -->
+    <script>
+      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const submenu = btn.nextElementSibling;
+          if (!submenu || !submenu.classList.contains("submenu")) return;
+
+          const isOpen = submenu.classList.contains("open");
+          if (isOpen) {
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.classList.remove("open");
+            requestAnimationFrame(() => (submenu.style.height = "0px"));
+          } else {
+            submenu.classList.add("open");
+            submenu.style.height = submenu.scrollHeight + "px";
+            submenu.addEventListener(
+              "transitionend",
+              () => {
+                if (submenu.classList.contains("open"))
+                  submenu.style.height = "auto";
+              },
+              { once: true }
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
