@@ -1,0 +1,102 @@
+/* ===== 헤더 ===== */
+header {
+    background: #fff;
+    border-bottom: 2px solid #ffb400;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 네비 컨테이너 */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1400px;  /* 규격 고정 */
+    margin: 0 auto;
+    padding: 20px 30px;
+}
+
+/* 로고 */
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff8c00;
+}
+
+/* 1단계 메뉴 */
+nav ul {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 0;
+    display: block;
+}
+
+nav ul li a:hover {
+    color: #ff8c00;
+}
+
+/* 드롭다운 메뉴 */
+nav ul li ul.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 10px 0;
+    min-width: 220px;
+    z-index: 1000;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+nav ul li:hover > ul.dropdown {
+    display: block;
+}
+
+nav ul li ul li a {
+    padding: 10px 20px;
+    font-weight: 400;
+    font-size: 15px;
+    color: #444;
+}
+
+nav ul li ul li:hover > a {
+    background: #fdf3e3;
+    color: #ff8c00;
+}
+
+/* 2단계 드롭다운 (오른쪽으로 펼쳐짐) */
+nav ul li ul li ul.dropdown {
+    top: 0;
+    left: 100%;
+    margin-left: 2px;
+}
+
+/* 로그인/회원가입 영역 */
+.auth-links a {
+    text-decoration: none;
+    color: #444;
+    margin-left: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.auth-links a:hover {
+    color: #ff8c00;
+}
