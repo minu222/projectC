@@ -108,49 +108,5 @@
         </main>
       </div>
     </div>
-
-    <script>
-      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const submenu = btn.nextElementSibling;
-          if (!submenu || !submenu.classList.contains("submenu")) return;
-
-          const isOpen = submenu.classList.contains("open");
-          if (isOpen) {
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.classList.remove("open");
-            requestAnimationFrame(() => (submenu.style.height = "0px"));
-          } else {
-            submenu.classList.add("open");
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.addEventListener(
-              "transitionend",
-              () => {
-                if (submenu.classList.contains("open")) {
-                  submenu.style.height = "auto";
-                }
-              },
-              { once: true }
-            );
-          }
-        });
-      });
-
-      const blurSelectors = 'input[type="checkbox"], .btn-delete, a';
-      document.addEventListener("pointerup", (e) => {
-        if (e.target.matches(blurSelectors)) {
-          setTimeout(() => e.target.blur(), 0);
-        }
-      });
-      document.addEventListener("keyup", (e) => {
-        if (
-          (e.key === " " || e.key === "Enter") &&
-          e.target.matches(blurSelectors)
-        ) {
-          e.target.blur();
-        }
-      });
-    </script>
-    <script src="menu-loader.js" defer></script>
   </body>
 </html>

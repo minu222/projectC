@@ -17,7 +17,6 @@
 
       /* 접고 펴기 애니메이션 */
 
-    
       .filter-box {
         display: flex;
         align-items: center;
@@ -154,41 +153,5 @@
         </div>
       </main>
     </div>
-
-    <script>
-      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const submenu = btn.nextElementSibling;
-          if (!submenu || !submenu.classList.contains("submenu")) return;
-
-          const isOpen = submenu.classList.contains("open");
-          if (isOpen) {
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.classList.remove("open");
-            requestAnimationFrame(() => (submenu.style.height = "0px"));
-          } else {
-            submenu.classList.add("open");
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.addEventListener(
-              "transitionend",
-              () => {
-                if (submenu.classList.contains("open")) {
-                  submenu.style.height = "auto";
-                }
-              },
-              { once: true }
-            );
-          }
-        });
-      });
-      document.addEventListener("DOMContentLoaded", () => {
-        const checkAll = document.getElementById("checkAll");
-        const rowChecks = document.querySelectorAll(".row-check");
-        checkAll.addEventListener("change", () => {
-          rowChecks.forEach((chk) => (chk.checked = checkAll.checked));
-        });
-      });
-    </script>
-    <script src="menu-loader.js" defer></script>
   </body>
 </html>

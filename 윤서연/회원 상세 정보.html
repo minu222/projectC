@@ -178,24 +178,5 @@
         </main>
       </div>
     </div>
-
-    <script>
-      // 비밀번호 초기화 버튼
-      document.querySelector(".btn-reset").addEventListener("click", () => {
-        if (confirm("비밀번호를 기본값(12345678a)으로 초기화하시겠습니까?")) {
-          // Ajax로 초기화 요청
-          alert("비밀번호가 초기화되었습니다.");
-        }
-      });
-
-      // 로그인 실패 횟수 초기화
-      document.querySelector(".btn-unlock").addEventListener("click", () => {
-        if (confirm("로그인 실패 횟수를 초기화하시겠습니까?")) {
-          // Ajax로 초기화 요청
-          alert("로그인 실패 횟수가 초기화되었습니다.");
-        }
-      });
-    </script>
-    <script src="menu-loader.js" defer></script>
   </body>
 </html>

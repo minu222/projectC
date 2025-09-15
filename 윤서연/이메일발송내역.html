@@ -11,7 +11,6 @@
     <style>
       /* ===== 공통 레이아웃 ===== */
 
-   
       /* ===== 검색 박스 & 버튼 영역 ===== */
       .search-area {
         display: flex;
@@ -191,43 +190,5 @@
         </div>
       </main>
     </div>
-
-    <script>
-      // 사이드바 토글
-      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const submenu = btn.nextElementSibling;
-          if (!submenu || !submenu.classList.contains("submenu")) return;
-          const isOpen = submenu.classList.contains("open");
-          if (isOpen) {
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.classList.remove("open");
-            requestAnimationFrame(() => (submenu.style.height = "0px"));
-          } else {
-            submenu.classList.add("open");
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.addEventListener(
-              "transitionend",
-              () => {
-                if (submenu.classList.contains("open")) {
-                  submenu.style.height = "auto";
-                }
-              },
-              { once: true }
-            );
-          }
-        });
-      });
-
-      // 전체 선택 체크박스
-      document.addEventListener("DOMContentLoaded", () => {
-        const checkAll = document.getElementById("checkAll");
-        const rowChecks = document.querySelectorAll(".row-check");
-        checkAll.addEventListener("change", () => {
-          rowChecks.forEach((chk) => (chk.checked = checkAll.checked));
-        });
-      });
-    </script>
-    <script src="menu-loader.js" defer></script>
   </body>
 </html>

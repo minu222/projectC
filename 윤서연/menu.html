@@ -268,31 +268,5 @@
     </div>
 
     <!-- (필요 시) 서브메뉴 토글 스크립트 -->
-    <script>
-      document.querySelectorAll(".submenu-toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const submenu = btn.nextElementSibling;
-          if (!submenu || !submenu.classList.contains("submenu")) return;
-
-          const isOpen = submenu.classList.contains("open");
-          if (isOpen) {
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.classList.remove("open");
-            requestAnimationFrame(() => (submenu.style.height = "0px"));
-          } else {
-            submenu.classList.add("open");
-            submenu.style.height = submenu.scrollHeight + "px";
-            submenu.addEventListener(
-              "transitionend",
-              () => {
-                if (submenu.classList.contains("open"))
-                  submenu.style.height = "auto";
-              },
-              { once: true }
-            );
-          }
-        });
-      });
-    </script>
   </body>
 </html>
