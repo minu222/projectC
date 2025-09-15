@@ -1,0 +1,222 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* ===== 헤더 ===== */
+header {
+    background: #fff;
+    border-bottom: 2px solid #ffb400;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 30px;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff8c00;
+}
+
+nav ul {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 0;
+    display: block;
+}
+
+nav ul li:hover > a {
+    color: #ff8c00;
+}
+
+nav ul li ul.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 10px 0;
+    min-width: 220px;
+    z-index: 1000;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+nav ul li:hover > ul.dropdown {
+    display: block;
+}
+
+nav ul li ul li a {
+    padding: 10px 20px;
+    font-weight: 400;
+    font-size: 15px;
+    color: #444;
+}
+
+nav ul li ul li:hover > a {
+    background: #fdf3e3;
+    color: #ff8c00;
+}
+
+nav ul li ul li ul.dropdown {
+    top: 0;
+    left: 100%;
+    margin-left: 2px;
+}
+
+.auth-links a {
+    text-decoration: none;
+    color: #444;
+    margin-left: 15px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    color: #ff8c00;
+}
+
+/* ===== 배너 ===== */
+.banner {
+    background: url("https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=1920&auto=format&fit=crop") center/cover no-repeat;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+}
+
+/* ===== 공통 섹션 ===== */
+section {
+    max-width: 1400px;
+    margin: 70px auto;
+    padding: 0 20px;
+}
+
+section h2 {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+    color: #222;
+}
+
+/* ===== 카드 레이아웃 ===== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: transform 0.25s, box-shadow 0.25s;
+    text-decoration: none;   /* a태그 밑줄 제거 */
+    color: inherit;          /* 기본 글자색 유지 */
+    display: block;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border: 1px solid #ff8c00;
+}
+
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 19px;
+    margin: 0 0 10px;
+    color: #111;
+}
+
+.card p {
+    font-size: 15px;
+    color: #555;
+}
+
+/* ===== 푸터 ===== */
+footer {
+    background: #222;
+    color: #ddd;
+    margin-top: 60px;
+    padding: 50px 20px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #ffb400;
+}
+
+.awards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: 0 auto 30px;
+}
+
+.badge {
+    background: #333;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+footer p {
+    text-align: center;
+    font-size: 13px;
+    color: #aaa;
+}
