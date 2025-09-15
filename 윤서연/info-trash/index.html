@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./공통css.css" />
+    <style>
+      /* 메인 메뉴 */
+
+      /* 부제목 */
+
+      /* 하위 내용 */
+
+      /* 접고 펴기 애니메이션 */
+
+      .filter-box {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+      }
+
+      .filter-box input,
+      .filter-box select {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      .filter-box button {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .filter-box button:hover {
+        background: #1d4ed8;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+
+      table thead {
+        background: #f0f0f0;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      table th {
+        font-weight: bold;
+      }
+
+      .btn-restore {
+        background: #2196f3;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 14px;
+        cursor: pointer;
+      }
+
+      .btn-restore:hover {
+        background: #1976d2;
+      }
+
+      .badge-red {
+        background: #e74c3c;
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>정보 휴지통</h2>
+          <div class="filter-box">
+            <label
+              >검색:
+              <select>
+                <option>- 전체 -</option>
+                <option>이름</option>
+                <option>아이디</option>
+                <option>구분</option>
+              </select>
+              <input placeholder="검색어 입력" type="text" />
+            </label>
+            <button>검색</button>
+            <div style="margin-left: auto">
+              <button class="btn-restore">♻ 선택 복원</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th><input id="checkAll" type="checkbox" /></th>
+                <th>No</th>
+                <th>구분</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>전화번호</th>
+                <th>삭제일</th>
+                <th>삭제 예정일</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item, stat : ${trashList}">
+                <td>
+                  <input
+                    class="row-check"
+                    th:value="${item.id}"
+                    type="checkbox"
+                  />
+                </td>
+                <td th:text="${stat.count}"></td>
+                <td th:text="${item.userType}"></td>
+                <td th:text="${item.refId}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.email}"></td>
+                <td th:text="${item.phone}"></td>
+                <td
+                  th:text="${#temporals.format(item.deletedAt, 'yyyy-MM-dd')}"
+                ></td>
+                <td
+                  th:text="${#temporals.format(item.expiresAt, 'yyyy-MM-dd')}"
+                ></td>
+                <td><span class="badge-red">탈퇴</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
