@@ -277,59 +277,7 @@
       </div>
     </div>
 
-    <script>
-      // 팝업 닫기
-      function closePopup() {
-        document.getElementById("mailPopup").style.display = "none";
-      }
+  
 
-      // 받는 사람 추가
-      const receiverInput = document.getElementById("receiverInput");
-      const receiverList = document.getElementById("receiverList");
-
-      receiverInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && receiverInput.value.trim() !== "") {
-          e.preventDefault();
-          addReceiver(receiverInput.value.trim());
-          receiverInput.value = "";
-        }
-      });
-
-      function addReceiver(value) {
-        const tag = document.createElement("div");
-        tag.classList.add("receiver-tag");
-        tag.innerHTML = `<span>${value}</span><button>&times;</button>`;
-        tag.querySelector("button").onclick = () => tag.remove();
-        receiverList.appendChild(tag);
-      }
-
-      // 파일 드래그 & 클릭 업로드
-      const fileDrop = document.getElementById("fileDrop");
-      fileDrop.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        fileDrop.classList.add("dragover");
-      });
-      fileDrop.addEventListener("dragleave", () =>
-        fileDrop.classList.remove("dragover")
-      );
-      fileDrop.addEventListener("drop", (e) => {
-        e.preventDefault();
-        fileDrop.classList.remove("dragover");
-        alert(`${e.dataTransfer.files.length}개 파일 첨부됨`);
-      });
-      fileDrop.addEventListener("click", () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.multiple = true;
-        input.onchange = (e) => alert(`${e.target.files.length}개 파일 선택됨`);
-        input.click();
-      });
-
-      // 주소록 팝업 (샘플)
-      function openAddressBook() {
-        alert("주소록 팝업 열기 (별도 구현 필요)");
-      }
-    </script>
-    <script src="menu-loader.js" defer></script>
   </body>
 </html>

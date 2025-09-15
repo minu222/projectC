@@ -25,32 +25,6 @@
         </div>
       </main>
     </div>
-    <script src="menu-loader.js" defer></script>
-    <script>
-      const yctx = document.getElementById("yearlyChart").getContext("2d");
-      new Chart(yctx, {
-        type: "bar",
-        data: {
-          labels: ["2021", "2022", "2023", "2024", "2025"],
-          datasets: [
-            {
-              label: "연 매출(₩)",
-              data: [12000000, 15000000, 17500000, 21000000, 19500000],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { callback: (v) => "₩" + Number(v).toLocaleString() },
-            },
-          },
-        },
-      });
-    </script>
+
   </body>
 </html>
