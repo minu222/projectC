@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DW Academy - 강사 정보</title>
+    <link rel="stylesheet" th:href="@{/css/public.css}" />
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- 프래그먼트 메뉴 -->
+<div th:replace="fragments/menu :: menu"></div>
+
+<div class="container">
+    <main class="main">
+        <div class="content-box">
+            <h2>강사 정보</h2>
+
+            <!-- 검색 필터 -->
+            <div class="filter-box">
+                <label>
+                    소속:
+                    <select>
+                        <option>- 전체 -</option>
+                        <option>DW</option>
+                        <option>JS</option>
+                    </select>
+                </label>
+                <label>
+                    검색:
+                    <select>
+                        <option>- 전체 -</option>
+                        <option>이름</option>
+                        <option>아이디</option>
+                    </select>
+                    <input placeholder="검색어 입력" type="text"/>
+                </label>
+                <button>검색</button>
+            </div>
+
+            <!-- 강사 리스트 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th><input id="checkAll" type="checkbox"/></th>
+                    <th>No</th>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>전화번호</th>
+                    <th>상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="instructor, stat : ${instructors}">
+                    <td><input type="checkbox" th:value="${instructor.id}"/></td>
+                    <td th:text="${stat.count}"></td>
+                    <td>
+                        <a th:href="@{'/admin/instructors/' + ${instructor.id}}"
+                           th:text="${instructor.nickname}"></a>
+                    </td>
+                    <td th:text="${instructor.name}"></td>
+                    <td th:text="${instructor.email}"></td>
+                    <td th:text="${instructor.phone}"></td>
+                    <td>
+                        <span class="badge badge-green" th:if="${instructor.status == T(com.lms.gitprojectc.domain.UserStatus).active}">정상</span>
+                        <span class="badge badge-gray" th:if="${instructor.status == T(com.lms.gitprojectc.domain.UserStatus).suspended}">휴면</span>
+                        <span class="badge badge-red" th:if="${instructor.status == T(com.lms.gitprojectc.domain.UserStatus).deleted}">탈퇴</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    // 체크박스 전체 선택
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkAll = document.getElementById("checkAll");
+        const rowChecks = document.querySelectorAll("tbody input[type='checkbox']");
+        checkAll.addEventListener("change", () => {
+            rowChecks.forEach(chk => chk.checked = checkAll.checked);
+        });
+    });
+</script>
+</body>
+</html>
