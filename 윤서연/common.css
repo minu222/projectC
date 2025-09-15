@@ -19,6 +19,7 @@
 }
 
 body {
+  overflow: hidden;
   margin: 0;
   font-family: "Noto Sans KR", sans-serif;
   background: #f4f6f9;
