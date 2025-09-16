@@ -37,9 +37,8 @@ dependencies {
     // Thymeleaf (View Template)
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-
-    // Swagger(OpenAPI) - 선택
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+    // Validation (javax → jakarta)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
