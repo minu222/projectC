@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<main class="dashboard" th:fragment="dashboard">
+    <!-- 📊 통계 카드 -->
+    <div class="stats">
+        <div class="card" th:text="${studentCount} + '명'">120명<span>총 회원(학생)</span></div>
+        <div class="card" th:text="${teacherCount} + '명'">35명<span>총 강사</span></div>
+        <div class="card" th:text="${courseCount} + '개'">25개<span>개설 과정</span></div>
+        <div class="card" th:text="${avgCompletion} + '%'">85%<span>평균 수료율</span></div>
+        <div class="card" th:text="${cancelRate} + '%'">12%<span>수강 취소율</span></div>
+        <div class="card" th:text="'₩' + ${monthRevenue}">₩12,530,000<span>이번 달 매출</span></div>
+    </div>
+
+    <!-- 📢 알림 -->
+    <div class="alerts">
+        <h3>📢 최근 알림 / 처리 필요</h3>
+        <ul>
+            <li th:each="notice : ${notices}" th:text="${notice}">강사 김민수 강의자료 업로드 요청</li>
+        </ul>
+    </div>
+
+    <!-- 🔍 검색 + 테이블 -->
+    <div class="search-box">
+        <input placeholder="과정명 검색" type="text" />
+        <input placeholder="예: 2025/01" type="text" />
+        <select>
+            <option>전체</option>
+            <option>정상</option>
+            <option>수강취소</option>
+            <option>수료</option>
+        </select>
+        <button>검색</button>
+    </div>
+
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>년도/차수</th>
+            <th>과정명</th>
+            <th>소속</th>
+            <th>수강생</th>
+            <th>진도율</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>2025/01</td>
+            <td>스마트테스트</td>
+            <td>(주)위런소프트</td>
+            <td>홍길동</td>
+            <td>90%</td>
+            <td><span class="badge normal">정상</span></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>2024/33</td>
+            <td>인터넷활용</td>
+            <td>(주)위런소프트</td>
+            <td>이영희</td>
+            <td>75%</td>
+            <td><span class="badge cancel">수강취소</span></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>2024/20</td>
+            <td>엑셀활용</td>
+            <td>(주)위런소프트</td>
+            <td>김민수</td>
+            <td>100%</td>
+            <td><span class="badge done">수료</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 💰 매출 리포트 -->
+    <div class="sales-report">
+        <h3>💰 이번 달 매출 리포트</h3>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+</main>
+</body>
+</html>
