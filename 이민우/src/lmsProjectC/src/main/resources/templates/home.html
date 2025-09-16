@@ -11,7 +11,11 @@
   </head>
   <body>
   <div th:replace="fragments/topbar :: topbar"></div>
+  <div class="container">
   <div th:replace="fragments/sidebar :: sidebar"></div>
+      <main>
   <div th:replace="fragments/dashboard :: dashboard"></div>
+      </main>
+  </div>
   </body>
 </html>
