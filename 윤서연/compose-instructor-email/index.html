@@ -9,167 +9,296 @@
     />
     <link rel="stylesheet" href="/common.css" />
     <style>
-      /* ===== 팝업 레이아웃 ===== */
-      .popup-overlay {
+      :root {
+        --bg: #f3f4f6; /* 배경 */
+        --card: #ffffff; /* 카드/패널 */
+        --text: #111827; /* 본문 텍스트 */
+        --muted: #6b7280; /* 보조 텍스트 */
+        --primary: #1e3a8a; /* 포인트 컬러 */
+        --accent: #2563eb; /* 보조 액센트 (버튼 등) */
+        --ring: rgba(30, 58, 138, 0.15); /* 포커스 링 */
+      }
+
+      /* =============================================
+   메일 쓰기 팝업 전용 스타일 (HTML 변경 없음)
+   기존 inline <style> 보다 높은 우선순위를 위해
+   #mailPopup 컨텍스트로 한 단계 더 구체화했습니다.
+   ============================================= */
+
+      /* 오버레이 */
+      #mailPopup.popup-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        inset: 0;
+        z-index: 999;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 999;
+        background: rgba(0, 0, 0, 0.45);
+        padding: 16px; /* 모바일에서 가장자리 여백 */
       }
 
-      .popup {
-        background: #fff;
-        width: 900px;
-        max-height: 90vh;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      /* 팝업 컨테이너 */
+      #mailPopup .popup {
+        width: clamp(320px, 92vw, 900px);
+        max-height: min(90vh, 860px);
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
 
-      .popup-header {
-        background: #1e3a8a;
+      /* 헤더 */
+      #mailPopup .popup-header {
+        background: var(--primary);
         color: #fff;
-        padding: 12px;
-        font-weight: bold;
+        font-weight: 800;
+        padding: 14px 16px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
       }
-
-      .popup-header button {
-        background: transparent;
-        border: none;
+      #mailPopup .popup-header button {
         color: #fff;
-        font-size: 18px;
+        font-size: 22px;
+        line-height: 1;
+        border: none;
+        background: transparent;
         cursor: pointer;
       }
-
-      .popup-body {
-        padding: 20px;
-        overflow-y: auto;
-        flex: 1;
-      }
-
-      .form-group {
-        margin-bottom: 15px;
-      }
-
-      .form-label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 6px;
-      }
-
-      /* 받는 사람 */
-      .receiver-box {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .receiver-list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-        flex: 1;
-        min-height: 40px;
-        padding: 6px;
-        border: 1px solid #ccc;
+      #mailPopup .popup-header button:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
         border-radius: 6px;
-        background: #fafafa;
       }
 
-      .receiver-tag {
-        background: #1e3a8a;
+      /* 본문 */
+      #mailPopup .popup-body {
+        padding: clamp(14px, 3vw, 20px);
+        overflow: auto;
+        flex: 1;
+      }
+
+      /* 공통 폼 */
+      #mailPopup .form-group {
+        margin-bottom: 16px;
+      }
+      #mailPopup .form-label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #111827;
+      }
+
+      /* 받는사람 행 */
+      #mailPopup .receiver-box {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr minmax(160px, 240px) auto;
+        align-items: start;
+      }
+      #mailPopup #receiverList.receiver-list {
+        min-height: 44px;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fafafa;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+      #mailPopup .receiver-tag {
+        background: var(--primary);
         color: #fff;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 6px 10px;
+        border-radius: 999px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 8px;
         font-size: 13px;
       }
-
-      .receiver-tag button {
+      #mailPopup .receiver-tag button {
+        color: #fff;
         background: transparent;
         border: none;
-        color: #fff;
         cursor: pointer;
+        font-size: 14px;
       }
-
-      .address-book-btn {
-        padding: 6px 12px;
+      #mailPopup #receiverInput {
+        height: 44px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+      }
+      #mailPopup #receiverInput:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      #mailPopup .address-book-btn {
+        height: 44px;
+        padding: 0 14px;
         border: none;
-        border-radius: 4px;
-        background: #3498db;
+        border-radius: 10px;
+        cursor: pointer;
+        background: var(--accent);
         color: #fff;
-        cursor: pointer;
+        font-weight: 700;
+      }
+      #mailPopup .address-book-btn:hover {
+        filter: brightness(0.98);
       }
 
-      /* 제목 */
-      .title-box {
-        display: flex;
+      /* 제목 행 */
+      #mailPopup .title-box {
+        display: grid;
         gap: 10px;
+        grid-template-columns: 1fr minmax(160px, 260px);
+      }
+      #mailPopup .title-box input,
+      #mailPopup .title-box select {
+        height: 42px;
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 14px;
+      }
+      #mailPopup .title-box input:focus,
+      #mailPopup .title-box select:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
       }
 
-      .title-box input,
-      .title-box select {
-        flex: 1;
-        padding: 6px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-
-      /* 파일첨부 */
-      .file-drop-area {
-        border: 2px dashed #ccc;
-        padding: 20px;
+      /* 파일 첨부 드롭존 */
+      #mailPopup #fileDrop.file-drop-area {
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #f9fafb;
         text-align: center;
-        border-radius: 6px;
-        background: #fafafa;
+        padding: 22px;
+        color: #475569;
         cursor: pointer;
+      }
+      /* 드래그중 표시 (JS에서 class "is-dragover" 토글해 사용) */
+      #mailPopup #fileDrop.is-dragover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+        color: #1e3a8a;
       }
 
       /* 에디터 */
-      .editor-toolbar {
-        border: 1px solid #ccc;
+      #mailPopup .editor-toolbar {
+        border: 1px solid #e5e7eb;
         border-bottom: none;
-        padding: 6px;
-        background: #f1f1f1;
+        padding: 8px;
+        background: #f3f4f6;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
       }
-
-      .editor-toolbar button,
-      .editor-toolbar select {
-        margin-right: 6px;
-        padding: 4px 8px;
+      #mailPopup .editor-toolbar button,
+      #mailPopup .editor-toolbar select {
+        height: 34px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
         cursor: pointer;
+        font-size: 14px;
       }
-
-      .editor {
+      #mailPopup .editor-toolbar button:hover {
+        background: #f9fafb;
+      }
+      #mailPopup .editor {
         min-height: 300px;
-        border: 1px solid #ccc;
-        border-radius: 0 0 6px 6px;
-        padding: 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 0 0 10px 10px;
+        padding: 12px;
+        background: #fff;
         outline: none;
       }
+      #mailPopup .editor:focus {
+        box-shadow: 0 0 0 4px var(--ring);
+      }
 
-      .btn-submit {
-        margin-top: 15px;
-        background: #1e3a8a;
-        color: #fff;
-        padding: 10px 20px;
+      /* 제출 버튼 */
+      #mailPopup .btn-submit {
+        margin-top: 16px;
+        height: 44px;
         border: none;
-        border-radius: 6px;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
         cursor: pointer;
         font-size: 15px;
+      }
+      #mailPopup .btn-submit:hover {
+        filter: brightness(0.98);
+      }
+
+      /* 배지 (다른 페이지와 톤 맞춤; 필요시 재사용) */
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .badge.normal {
+        background: rgba(16, 185, 129, 0.12);
+        color: #065f46;
+      }
+      .badge.done {
+        background: rgba(99, 102, 241, 0.12);
+        color: #1e1b4b;
+      }
+      .badge.cancel {
+        background: rgba(239, 68, 68, 0.12);
+        color: #7f1d1d;
+      }
+
+      /* 반응형 */
+      @media (max-width: 860px) {
+        #mailPopup .receiver-box {
+          grid-template-columns: 1fr 1fr auto;
+        }
+        #mailPopup .title-box {
+          grid-template-columns: 1fr 200px;
+        }
+      }
+      @media (max-width: 640px) {
+        #mailPopup.popup-overlay {
+          padding: 10px;
+        }
+        #mailPopup .receiver-box {
+          grid-template-columns: 1fr;
+        }
+        #mailPopup .address-book-btn {
+          justify-self: start;
+        }
+        #mailPopup .title-box {
+          grid-template-columns: 1fr;
+        }
+        #mailPopup .btn-submit {
+          width: 100%;
+        }
+      }
+
+      /* 접근성 */
+      #mailPopup :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
+
+      /* 프린트 시 팝업 숨김 (선택) */
+      @media print {
+        #mailPopup {
+          display: none !important;
+        }
       }
     </style>
   </head>

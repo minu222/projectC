@@ -5,6 +5,147 @@
     <title>수업 자료 관리</title>
     <link rel="stylesheet" href="/common.css" />
   </head>
+  <style>
+   
+    /* 검색 박스 */
+    .search-box.materials-search {
+      display: grid;
+      gap: 12px;
+      margin: 8px 0 16px;
+      grid-template-columns: 1fr auto auto;
+    }
+    .search-box.materials-search input[type="text"],
+    .search-box.materials-search .btn-search,
+    .search-box.materials-search .btn-submit {
+      height: 42px;
+      font-size: 14px;
+      border-radius: 10px;
+    }
+    .search-box.materials-search input[type="text"] {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    .search-box.materials-search input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .btn-search {
+      padding: 10px 14px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      color: #111827;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-search:hover {
+      background: #f9fafb;
+    }
+    .btn-submit {
+      padding: 10px 14px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* 표 */
+    .data-table.materials-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .data-table.materials-table thead th {
+      background: #f9fafb;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+    }
+    .data-table.materials-table td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    .data-table.materials-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table.materials-table tbody tr:hover {
+      background: #fcfcfd;
+    }
+
+    /* 열 별 디테일 */
+    .materials-table td:nth-child(1) {
+      width: 72px;
+      text-align: center;
+      color: #374151;
+    }
+    .materials-table td:nth-child(2) {
+      overflow-wrap: anywhere;
+    }
+    .materials-table td:nth-child(3) {
+      font-variant-numeric: tabular-nums;
+      color: #374151;
+    }
+    .materials-table td:nth-child(4) a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .materials-table td:nth-child(4) a:hover {
+      text-decoration: underline;
+    }
+    /* 다운로드 링크에 아이콘 느낌(문자) 추가 — HTML 수정 없이 */
+    .materials-table td:nth-child(4) a::before {
+      content: "⤓ ";
+    }
+
+    /* 작은 화면: HTML 수정 없이 가로 스크롤 */
+    @media (max-width: 720px) {
+      .data-table.materials-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-radius: 12px;
+      }
+      .search-box.materials-search {
+        grid-template-columns: 1fr;
+      }
+      .btn-submit {
+        width: 100%;
+      }
+    }
+
+    /* 접근성 */
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+      border-radius: 8px;
+    }
+
+    /* 프린트 최적화(선택) */
+    @media print {
+      .topbar {
+        position: static;
+        border: none;
+      }
+      .container {
+        min-height: auto;
+      }
+      .content-box {
+        box-shadow: none;
+      }
+    }
+  </style>
   <body>
     <header class="topbar">
       <div>DW Academy</div>
