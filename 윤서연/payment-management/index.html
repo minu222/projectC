@@ -3,8 +3,143 @@
   <head>
     <meta charset="UTF-8" />
     <title>결제 관리</title>
-    <link rel="stylesheet" href="/common.css" />
-  </head>
+    <link rel="stylesheet" href="/common.css" /></head
+  ><style>
+    /* 검색 박스: 입력/셀렉트/버튼 3개가 자연스럽게 접힘 */
+    .search-box.payments-search {
+      display: grid;
+      gap: 12px;
+      margin: 8px 0 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .search-box.payments-search input[type="text"],
+    .search-box.payments-search select,
+    .search-box.payments-search .btn-search {
+      height: 42px;
+      font-size: 14px;
+      border-radius: 10px;
+    }
+    .search-box.payments-search input[type="text"],
+    .search-box.payments-search select {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    .search-box.payments-search input[type="text"]:focus,
+    .search-box.payments-search select:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .btn-search {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      color: #111827;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    .btn-search:hover {
+      background: #f9fafb;
+    }
+
+    /* 표 */
+    .data-table.payments-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .data-table.payments-table thead th {
+      background: #f9fafb;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+    }
+    .data-table.payments-table td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    .data-table.payments-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table.payments-table tbody tr:hover {
+      background: #fcfcfd;
+    }
+
+    /* 열 디테일 */
+    .payments-table td:nth-child(1), /* 결제번호 */
+.payments-table td:nth-child(2) {
+      /* 주문번호 */
+      font-variant-numeric: tabular-nums;
+    }
+    .payments-table td:nth-child(3) {
+      /* 금액 */
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* 배지 (상태) */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .badge.normal {
+      background: rgba(16, 185, 129, 0.12);
+      color: #065f46;
+    } /* 승인 */
+    .badge.cancel {
+      background: rgba(220, 38, 38, 0.12);
+      color: #7f1d1d;
+    } /* 취소/환불 */
+    .badge.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: #8a4b00;
+    } /* 승인대기 등 */
+
+    /* 작은 화면: HTML 수정 없이 가로 스크롤 */
+    @media (max-width: 720px) {
+      .data-table.payments-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-radius: 12px;
+      }
+      .btn-search {
+        width: 100%;
+      }
+    }
+
+    /* 접근성 */
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+      border-radius: 8px;
+    }
+
+    /* 프린트 최적화(선택) */
+    @media print {
+      .topbar {
+        position: static;
+        border: none;
+      }
+      .container {
+        min-height: auto;
+      }
+      .content-box {
+        box-shadow: none;
+      }
+    }
+  </style>
   <body>
     <header class="topbar">
       <div>DW Academy</div>
