@@ -1,0 +1,86 @@
+.sidebar {
+    overflow: hidden;
+    position: relative;
+    padding-top: 80px;
+    width: 260px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
+}
+
+.menu,
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 상단 링크/토글 버튼 공통 모양 유지 */
+.menu > li > .submenu-toggle,
+.menu > li > .link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    margin: 6px 10px;
+    border-radius: 8px;
+    background: #1e3a8a;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.menu > li > .submenu-toggle:hover,
+.menu > li > .link:hover {
+    background: #374eb8;
+    transform: translateX(2px);
+}
+
+.submenu > li > .submenu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    margin: 4px 14px;
+    border-radius: 6px;
+    background: #f9fafb;
+    color: #111827;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #e5e7eb;
+}
+
+.submenu li ul li a,
+.submenu li a {
+    display: block;
+    padding: 8px 14px;
+    margin: 2px 14px 2px 28px;
+    font-size: 13px;
+    text-decoration: none;
+    color: #4b5563;
+    border-radius: 4px;
+}
+.submenu li ul li a:hover,
+.submenu li a:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* ▼ JS 없이 열고 닫기: max-height 트릭 */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.submenu-check {
+    display: none;
+} /* 접근성 배려하려면 visually-hidden 처리해도 OK */
+
+/* 체크되면 인접한 submenu 펼침 */
+.submenu-check:checked + .submenu {
+    transition: 0.5s ease-in-out;
+    max-height: 1200px;
+} /* 필요시 값 키워도 됨 */
