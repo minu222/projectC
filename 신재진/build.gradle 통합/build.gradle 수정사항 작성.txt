@@ -1,0 +1,8 @@
+25-09-16 11:43
+
+삭제
+    // Validation (javax → jakarta)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Security (BCrypt 포함)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
