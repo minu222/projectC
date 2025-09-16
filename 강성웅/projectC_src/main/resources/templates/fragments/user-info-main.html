@@ -1,0 +1,228 @@
+<section class="main-content" th:fragment="main"
+         xmlns:th="http://www.thymeleaf.org"
+         th:with="u=${me != null ? me : session.loginUser}">
+    <div class="container">
+        <div class="header">
+            <h1>회원 정보 수정</h1>
+            <p>프로필 정보를 업데이트하세요</p>
+        </div>
+
+        <div class="content">
+            <div class="profile-section">
+                <div class="profile-pic-wrapper">
+                    <div class="profile-pic" id="profilePic">
+                        <span class="plus-icon" id="plusIcon">+</span>
+                        <img id="profileImage" src="#" alt="프로필 이미지" style="display:none;">
+                        <input type="file" id="profileInput" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h3 id="displayName" th:text="${u != null ? u.name : '홍길동'}">Hong Gil Dong</h3>
+                    <p id="displayEmail" th:text="${u != null ? u.email : 'hong@mail.co.kr'}">hong@mail.co.kr</p>
+                </div>
+            </div>
+
+            <!-- 저장은 /api/profile/update 로 x-www-form-urlencoded 전송 -->
+            <form class="form-grid" id="editForm" th:action="@{/api/profile/update}" method="post">
+                <!-- 닉네임(아이디) -->
+                <div class="input-group">
+                    <label for="username">아이디</label>
+                    <input type="text" id="username" name="nickname" class="input-field"
+                           th:value="${u != null ? u.nickname : 'hong123'}" readonly>
+                </div>
+
+                <!-- 비밀번호 변경(선택) -->
+                <div class="row">
+                    <div class="input-group">
+                        <label for="password">새 비밀번호</label>
+                        <input type="password" id="password" name="newPassword"
+                               class="input-field" placeholder="새 비밀번호" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">비밀번호 확인</label>
+                        <input type="password" id="confirmPassword" name="newPassword2"
+                               class="input-field" placeholder="비밀번호 확인" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="name" class="input-field"
+                           th:value="${u != null ? u.name : ''}" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">핸드폰 번호</label>
+                    <input type="text" id="phone" name="phone" class="input-field"
+                           th:value="${u != null ? u.phone : ''}" placeholder="010-1234-5678" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="address">주소</label>
+                    <input type="text" id="address" name="address" class="input-field"
+                           th:value="${u != null ? u.address : ''}" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="detailAddress">상세주소</label>
+                    <input type="text" id="detailAddress" name="detailAddress"
+                           class="input-field" readonly>
+                </div>
+
+                <!-- 이메일은 서버 업데이트 대상이 아니라면 name을 빼거나 readonly 유지 -->
+                <div class="input-group">
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" class="input-field"
+                           th:value="${u != null ? u.email : ''}" readonly>
+                </div>
+
+                <div class="checkbox-group" id="checkboxGroup">
+                    <h4>수신 동의 설정</h4>
+                    <div class="checkbox-item">
+                        <label>
+                            <input type="checkbox" id="emailAgree" disabled>
+                            <span class="checkmark"></span>
+                            이메일 수신 동의
+                        </label>
+                        <label style="margin-left:16px;">
+                            <input type="checkbox" id="messageAgree" disabled>
+                            <span class="checkmark"></span>
+                            쪽지 수신 동의
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" id="editBtn">수정하기</button>
+                    <div>
+                        <!-- type="submit" 으로 두고 JS에서 fetch로 가로채 전송 -->
+                        <button type="submit" class="btn btn-primary" id="saveBtn" disabled>저장하기</button>
+                        <button type="button" class="btn btn-secondary" id="closeBtn">닫기</button>
+                    </div>
+                </div>
+            </form>
+
+            <p id="editMsg" style="margin-top:12px; display:none;"></p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const $ = (id) => document.getElementById(id);
+
+            const profilePic   = $('profilePic');
+            const profileInput = $('profileInput');
+            const profileImage = $('profileImage');
+            const plusIcon     = $('plusIcon');
+            const editBtn      = $('editBtn');
+            const saveBtn      = $('saveBtn');
+            const closeBtn     = $('closeBtn');
+            const form         = $('editForm');
+            const msgEl        = $('editMsg');
+
+            const editableIds = ['password','confirmPassword','name','phone','address','detailAddress'];
+            const checkIds    = ['emailAgree','messageAgree'];
+
+            function setReadonly(on) {
+                editableIds.forEach(id => {
+                    const el = $(id);
+                    if (!el) return;
+                    if (on) {
+                        el.setAttribute('readonly', 'readonly');
+                        el.classList.remove('editing');
+                    } else {
+                        el.removeAttribute('readonly');
+                        el.classList.add('editing');
+                    }
+                });
+                checkIds.forEach(id => {
+                    const el = $(id);
+                    if (el) el.disabled = on;
+                });
+                if (saveBtn) saveBtn.disabled = on;
+            }
+
+            function previewImage(file) {
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profileImage.src = e.target.result;
+                    profileImage.style.display = 'block';
+                    if (plusIcon) plusIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // 이벤트: 프로필 이미지 선택
+            if (profilePic && profileInput) {
+                profilePic.addEventListener('click', () => profileInput.click());
+                profileInput.addEventListener('change', (e) => previewImage(e.target.files && e.target.files[0]));
+            }
+
+            // 수정 모드
+            if (editBtn) editBtn.addEventListener('click', () => setReadonly(false));
+
+            // 저장(폼 submit을 가로채서 fetch로 전송)
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!saveBtn.disabled) {
+                        try {
+                            const body = new URLSearchParams(new FormData(form));
+
+                            // 간단한 클라이언트 검증(선택)
+                            const pw1 = $('password').value.trim();
+                            const pw2 = $('confirmPassword').value.trim();
+                            if (pw1 || pw2) {
+                                if (pw1.length < 8) throw new Error('비밀번호는 8자 이상이어야 합니다.');
+                                if (pw1 !== pw2)   throw new Error('비밀번호 확인이 일치하지 않습니다.');
+                            }
+
+                            const res = await fetch(form.getAttribute('action'), {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                                body
+                            });
+                            const json = await res.json().catch(() => ({}));
+
+                            if (!res.ok || !json.ok) {
+                                throw new Error(json.msg || '저장에 실패했습니다.');
+                            }
+
+                            // 성공 처리
+                            if (msgEl) {
+                                msgEl.style.display = 'block';
+                                msgEl.style.color = '#10b981';
+                                msgEl.textContent = '저장되었습니다.';
+                            }
+                            setReadonly(true);
+
+                            // 화면 표시 갱신
+                            const nameVal  = $('name').value.trim();
+                            if (nameVal)  { const dn = document.getElementById('displayName'); if (dn) dn.textContent = nameVal; }
+                        } catch (err) {
+                            if (msgEl) {
+                                msgEl.style.display = 'block';
+                                msgEl.style.color = '#e11d48';
+                                msgEl.textContent = err.message || '오류가 발생했습니다.';
+                            } else {
+                                alert(err.message || '오류가 발생했습니다.');
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 닫기
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    if (history.length > 1) history.back();
+                    else window.location.href = '/';
+                });
+            }
+
+            // 초기 상태
+            setReadonly(true);
+        })();
+    </script>
+</section>

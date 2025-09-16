@@ -1,0 +1,16 @@
+
+/* 공통 기본 설정 */
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* 전체 레이아웃 */
+.content-container {
+    display: flex;
+    width: 1400px;
+    margin: 40px auto;
+    gap: 30px;
+}

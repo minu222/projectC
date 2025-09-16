@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="top">
+    <div class="nav-container">
+        <div class="logo">MyLMS</div>
+
+        <nav>
+            <ul>
+                <li><a href="#">교육과정</a>
+                    <ul class="dropdown">
+                        <li><a href="#">과정목록</a>
+                            <ul class="dropdown">
+                                <li><a href="#">이과</a></li>
+                                <li><a href="#">문과</a></li>
+                                <li><a href="#">예체능</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">교육강의</a>
+                            <ul class="dropdown">
+                                <li><a href="#">실시간 강의</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">개인 강의</a></li>
+                                        <li><a href="#">다수 강의</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">VOD 강의</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li><a href="#">정보센터</a>
+                    <ul class="dropdown">
+                        <li><a href="#">강사소개</a></li>
+                        <li><a href="#">도서추천</a></li>
+                        <li><a href="#">시험 일정</a></li>
+                        <li><a href="#">자료실</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">게시판</a>
+                    <ul class="dropdown">
+                        <li><a href="#">공지사항/이벤트</a></li>
+                        <li><a href="#">FAQ/고객센터</a></li>
+                        <li><a href="#">자유게시판</a></li>
+                        <li><a href="#">문의 게시판</a></li>
+                        <li><a href="#">수강후기</a></li>
+                        <li><a href="#">강사후기</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">나의 강의실</a>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/courses}">수강목록</a></li>
+                        <li><a th:href="@{/payments}">결제내역</a></li>
+                        <li><a th:href="@{/notifications}">이메일/쪽지 정보</a></li>
+                        <li><a th:href="@{/account/profile}">회원정보 수정</a></li> <!-- ✅ 여기 -->
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="auth-links">
+            <!-- 비로그인: 로그인/회원가입 -->
+            <span th:if="${session.loginUser == null}">
+                <a th:href="@{/login}" id="loginBtn">로그인</a> |
+                <a th:href="@{/signup}" id="signupBtn">회원가입</a>
+            </span>
+
+            <!-- 로그인: 알림 + 사용자/로그아웃 -->
+            <div th:if="${session.loginUser != null}" class="auth-links">
+                <div class="notification" id="notificationBtn">
+                    🔔
+                    <span class="badge" th:text="${unreadCount}">3</span>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/messages}">새 쪽지 확인</a></li>
+                        <li><a th:href="@{/emails}">새 이메일</a></li>
+                        <li><a th:href="@{/notifications}">모두 보기</a></li>
+                    </ul>
+                </div>
+
+                <span class="user"><strong th:text="${session.loginUser.nickname}">user</strong></span>
+
+                <!-- a 태그 대신 form + button 사용 -->
+                <form th:action="@{/api/auth/logout}" method="post" style="display:inline">
+                    <!-- CSRF 토큰이 존재할 때만 렌더링 -->
+                    <input type="hidden" th:if="${_csrf != null}"
+                           th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="link-btn">로그아웃</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 드롭다운/로그아웃 클릭 처리 -->
+<script th:src="@{/js/header.js}"></script>
+<script>
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'logoutLink') {
+            e.preventDefault();
+            const f = document.getElementById('logoutForm');
+            if (f) f.submit();
+        }
+    });
+</script>
+</body>
+</html>
