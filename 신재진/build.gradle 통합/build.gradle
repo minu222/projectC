@@ -37,11 +37,6 @@ dependencies {
     // Thymeleaf (View Template)
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    // Validation (javax → jakarta)
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // Security (BCrypt 포함)
-    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // Swagger(OpenAPI) - 선택
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
