@@ -81,3 +81,21 @@ body {
   font-size: clamp(18px, 2.6vw, 24px);
   color: var(--primary);
 }
+.btn-primary {
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.btn-search {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
