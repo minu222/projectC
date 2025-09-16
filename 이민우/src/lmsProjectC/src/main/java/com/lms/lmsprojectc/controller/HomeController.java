@@ -25,6 +25,8 @@ public class HomeController {
         return "home"; // templates/home.html
     }
 
+
+    // ---------------------강사 정보 ---------------------
     // 강사 목록 조회 (검색 + 상태 필터)
     @GetMapping("/admin/instructors")
     public String instructors(
@@ -48,4 +50,31 @@ public class HomeController {
         }
         return "redirect:/admin/instructors";
     }
+
+    // -----------------------------------------------------
+
+    //-------------학생정보-------------------------
+    @GetMapping("/admin/students")
+    public String students(
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false, defaultValue = "all") String status,
+            Model model) {
+
+        // 학생만 조회
+        List<User> students = userService.getAllStudents(type, keyword, status);
+
+        model.addAttribute("students", students);
+        return "student-info/index"; // templates/student-info/index.html
+    }
+
+    @PostMapping("/admin/students/delete")
+    public String deleteStudents(@RequestParam(name = "ids") List<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            userService.deleteStudents(ids);
+        }
+        return "redirect:/admin/students";
+    }
+
+    //----------------------------------------------
 }
