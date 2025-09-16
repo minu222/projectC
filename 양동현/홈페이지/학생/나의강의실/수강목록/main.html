@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강 목록 | MyLMS</title>
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+<body>
+<div class="course-container">
+    <h1>수강 목록</h1>
+
+    <!-- 필터 & 검색 -->
+    <div class="course-header">
+        <div class="filters">
+            <select id="filter">
+                <option value="all">전체</option>
+                <option value="purchase">구매날짜순</option>
+                <option value="recent">최근 수강순</option>
+                <option value="progress">진행중</option>
+                <option value="completed">종료</option>
+            </select>
+        </div>
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="강의명 또는 강사명 검색">
+            <button id="searchBtn">검색</button>
+        </div>
+    </div>
+
+    <!-- 강의 목록 -->
+    <div id="courseGrid" class="course-grid"></div>
+
+    <!-- 페이지네이션 -->
+    <div id="pagination" class="pagination"></div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
