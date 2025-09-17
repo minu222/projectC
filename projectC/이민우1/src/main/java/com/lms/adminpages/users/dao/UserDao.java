@@ -36,17 +36,23 @@ public class UserDao {
             params.add(department);
         }
 
-        if (keyword != null && !keyword.isEmpty() && keywordType != null && !keywordType.isEmpty()) {
-            if (keywordType.equals("name")) {
+        if (keyword != null && !keyword.isEmpty()) {
+            if ("name".equals(keywordType)) {
                 sql.append(" AND name LIKE ?");
-            } else if (keywordType.equals("nickname")) {
+                params.add("%" + keyword + "%");
+            } else if ("nickname".equals(keywordType)) {
                 sql.append(" AND nickname LIKE ?");
+                params.add("%" + keyword + "%");
+            } else {
+                sql.append(" AND (name LIKE ? OR nickname LIKE ?)");
+                params.add("%" + keyword + "%");
+                params.add("%" + keyword + "%");
             }
-            params.add("%" + keyword + "%");
         }
 
         return jdbcTemplate.query(sql.toString(), params.toArray(), new UserRowMapper());
     }
+
 
     // =============================
     // 동적 필터 적용 가능한 학생 조회
@@ -65,17 +71,23 @@ public class UserDao {
             params.add(department);
         }
 
-        if (keyword != null && !keyword.isEmpty() && keywordType != null && !keywordType.isEmpty()) {
-            if (keywordType.equals("name")) {
+        if (keyword != null && !keyword.isEmpty()) {
+            if ("name".equals(keywordType)) {
                 sql.append(" AND name LIKE ?");
-            } else if (keywordType.equals("nickname")) {
+                params.add("%" + keyword + "%");
+            } else if ("nickname".equals(keywordType)) {
                 sql.append(" AND nickname LIKE ?");
+                params.add("%" + keyword + "%");
+            } else {
+                sql.append(" AND (name LIKE ? OR nickname LIKE ?)");
+                params.add("%" + keyword + "%");
+                params.add("%" + keyword + "%");
             }
-            params.add("%" + keyword + "%");
         }
 
         return jdbcTemplate.query(sql.toString(), params.toArray(), new UserRowMapper());
     }
+
 
     // =============================
     // 공통 RowMapper
@@ -86,23 +98,34 @@ public class UserDao {
             user.setUser_id(rs.getInt("user_id"));
             user.setNickname(rs.getString("nickname"));
             user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
             user.setName(rs.getString("name"));
             user.setPhone(rs.getString("phone"));
             user.setAddress(rs.getString("address"));
+            user.setBirth_day(rs.getDate("birth_day") != null ? rs.getDate("birth_day").toLocalDate() : null);
+            user.setGender(rs.getString("gender") != null ? User.Gender.valueOf(rs.getString("gender").toLowerCase()) : null);
+            user.setEmail_verified(rs.getBoolean("email_verified"));
 
             // Role
             String roleStr = rs.getString("role");
-            user.setRole(roleStr != null ? User.Role.valueOf(roleStr) : User.Role.instructor);
+            if (roleStr != null) {
+                user.setRole(User.Role.valueOf(roleStr.toLowerCase()));
+            }
 
             // Status
             String statusStr = rs.getString("status");
-            user.setStatus(statusStr != null ? User.Status.valueOf(statusStr) : User.Status.active);
+            if (statusStr != null) {
+                user.setStatus(User.Status.valueOf(statusStr.toLowerCase()));
+            }
 
-            // Timestamp
-            user.setCreated_at(rs.getTimestamp("created_at"));
-            user.setUpdated_at(rs.getTimestamp("updated_at"));
+            user.setCreated_at(rs.getTimestamp("created_at") != null ?
+                    rs.getTimestamp("created_at").toLocalDateTime() : null);
+
+            user.setUpdated_at(rs.getTimestamp("updated_at") != null ?
+                    rs.getTimestamp("updated_at").toLocalDateTime() : null);
 
             return user;
         }
     }
+
 }
