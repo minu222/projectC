@@ -1,0 +1,148 @@
+<header th:fragment="top" xmlns:th="http://www.thymeleaf.org">
+    <div class="nav-container">
+        <div class="logo"><a th:href="@{/}">MyLMS</a></div>
+        <link rel="stylesheet" th:href="@{/mainpages/css/header.css}">
+        <nav>
+            <!-- ▼ 강사 로그인 상태: 강사용 메뉴 -->
+            <ul th:if="${session.loginUser != null
+              and session.loginUser.role != null
+              and #strings.equalsIgnoreCase(session.loginUser.role.toString(), 'INSTRUCTOR')}">
+                <li><a href="#">교육과정</a>
+                    <ul class="dropdown">
+                        <li><a href="#">과정목록</a>
+                            <ul class="dropdown">
+                                <li><a href="#">이과</a></li>
+                                <li><a href="#">문과</a></li>
+                                <li><a href="#">예체능</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">교육강의</a>
+                            <ul class="dropdown">
+                                <li><a href="#">실시간 강의</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">1대1 강의</a></li>
+                                        <li><a href="#">1대 다 강의</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">동영상 강의</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li><a href="#">정보센터</a>
+                    <ul class="dropdown">
+                        <li><a href="#">강사소개</a></li>
+                        <li><a href="#">도서추천</a></li>
+                        <li><a href="#">시험 일정</a></li>
+                        <li><a href="#">자료실</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">게시판</a>
+                    <ul class="dropdown">
+                        <li><a href="#">공지사항/이벤트</a></li>
+                        <li><a href="#">FAQ/고객센터</a></li>
+                        <li><a href="#">자유게시판</a></li>
+                        <li><a href="#">문의 게시판</a></li>
+                        <li><a href="#">수강후기</a></li>
+                        <li><a href="#">강사후기</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">나의 강의실</a>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/instructor/room}">강의실정보</a></li>
+                        <li><a th:href="@{/instructor/resources}">자료목록</a></li>
+                        <li><a th:href="@{/notifications}">이메일/쪽지 정보</a></li>
+                        <li><a th:href="@{/instructor/payments}">결재내역조회</a></li>
+                        <li><a th:href="@{/profile}">회원정보 수정</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- ▼ 그 외(비로그인/학생 등): 기본 메뉴 -->
+            <ul th:unless="${session.loginUser != null
+                 and session.loginUser.role != null
+                 and #strings.equalsIgnoreCase(session.loginUser.role.toString(), 'INSTRUCTOR')}">
+                <li><a href="#">교육과정</a>
+                    <ul class="dropdown">
+                        <li><a href="#">과정목록</a>
+                            <ul class="dropdown">
+                                <li><a href="#">이과</a></li>
+                                <li><a href="#">문과</a></li>
+                                <li><a href="#">예체능</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">교육강의</a>
+                            <ul class="dropdown">
+                                <li><a href="#">실시간 강의</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">개인 강의</a></li>
+                                        <li><a href="#">다수 강의</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">VOD 강의</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li><a href="#">정보센터</a>
+                    <ul class="dropdown">
+                        <li><a href="#">강사소개</a></li>
+                        <li><a href="#">도서추천</a></li>
+                        <li><a href="#">시험 일정</a></li>
+                        <li><a href="#">자료실</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">게시판</a>
+                    <ul class="dropdown">
+                        <li><a href="#">공지사항/이벤트</a></li>
+                        <li><a href="#">FAQ/고객센터</a></li>
+                        <li><a href="#">자유게시판</a></li>
+                        <li><a href="#">문의 게시판</a></li>
+                        <li><a href="#">수강후기</a></li>
+                        <li><a href="#">강사후기</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">나의 강의실</a>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/courses}">수강목록</a></li>
+                        <li><a th:href="@{/payments}">결제내역</a></li>
+                        <li><a th:href="@{/notifications}">이메일/쪽지 정보</a></li>
+                        <li><a th:href="@{/boards/mine}">나의 게시판목록</a></li>
+                        <li><a th:href="@{/profile}">회원정보 수정</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="auth-links">
+            <!-- 알림: 로그인 시 표시 -->
+            <div class="notification" id="notificationBtn" th:if="${session.loginUser != null}">
+                🔔
+                <span class="badge" th:text="${unreadCount} ?: 0">0</span>
+                <ul class="dropdown">
+                    <li><a th:href="@{/messages}">새 쪽지 확인</a></li>
+                    <li><a th:href="@{/emails}">새 이메일</a></li>
+                    <li><a th:href="@{/notifications}">모두 보기</a></li>
+                </ul>
+            </div>
+
+            <!-- 비로그인 -->
+            <span th:if="${session.loginUser == null}">
+  <a th:href="@{/user/login}" href="/user/login">로그인</a> |
+  <a th:href="@{/user/add}"   href="/user/add">회원가입</a>
+</span>
+
+            <!-- 로그인 -->
+            <span th:if="${session.loginUser != null}">
+        <span class="user"><strong th:text="${session.loginUser.name}">user</strong>님 환영합니다.</span>
+        <a th:href="@{/user/logout}" class="link-btn" style="display:inline-block">로그아웃</a>
+      </span>
+        </div>
+    </div>
+</header>
