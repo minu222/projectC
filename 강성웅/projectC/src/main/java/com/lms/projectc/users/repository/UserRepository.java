@@ -4,9 +4,13 @@ import com.lms.projectc.users.entity.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,15 +25,24 @@ public class UserRepository {
         this.jdbc = jdbc;
     }
 
-    /** 회원 저장 (null-safe, 컬럼/파라미터 정렬) */
-    public User save(User user) {
-        // ※ 테이블 컬럼명이 address 인지 확인하세요. (addsress 였다면 DB를 고치거나 아래를 맞추세요)
-        final String sql =
-                "INSERT INTO users (" +
-                        "  nickname, email, password, name, phone, address, role, birth_day, gender, status, created_at, updated_at" +
-                        ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+    /**
+     * 사용자 저장 + 생성된 PK(user_id) 반환
+     * - Enum은 name()으로 저장
+     * - LocalDate는 java.sql.Date로 변환
+     * - created_at/updated_at는 DB NOW() 사용
+     */
+    public long saveAndReturnId(User user) {
+        final String sql = """
+            INSERT INTO users
+              (nickname, email, password, name, phone, address, role, birth_day, gender, status, created_at, updated_at)
+            VALUES
+              (?,        ?,     ?,        ?,    ?,     ?,      ?,    ?,         ?,      ?,      NOW(),     NOW())
+            """;
 
-        int updated = jdbc.update(sql, ps -> {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbc.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             int i = 1;
             ps.setString(i++, user.getNickname());
             ps.setString(i++, user.getEmail());
@@ -37,30 +50,35 @@ public class UserRepository {
             ps.setString(i++, user.getName());
             ps.setString(i++, user.getPhone());
             ps.setString(i++, user.getAddress());
+            ps.setString(i++, user.getRole()   != null ? user.getRole().name()   : null);
 
-            // role (ENUM → VARCHAR), null-safe
-            if (user.getRole() != null) ps.setString(i++, user.getRole().name());
-            else ps.setNull(i++, Types.VARCHAR);
-
-            // birth_day (LocalDate → DATE), null-safe
             LocalDate birth = user.getBirth_day();
-            if (birth != null) ps.setDate(i++, Date.valueOf(birth));
-            else ps.setNull(i++, Types.DATE);
+            if (birth != null) ps.setDate(i++, Date.valueOf(birth)); else ps.setNull(i++, Types.DATE);
 
-            // gender (ENUM → VARCHAR), null-safe
-            if (user.getGender() != null) ps.setString(i++, user.getGender().name());
-            else ps.setNull(i++, Types.VARCHAR);
+            ps.setString(i++, user.getGender() != null ? user.getGender().name() : null);
+            ps.setString(i++, user.getStatus() != null ? user.getStatus().name() : null);
 
-            // status (ENUM → VARCHAR), null-safe
-            if (user.getStatus() != null) ps.setString(i++, user.getStatus().name());
-            else ps.setNull(i++, Types.VARCHAR);
-        });
+            return ps;
+        }, keyHolder);
 
-        return (updated == 1) ? user : null;
+        Number key = keyHolder.getKey();
+        if (key == null) throw new IllegalStateException("user_id 생성 실패");
+        user.setUser_id(key.intValue());
+        return key.longValue();
     }
 
-    /** save와 동일 동작 */
-    public void add(User user) { save(user); }
+    /**
+     * 사용자 저장 (User 객체에 user_id 세팅 후 반환)
+     */
+    public User save(User user) {
+        saveAndReturnId(user);
+        return user;
+    }
+
+    /** 기존 add 메서드는 save 위임 */
+    public void add(User user) {
+        save(user);
+    }
 
     public List<User> findAll() {
         String sql = "SELECT * FROM users";
@@ -87,10 +105,10 @@ public class UserRepository {
 
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> {
-            Date d = rs.getDate("birth_day");
-            LocalDate birth = (d != null) ? d.toLocalDate() : null;
+            Date birthSql = rs.getDate("birth_day");
+            LocalDate birth = (birthSql != null) ? birthSql.toLocalDate() : null;
 
-            User.Role role = toRole(rs.getString("role"));
+            User.Role role     = toRole(rs.getString("role"));
             User.Gender gender = toGender(rs.getString("gender"));
             User.Status status = toStatus(rs.getString("status"));
 
@@ -101,7 +119,7 @@ public class UserRepository {
                     rs.getString("password"),
                     rs.getString("name"),
                     rs.getString("phone"),
-                    rs.getString("address"),
+                    rs.getString("address"),   // ⚠️ DB 컬럼명이 address 인지 확인
                     role,
                     birth,
                     gender,
@@ -114,18 +132,25 @@ public class UserRepository {
 
     private User.Role toRole(String s) {
         if (s == null) return null;
-        try { return User.Role.valueOf(s.toUpperCase()); } catch (Exception e) { return null; }
-    }
-    private User.Gender toGender(String s) {
-        if (s == null) return null;
-        try { return User.Gender.valueOf(s.toUpperCase()); } catch (Exception e) { return null; }
-    }
-    private User.Status toStatus(String s) {
-        if (s == null) return null;
-        try { return User.Status.valueOf(s.toUpperCase()); } catch (Exception e) { return null; }
+        try { return User.Role.valueOf(s.trim().toUpperCase()); }
+        catch (Exception e) { return null; }
     }
 
-    /** 일부 정보 수정 (콤마 오류 제거) */
+    private User.Gender toGender(String s) {
+        if (s == null) return null;
+        try { return User.Gender.valueOf(s.trim().toUpperCase()); }
+        catch (Exception e) { return null; }
+    }
+
+    private User.Status toStatus(String s) {
+        if (s == null) return null;
+        try { return User.Status.valueOf(s.trim().toUpperCase()); }
+        catch (Exception e) { return null; }
+    }
+
+    /**
+     * 일부 정보 수정
+     */
     public void update(User user) {
         String sql = "UPDATE users SET address = ?, email = ?, phone = ? WHERE user_id = ?";
         jdbc.update(sql,
@@ -140,7 +165,7 @@ public class UserRepository {
         String sql = "DELETE FROM users WHERE user_id = ?";
         int rows = jdbc.update(sql, userId);
         if (rows == 0) {
-            System.out.println("삭제 할 사용자가 없습니다. id=" + userId);
+            System.out.println("삭제할 사용자가 없습니다. id=" + userId);
         }
     }
 }
