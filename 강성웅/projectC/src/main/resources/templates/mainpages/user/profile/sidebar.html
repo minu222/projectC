@@ -1,0 +1,25 @@
+<aside class="side-menu"
+       th:fragment="sidebar"
+       xmlns:th="http://www.thymeleaf.org"
+       th:with="uri=${#httpServletRequest != null ? #httpServletRequest.requestURI : ''}">
+    <link rel="stylesheet" href="/mainpages/css/User-info-S.css"/>
+    <ul>
+        <h3>나의강의실</h3>
+
+        <li th:classappend="${#strings.startsWith(uri, '/courses')} ? 'active'">
+            <a th:href="@{/courses}">수강목록</a>
+        </li>
+        <li th:classappend="${#strings.startsWith(uri, '/payments')} ? 'active'">
+            <a th:href="@{/payments}">결제내역</a>
+        </li>
+        <li th:classappend="${#strings.startsWith(uri, '/notifications')} ? 'active'">
+            <a th:href="@{/notifications}">이메일/쪽지 정보</a>
+        </li>
+        <li th:classappend="${#strings.startsWith(uri, '/boards/mine')} ? 'active'">
+            <a th:href="@{/boards/mine}">나의 게시판목록</a>
+        </li>
+        <li th:classappend="${#strings.startsWith(uri, '/profile')} ? 'active'">
+            <a th:href="@{/profile}">회원정보수정</a>
+        </li>
+    </ul>
+</aside>
