@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,8 +24,9 @@ public class User {
     private Gender gender;
     private boolean email_verified;
     private Status status;
-    private Timestamp created_at;
-    private Timestamp updated_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
 
     public enum Role {
         student, instructor, admin
