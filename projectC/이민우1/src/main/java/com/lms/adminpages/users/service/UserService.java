@@ -17,6 +17,7 @@ public class UserService {
 
     // 상태, 소속, 검색어 필터 적용한 강사 목록
     public List<User> getInstructors(String status, String department, String keywordType, String keyword) {
+        System.out.println(userDao.findInstructors(status, department, keywordType, keyword));
         return userDao.findInstructors(status, department, keywordType, keyword);
     }
 
