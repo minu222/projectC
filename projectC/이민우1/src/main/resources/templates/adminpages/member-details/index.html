@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>회원 관리 (마스터 · 디테일)</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/common.css" />
+    <style>
+      /* ===== Two-column layout ===== */
+      .two-col {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .list-col {
+        flex: 0 0 58%;
+        min-width: 520px;
+      }
+      .detail-col {
+        flex: 1 1 auto;
+        position: sticky;
+        top: 72px;
+        align-self: flex-start;
+      }
+
+      /* ===== List card (left) ===== */
+      .card {
+        background: var(--card);
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .card-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #eef2f7;
+      }
+      .card-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .filters {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: end;
+      }
+      .filters-left {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 10px 12px;
+      }
+      .filters-left label {
+        display: grid;
+        gap: 6px;
+        grid-template-columns: auto minmax(130px, 160px) minmax(160px, 240px);
+        align-items: center;
+      }
+      .filters-left label.only-select {
+        grid-template-columns: auto minmax(130px, 160px);
+      }
+      .filters-left select,
+      .filters-left input[type="text"],
+      .filters-left button {
+        height: 38px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+      .filters-left select,
+      .filters-left input[type="text"] {
+        padding: 8px 10px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+      }
+      .filters-left select:focus,
+      .filters-left input[type="text"]:focus {
+        outline: none;
+        background: #fff;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      .filters-left button {
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        padding: 0 14px;
+        cursor: pointer;
+      }
+      .filters-left button:hover {
+        filter: brightness(0.98);
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+      .btn-line {
+        height: 38px;
+        padding: 0 12px;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 14px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #111827;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-danger {
+        border-color: color-mix(in srgb, var(--danger) 40%, #e5e7eb);
+        color: var(--danger);
+      }
+      .btn-primary {
+        border: none;
+        background: var(--primary);
+        color: #fff;
+      }
+
+      table.member-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table.member-table thead th {
+        background: #f9fafb;
+        font-weight: 700;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+      }
+      table.member-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+      table.member-table tbody tr:hover {
+        background: #fcfcfd;
+      }
+      .col-no {
+        width: 64px;
+        text-align: center;
+        color: #374151;
+      }
+      .col-actions {
+        width: 132px;
+      }
+      .col-date,
+      .col-phone,
+      .col-email {
+        font-variant-numeric: tabular-nums;
+      }
+      .member-id a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .member-id a:hover {
+        text-decoration: underline;
+      }
+      input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .badge.green {
+        background: rgba(16, 185, 129, 0.12);
+        color: #065f46;
+      }
+      .badge.gray {
+        background: rgba(107, 114, 128, 0.15);
+        color: #374151;
+      }
+      .badge.red {
+        background: rgba(220, 38, 38, 0.12);
+        color: #7f1d1d;
+      }
+
+      /* ===== Detail card (right) ===== */
+      .detail-card {
+        background: var(--card);
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+      .detail-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eef2f7;
+      }
+      .detail-title {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 800;
+        color: #111827;
+      }
+      .detail-body {
+        padding: 12px 16px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 14px;
+      }
+      .form-row {
+        display: grid;
+        gap: 6px;
+      }
+      .form-row label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #374151;
+      }
+      .input,
+      .select,
+      .textarea {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        color: var(--text);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+      .textarea {
+        min-height: 84px;
+        resize: vertical;
+      }
+      .input:focus,
+      .select:focus,
+      .textarea:focus {
+        outline: none;
+        background: #fff;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-color: #cbd5e1;
+      }
+      .readonly {
+        background: #f3f4f6;
+      }
+      .two {
+        grid-column: 1 / -1;
+      }
+
+      .inline-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn-sm {
+        height: 32px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .btn-reset {
+        background: #fff;
+        border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
+        color: var(--danger);
+      }
+      .btn-unlock {
+        background: #fff;
+        border: 1px solid color-mix(in srgb, var(--primary) 40%, #e5e7eb);
+        color: var(--primary);
+      }
+      .btn-reset:hover {
+        background: color-mix(in srgb, var(--danger) 6%, #fff);
+      }
+      .btn-unlock:hover {
+        background: color-mix(in srgb, var(--primary) 6%, #fff);
+      }
+
+      .detail-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 12px 16px;
+        border-top: 1px solid #eef2f7;
+        background: linear-gradient(
+          to top,
+          rgba(255, 255, 255, 0.98),
+          rgba(255, 255, 255, 0.94)
+        );
+      }
+      .btn {
+        height: 38px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .btn-save {
+        border: none;
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-close {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        color: #111827;
+      }
+
+      .empty {
+        color: var(--muted);
+        font-size: 14px;
+        padding: 6px 0;
+      }
+
+      @media (max-width: 1100px) {
+        .list-col {
+          flex-basis: 55%;
+          min-width: 0;
+        }
+      }
+      @media (max-width: 920px) {
+        .two-col {
+          flex-direction: column;
+        }
+        .list-col {
+          min-width: auto;
+        }
+        .detail-col {
+          position: static;
+        }
+      }
+      @media (max-width: 760px) {
+        table.member-table {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+          border-radius: 10px;
+        }
+        .actions {
+          flex-wrap: wrap;
+        }
+        .btn-line,
+        .btn-primary {
+          flex: 1 1 auto;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar"><div>DW Academy</div></header>
+    <div class="container">
+      <div class="main">
+        <div class="two-col">
+          <!-- LEFT: 목록 -->
+          <section class="list-col card">
+            <div class="card-header">
+              <h2 class="card-title">회원 관리</h2>
+              <div class="actions">
+                <a class="btn-line" th:href="@{/messages/write}"
+                  ><i class="fa-solid fa-envelope"></i> 메일 쓰기</a
+                >
+                <a class="btn-line btn-primary" th:href="@{/admin/members/new}"
+                  ><i class="fa-solid fa-user-plus"></i> 신규 등록</a
+                >
+                <button class="btn-line btn-danger" type="button">
+                  <i class="fa-solid fa-user-slash"></i> 선택 탈퇴
+                </button>
+              </div>
+            </div>
+            <div class="card-body" style="padding: 14px 16px">
+              <form class="filters" method="get" th:action="@{/admin/members}">
+                <div class="filters-left">
+                  <label class="only-select"
+                    >소속:
+                    <select name="group">
+                      <option value="">- 전체 -</option>
+                      <option value="DW">DW</option>
+                      <option value="JS">JS</option>
+                    </select>
+                  </label>
+                  <label
+                    >검색:
+                    <select name="type">
+                      <option value="">- 전체 -</option>
+                      <option value="name">이름</option>
+                      <option value="username">아이디</option>
+                      <option value="email">이메일</option>
+                    </select>
+                    <input
+                      type="text"
+                      name="keyword"
+                      placeholder="검색어 입력"
+                    />
+                  </label>
+                  <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i> 검색
+                  </button>
+                </div>
+              </form>
+
+              <table class="member-table" aria-label="회원 목록">
+                <thead>
+                  <tr>
+                    <th><input id="checkAll" type="checkbox" /></th>
+                    <th class="col-no">No</th>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th class="col-email">이메일</th>
+                    <th class="col-phone">전화번호</th>
+                    <th class="col-date">가입일</th>
+                    <th>상태</th>
+                    <th class="col-actions">관리</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="member, stat : ${members}">
+                    <td>
+                      <input
+                        class="row-check"
+                        th:value="${member.id}"
+                        type="checkbox"
+                      />
+                    </td>
+                    <td class="col-no" th:text="${stat.count}">1</td>
+                    <td class="member-id">
+                      <a
+                        th:href="@{/admin/members/{id}(id=${member.id})}"
+                        th:text="${member.username}"
+                        >user01</a
+                      >
+                    </td>
+                    <td th:text="${member.name}">홍길동</td>
+                    <td class="col-email" th:text="${member.email}">
+                      user01@example.com
+                    </td>
+                    <td class="col-phone" th:text="${member.phone}">
+                      010-1234-5678
+                    </td>
+                    <td
+                      class="col-date"
+                      th:text="${#dates.format(member.createdAt,'yyyy-MM-dd')}"
+                    >
+                      2025-09-01
+                    </td>
+                    <td>
+                      <span
+                        class="badge green"
+                        th:if="${member.status == '정상'}"
+                        >정상</span
+                      >
+                      <span
+                        class="badge gray"
+                        th:if="${member.status == '휴면'}"
+                        >휴면</span
+                      >
+                      <span class="badge red" th:if="${member.status == '탈퇴'}"
+                        >탈퇴</span
+                      >
+                    </td>
+                    <td class="col-actions">
+                      <a
+                        href="#"
+                        class="btn-detail"
+                        th:attr="
+                           data-id=${member.id},
+                           data-username=${member.username},
+                           data-name=${member.name},
+                           data-email=${member.email},
+                           data-phone=${member.phone},
+                           data-tel=${member.tel},
+                           data-address=${member.address},
+                           data-role=${member.role},
+                           data-status=${member.status},
+                           data-loginfails=${member.loginFailCount},
+                           data-join=${#dates.format(member.createdAt,'yyyy-MM-dd HH:mm')},
+                           data-last=${#dates.format(member.lastLogin,'yyyy-MM-dd HH:mm')}
+                         "
+                      >
+                        상세
+                      </a>
+                      <span> | </span>
+                      <a th:href="@{/admin/members/{id}/edit(id=${member.id})}"
+                        >수정</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- RIGHT: 상세 패널 (처음엔 비어있음) -->
+          <aside class="detail-col">
+            <div class="detail-card" id="detailCard" aria-live="polite">
+              <div class="detail-head">
+                <h3 class="detail-title">회원 상세</h3>
+                <span id="detailId" class="empty">선택된 회원 없음</span>
+              </div>
+              <form id="detailForm">
+                <div class="detail-body">
+                  <div class="form-grid">
+                    <div class="form-row">
+                      <label>이름</label>
+                      <input class="input" name="name" placeholder="—" />
+                    </div>
+                    <div class="form-row">
+                      <label>아이디</label>
+                      <input
+                        class="input readonly"
+                        name="username"
+                        placeholder="—"
+                        readonly
+                      />
+                    </div>
+
+                    <div class="form-row">
+                      <label>구분(권한)</label>
+                      <select class="select" name="role">
+                        <option value="USER">일반 회원</option>
+                        <option value="TEACHER">강사</option>
+                        <option value="ADMIN">관리자</option>
+                      </select>
+                    </div>
+                    <div class="form-row">
+                      <label>회원 상태</label>
+                      <select class="select" name="status">
+                        <option value="정상">정상</option>
+                        <option value="휴면">휴면</option>
+                        <option value="탈퇴">탈퇴</option>
+                        <option value="수료">수료</option>
+                      </select>
+                    </div>
+
+                    <div class="form-row">
+                      <label>이메일</label>
+                      <input class="input" name="email" placeholder="—" />
+                    </div>
+                    <div class="form-row">
+                      <label>휴대전화</label>
+                      <input class="input" name="phone" placeholder="—" />
+                    </div>
+                    <div class="form-row">
+                      <label>유선전화</label>
+                      <input class="input" name="tel" placeholder="—" />
+                    </div>
+                    <div class="form-row two">
+                      <label>주소</label>
+                      <input class="input" name="address" placeholder="—" />
+                    </div>
+
+                    <div class="form-row">
+                      <label>로그인 실패횟수</label>
+                      <div class="inline-actions">
+                        <input
+                          class="input readonly"
+                          name="loginFailCount"
+                          placeholder="0회"
+                          readonly
+                        />
+                        <button
+                          type="button"
+                          class="btn-sm btn-unlock"
+                          id="btnUnlock"
+                        >
+                          풀어주기
+                        </button>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <label>비밀번호</label>
+                      <div class="inline-actions">
+                        <input
+                          class="input readonly"
+                          value="********"
+                          readonly
+                        />
+                        <button
+                          type="button"
+                          class="btn-sm btn-reset"
+                          id="btnResetPw"
+                        >
+                          비밀번호 초기화
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-row two">
+                      <label>메모</label>
+                      <textarea
+                        class="textarea"
+                        name="memo"
+                        placeholder="내부 관리 메모"
+                      ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                      <label>가입일</label>
+                      <input class="input readonly" name="joinDate" readonly />
+                    </div>
+                    <div class="form-row">
+                      <label>최근접속일</label>
+                      <input class="input readonly" name="lastLogin" readonly />
+                    </div>
+                  </div>
+                </div>
+                <div class="detail-footer">
+                  <button type="button" class="btn btn-close" id="btnClear">
+                    비우기
+                  </button>
+                  <button type="submit" class="btn btn-save">저장</button>
+                </div>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

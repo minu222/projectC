@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --bg: #f3f4f6; /* 배경 */
+  --card: #ffffff; /* 카드/패널 */
+  --text: #111827; /* 본문 텍스트 */
+  --muted: #6b7280; /* 보조 텍스트 */
+  --primary: #1e3a8a; /* 메인 포인트 */
+  --danger: #dc2626; /* 삭제 버튼 */
+  --ring: rgba(30, 58, 138, 0.15); /* 포커스 링 */
+}
+.topbar {
+  z-index: 1;
+  width: 100vw;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e3a8a;
+  color: #fff;
+  padding: 16px 28px;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Helvetica,
+    Arial, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 상단바 & 레이아웃 (공통 톤) */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+.container {
+  padding-left: 300px;
+  min-height: calc(100dvh - 56px);
+  display: flex;
+}
+.main {
+  flex: 1;
+  padding: clamp(16px, 4vw, 32px);
+  display: flex;
+  justify-content: center;
+}
+
+/* 카드 박스 */
+.content-box {
+  width: 100%;
+  max-width: 1200px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: clamp(16px, 3.5vw, 28px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+.content-box .header h2 {
+  margin: 0 0 14px;
+  font-size: clamp(18px, 2.6vw, 24px);
+  color: var(--primary);
+}
+.content-box h2 {
+  margin: 0 0 14px;
+  font-size: clamp(18px, 2.6vw, 24px);
+  color: var(--primary);
+}
