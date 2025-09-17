@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>쿠폰 관리</title>
+    <link rel="stylesheet" href="/common.css" />
+  </head>
+  <style>
+    /* 검색 박스: 4개 요소가 자연스럽게 접힘 */
+    .search-box.coupons-search {
+      display: grid;
+      gap: 12px;
+      margin: 8px 0 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .search-box.coupons-search input[type="text"],
+    .search-box.coupons-search select,
+    .search-box.coupons-search .btn-primary {
+      height: 42px;
+      font-size: 14px;
+      border-radius: 10px;
+    }
+    .search-box.coupons-search input[type="text"],
+    .search-box.coupons-search select {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    .search-box.coupons-search input[type="text"]:focus,
+    .search-box.coupons-search select:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    /* 버튼 (공통) */
+    .btn-primary {
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* 표 */
+    .table-gap-top {
+      margin-top: 12px;
+    }
+    .data-table.coupons-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .data-table.coupons-table thead th {
+      background: #f9fafb;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+    }
+    .data-table.coupons-table td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    .data-table.coupons-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table.coupons-table tbody tr:hover {
+      background: #fcfcfd;
+    }
+
+    /* 숫자/날짜 가독성 */
+    .coupons-table td:nth-child(3), /* 할인율 */
+.coupons-table td:nth-child(4) {
+      /* 기간 */
+      font-variant-numeric: tabular-nums; /* 등폭 숫자 */
+    }
+    .coupons-table td:nth-child(3) {
+      text-align: right;
+    }
+
+    /* 배지 (상태) */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge.normal {
+      background: rgba(16, 185, 129, 0.12);
+      color: #065f46;
+    } /* 사용가능 */
+    .badge.ended {
+      background: rgba(107, 114, 128, 0.15);
+      color: #374151;
+    } /* 종료 */
+    .badge.soon {
+      background: rgba(245, 158, 11, 0.15);
+      color: #8a4b00;
+    } /* 임박(선택) */
+
+    /* 작은 화면: HTML 수정 없이 가로 스크롤 */
+    @media (max-width: 720px) {
+      .data-table.coupons-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-radius: 12px;
+      }
+    }
+
+    /* 접근성 */
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+      border-radius: 8px;
+    }
+
+    /* 프린트 최적화(선택) */
+    @media print {
+      .topbar {
+        position: static;
+        border: none;
+      }
+      .container {
+        min-height: auto;
+      }
+      .content-box {
+        box-shadow: none;
+      }
+    }
+  </style>
+  <body>
+    <header class="topbar">
+      <div>DW Academy</div>
+    </header>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>쿠폰 관리</h2>
+
+          <div class="search-box coupons-search">
+            <input type="text" placeholder="쿠폰코드/이름" />
+            <select>
+              <option>전체</option>
+              <option>사용가능</option>
+              <option>종료</option>
+            </select>
+            <button class="btn-primary">검색</button>
+            <button class="btn-primary">쿠폰 생성</button>
+          </div>
+
+          <table class="data-table table-gap-top coupons-table">
+            <thead>
+              <tr>
+                <th>쿠폰코드</th>
+                <th>이름</th>
+                <th>할인율</th>
+                <th>기간</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WELCOME10</td>
+                <td>신규 10%</td>
+                <td>10%</td>
+                <td>2025-01-01 ~ 2025-12-31</td>
+                <td><span class="badge normal">사용가능</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
