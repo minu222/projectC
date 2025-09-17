@@ -10,9 +10,9 @@
     <link rel="stylesheet" th:href="@{/adminpages/css/user-info.css}">
 </head>
 <body>
-<div th:replace="fragments/topbar :: topbar"></div>
+<div th:replace="adminpages/fragments/topbar :: topbar"></div>
 <div class="container">
-    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
 
     <main class="main">
         <div class="content-box">
@@ -45,7 +45,7 @@
                 <div class="status-filter">
                     상태:
                     <label>
-                        <input type="radio" name="status" th:value="" th:checked="${statusFilter == null}" /> 전체
+                        <input type="radio" name="status" th:value="${null}" th:checked="${statusFilter == null}" /> 전체
                     </label>
                     <label>
                         <input type="radio" name="status" th:value="active" th:checked="${statusFilter == 'active'}" /> 정상
@@ -81,9 +81,10 @@
                     <td>
                         <input class="row-check" th:value="${student.user_id}" type="checkbox" />
                     </td>
-                    <td th:text="${stat.count}"></td>
+                    <td th:text="${stat.index + 1}"></td>
                     <td>
-                        <a th:href="@{'/admin/member-details/' + ${student.user_id}}" th:text="${student.nickname}"></a>
+                        <a th:href="@{/admin/member-details/{id}(id=${student.user_id})}"
+                           th:text="${student.nickname}"></a>
                     </td>
                     <td th:text="${student.name}"></td>
                     <td th:text="${student.email}"></td>
