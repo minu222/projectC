@@ -32,17 +32,18 @@ public class UserController {
     //User 등록
     @PostMapping("/user/add")
     public String addUser(@ModelAttribute User user,
-                RedirectAttributes message) {
-        //userService.register(user);
-
-        try{
-            userService.join(user);
-        }catch (IllegalArgumentException e){
-            message.addFlashAttribute("errorMessage", e.getMessage());
+                          @RequestParam(required=false) String affiliation,
+                          @RequestParam(required=false) String bio,
+                          RedirectAttributes ra) {
+        try {
+            // role은 INSTRUCTOR/STUDENT 로 넘어오도록 폼/JS 맞추기
+            userService.joinWithInstructorProfile(user, affiliation, bio);
+            ra.addFlashAttribute("successMessage","회원가입이 완료되었습니다. 로그인 해주세요.");
+            return "redirect:/user/login";
+        } catch (IllegalArgumentException e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user/add";
         }
-        message.addFlashAttribute("successMessage", "회원가입이 완료되었습니다. 로그인해 주세요.");
-           message.addFlashAttribute("prefillNickname", user.getNickname());
-           return "redirect:/user/login";
     }
 
 
