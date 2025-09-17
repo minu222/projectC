@@ -126,24 +126,64 @@
         background: var(--primary);
         color: #fff;
       }
-
-      table.member-table {
-        width: 100%;
-        border-collapse: collapse;
+      table {
+        flex-direction: column;
+        display: flex;
       }
-      table.member-table thead th {
+      thead {
+        position: relative;
+        width: 100%;
+        display: flex;
+      }
+      thead tr {
+        display: flex;
+        width: 100%;
+      }
+      thead tr th:first-child {
+        min-width: 50px;
+        max-width: 50px;
+      }
+      thead tr th:nth-child(2) {
+        background: turquoise;
+        max-width: 50px;
+      }
+      thead tr th {
+        flex: 1;
+      }
+      tbody {
+        display: flex;
+      }
+      tbody tr {
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        display: flex;
+      }
+      tbody tr td {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex: 1;
+      }
+      tbody tr td:first-child {
+        min-width: 50px;
+        max-width: 50px;
+      }
+      tbody tr td:nth-child(2) {
+        background: turquoise;
+        max-width: 50px;
+      }
+      /* table.member-table thead th {
+        display: flex;
+        width: 100%;
         background: #f9fafb;
         font-weight: 700;
         font-size: 13px;
-        text-align: left;
+        text-align: center;
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
-      }
-      table.member-table td {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 12px 14px;
-        font-size: 14px;
-      }
+      } */
+
       table.member-table tbody tr:hover {
         background: #fcfcfd;
       }
@@ -264,12 +304,14 @@
       }
 
       .inline-actions {
+        background: yellow;
+        word-break: keep-all;
         display: flex;
         gap: 8px;
         align-items: center;
       }
       .btn-sm {
-        height: 32px;
+        display: flex;
         padding: 6px 10px;
         border-radius: 8px;
         font-weight: 700;
@@ -277,11 +319,11 @@
         cursor: pointer;
       }
       .btn-reset {
-        background: #fff;
         border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
         color: var(--danger);
       }
       .btn-unlock {
+        display: flex;
         background: #fff;
         border: 1px solid color-mix(in srgb, var(--primary) 40%, #e5e7eb);
         color: var(--primary);

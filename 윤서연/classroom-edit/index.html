@@ -7,12 +7,7 @@
   </head>
   <style>
     /* 검색 박스 */
-    .search-box.classroom-edit-search {
-      display: grid;
-      gap: 12px;
-      margin: 8px 0 16px;
-      grid-template-columns: 1fr auto;
-    }
+
     .search-box.classroom-edit-search input[type="text"],
     .search-box.classroom-edit-search .btn-search {
       height: 42px;
@@ -42,9 +37,14 @@
 
     /* 폼 레이아웃 */
     .classroom-edit-form {
-      display: grid;
+      display: flex;
       gap: 14px 16px;
-      grid-template-columns: repeat(2, minmax(220px, 1fr));
+
+      flex-direction: column;
+    }
+    .classroom-edit-form > div {
+      display: flex;
+      gap: 14px 16px;
     }
     .classroom-edit-form label {
       display: grid;
@@ -187,14 +187,16 @@
           </div>
 
           <form class="classroom-edit-form">
-            <label>
-              강의실 코드
-              <input type="text" value="A-101" class="form-input" />
-            </label>
-            <label>
-              수용 인원
-              <input type="number" value="30" class="form-input" />
-            </label>
+            <div>
+              <label>
+                강의실 코드
+                <input type="text" value="A-101" class="form-input" />
+              </label>
+              <label>
+                수용 인원
+                <input type="number" value="30" class="form-input" />
+              </label>
+            </div>
             <label class="full-row">
               비고
               <textarea rows="6" class="form-textarea">

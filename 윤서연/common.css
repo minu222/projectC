@@ -4,6 +4,7 @@
   padding: 0;
 }
 :root {
+  --accent: #2563eb; /* 보조 액센트 (버튼 등) */
   --bg: #f3f4f6; /* 배경 */
   --card: #ffffff; /* 카드/패널 */
   --text: #111827; /* 본문 텍스트 */
@@ -98,4 +99,9 @@ body {
   cursor: pointer;
   padding: 10px 14px;
   border-radius: 10px;
+}
+.search-box {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 16px;
 }

@@ -6,12 +6,15 @@
     <link rel="stylesheet" href="/common.css" />
   </head>
   <style>
-  
     /* 폼 레이아웃 */
     .classroom-form {
-      display: grid;
+      display: flex;
       gap: 14px 16px; /* row col */
-      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      flex-direction: column;
+    }
+    .classroom-form > div {
+      gap: 14px 16px;
+      display: flex;
     }
     .classroom-form label {
       display: grid;
@@ -146,14 +149,16 @@
         <div class="content-box">
           <h2>강의실 등록</h2>
           <form class="classroom-form">
-            <label>
-              강의실 코드
-              <input type="text" placeholder="예: A-101" class="form-input" />
-            </label>
-            <label>
-              수용 인원
-              <input type="number" placeholder="예: 30" class="form-input" />
-            </label>
+            <div>
+              <label>
+                강의실 코드
+                <input type="text" placeholder="예: A-101" class="form-input" />
+              </label>
+              <label>
+                수용 인원
+                <input type="number" placeholder="예: 30" class="form-input" />
+              </label>
+            </div>
             <label class="full-row">
               비고
               <textarea
