@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의게시판</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="board-container">
+    <div class="board-header">
+        <div class="board-title">문의게시판</div>
+        <div class="search">
+            <input type="text" placeholder="검색어를 입력해주세요">
+            <button>검색</button>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>등록일</th>
+            <th>답변상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>6</td>
+            <td>2111111111 🔒</td>
+            <td>홍*동</td>
+            <td>2025.08.25</td>
+            <td><span class="status wait">답변대기</span></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>임시저장 📄 🔒</td>
+            <td>홍*동</td>
+            <td>2024.12.01</td>
+            <td><span class="status wait">답변대기</span></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>123456 🔒</td>
+            <td>홍*동</td>
+            <td>2024.05.14</td>
+            <td><span class="status wait">답변대기</span></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>임시저장 입니다. 📄 🔒</td>
+            <td>홍*동</td>
+            <td>2023.02.15</td>
+            <td><span class="status complete">답변완료</span></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>질문 있습니다.</td>
+            <td>홍*동</td>
+            <td>2023.01.31</td>
+            <td><span class="status complete">답변완료</span></td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>판매가 종료된 과정은 언제 다시 오픈하나요? 🔒</td>
+            <td>홍*동</td>
+            <td>2023.01.31</td>
+            <td><span class="status complete">답변완료</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button>&lt;</button>
+        <button class="active">1</button>
+        <button>&gt;</button>
+        <button>&raquo;</button>
+    </div>
+
+    <button class="write-button">문의하기</button>
+</div>
+</body>
+</html>

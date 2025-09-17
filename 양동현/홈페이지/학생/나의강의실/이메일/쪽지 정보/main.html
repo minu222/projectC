@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>이메일/쪽지 | MyLMS</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .board-container {
+            width: 1100px;
+            min-height: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .board-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .top-buttons button {
+            padding: 6px 14px;
+            background: #ffb400;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tabs button {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .tabs button.active {
+            background: #ffb400;
+            color: #fff;
+            border-color: #ffb400;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 10px;
+            font-size: 0.95rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+        }
+
+        .search-container select {
+            padding: 6px 10px;
+            font-size: 0.95rem;
+            border-radius: 4px;
+        }
+
+        .search-container button {
+            padding: 6px 14px;
+            background: #ffb400;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table thead th {
+            background: #ffb400;
+            color: #fff;
+            text-align: center;
+            padding: 12px 0;
+            border: 1px solid #e0a800;
+        }
+
+        table tbody td {
+            text-align: center;
+            padding: 12px 8px;
+            border: 1px solid #ddd;
+        }
+
+        table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .delete-button {
+            padding: 4px 10px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .pagination button {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.active {
+            background: #ffb400;
+            color: #fff;
+            border-color: #ffb400;
+        }
+    </style>
+</head>
+<body>
+
+<div class="board-container">
+    <div class="board-header">
+        <div class="board-title">내 쪽지 / 이메일</div>
+        <div class="top-buttons">
+            <!-- 페이지 어디든 -->
+            <button id="openEmailModal">이메일 보내기</button>
+            <button id="openNoteModal">쪽지 보내기</button>
+            <button onclick="deleteSelected()">선택 삭제</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="active" onclick="filterTab('전체')">전체</button>
+        <button onclick="filterTab('받은메일')">받은 메일</button>
+        <button onclick="filterTab('보낸메일')">보낸 메일</button>
+        <button onclick="filterTab('받은쪽지')">받은 쪽지</button>
+        <button onclick="filterTab('보낸쪽지')">보낸 쪽지</button>
+    </div>
+
+    <div class="search-container">
+        <input id="searchInput" placeholder="제목 또는 보낸사람 검색" type="text">
+        <select id="roleFilter">
+            <option value="">전체</option>
+            <option value="강사">강사</option>
+            <option value="학생">학생</option>
+            <option value="관리자">관리자</option>
+        </select>
+        <button onclick="filterTable()">검색</button>
+    </div>
+
+    <table id="messageTable">
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>제목</th>
+            <th>보낸사람</th>
+            <th>수신일</th>
+            <th>유형</th>
+            <th>상태</th>
+            <th><input id="selectAll" onclick="toggleAll(this)" type="checkbox"> 체크</th>
+            <th>지우기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-direction="받은메일" data-role="강사" data-type="이메일">
+            <td>1</td>
+            <td>테스트용</td>
+            <td>강사1</td>
+            <td>2025-09-17</td>
+            <td>이메일</td>
+            <td>받음</td>
+            <td><input type="checkbox"></td>
+            <td>
+                <button class="delete-button" onclick="deleteRow(this)">삭제</button>
+            </td>
+        </tr>
+        <tr data-direction="보낸쪽지" data-role="학생" data-type="쪽지">
+            <td>2</td>
+            <td>테스트2</td>
+            <td>학생1</td>
+            <td>2025-09-16</td>
+            <td>쪽지</td>
+            <td>보냄</td>
+            <td><input type="checkbox"></td>
+            <td>
+                <button class="delete-button" onclick="deleteRow(this)">삭제</button>
+            </td>
+        </tr>
+        <tr data-direction="보낸메일" data-role="관리자" data-type="이메일">
+            <td>3</td>
+            <td>관리자공지</td>
+            <td>관리자</td>
+            <td>2025-09-15</td>
+            <td>이메일</td>
+            <td>보냄</td>
+            <td><input type="checkbox"></td>
+            <td>
+                <button class="delete-button" onclick="deleteRow(this)">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>&raquo;</button>
+    </div>
+</div>
+<script src="EmailModal/main.js"></script>
+<script src="NoteModal/main.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
