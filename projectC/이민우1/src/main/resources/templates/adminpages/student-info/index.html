@@ -82,7 +82,7 @@
                     <tbody>
                     <tr th:each="student, stat : ${students}">
                         <td>
-                            <input class="row-check" th:value="${student.user_id}" type="checkbox"/>
+                            <input class="row-check" name="ids" th:value="${student.user_id}" type="checkbox"/>
                         </td>
                         <td th:text="${stat.index + 1}"></td>
                         <td>
@@ -101,7 +101,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn-delete">🗑 선택 탈퇴</button>
+                <button type="submit" class="btn-delete">🗑 선택 탈퇴</button>
             </form>
         </div>
     </main>
