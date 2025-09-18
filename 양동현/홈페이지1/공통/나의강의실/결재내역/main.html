@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLMS 결제 및 주문 통합</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<main class="main-content">
+    <h2>결제 및 주문 내역 통합</h2>
+
+    <!-- 검색 입력 -->
+    <input type="text" id="searchInput" placeholder="주문명을 입력하여 검색..." onkeyup="renderTable()">
+
+    <!-- 상태 필터 버튼 -->
+    <div class="filter-buttons">
+        <button class="active" data-filter="all" onclick="setFilter(this)">전체</button>
+        <button data-filter="pending" onclick="setFilter(this)">주문대기</button>
+        <button data-filter="completed" onclick="setFilter(this)">주문완료</button>
+    </div>
+
+    <table id="orderTable">
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>주문명</th>
+            <th>판매가</th>
+            <th>수량</th>
+            <th>결제금액</th>
+            <th>결제수단</th>
+            <th>주문일</th>
+            <th>상태</th>
+            <th>구매</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 데이터는 JS에서 렌더링 -->
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 버튼 -->
+    <div class="pagination" id="pagination"></div>
+</main>
+
+<!-- 결제 모달 -->
+<div class="modal" id="paymentModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <h3 id="modalCourseName">결제</h3>
+
+        <!-- 상품 카드 -->
+        <div class="product-card-detailed">
+            <div class="product-left">
+                <img src="https://picsum.photos/120/80?random=3" alt="상품 이미지" class="product-img">
+            </div>
+            <div class="product-center">
+                <h4 class="course-name" id="modalCourseNameDetail">HTML/CSS 완전정복</h4>
+                <p class="course-desc">웹 페이지 구조와 스타일링 기초~실전</p>
+                <p class="course-instructor">강사: 김현수</p>
+            </div>
+            <div class="product-right">
+                <div class="price-row"><span>단가:</span> <strong id="modalPrice">50,000원</strong></div>
+                <div class="price-row"><span>수량:</span> <strong id="modalQty">1</strong></div>
+                <div class="price-row total"><span>총액:</span> <strong id="modalTotal">50,000원</strong></div>
+            </div>
+        </div>
+
+        <!-- 결제 수단 선택 -->
+        <div class="card">
+            <label for="paymentMethod">결제수단 선택:</label>
+            <select id="paymentMethod" onchange="showPaymentForm()">
+                <option value="">-- 선택 --</option>
+                <option value="card">카드 결제</option>
+                <option value="bank">계좌이체</option>
+                <option value="easy">간편결제</option>
+            </select>
+
+            <div class="payment-form" id="cardForm">
+                <label>카드번호</label><input type="text" placeholder="0000-0000-0000-0000">
+                <label>유효기간</label><input type="text" placeholder="MM/YY">
+                <label>CVC</label><input type="number" placeholder="123">
+            </div>
+
+            <div class="payment-form" id="bankForm">
+                <label>은행 선택</label>
+                <select><option>국민은행</option><option>신한은행</option><option>우리은행</option></select>
+                <label>계좌번호</label><input type="text" placeholder="000-0000-0000">
+            </div>
+
+            <div class="payment-form" id="easyForm">
+                <button>카카오페이</button>
+                <button>네이버페이</button>
+            </div>
+        </div>
+
+        <!-- 약관 체크 -->
+        <div class="terms-section">
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeTerms1">
+                <label for="agreeTerms1">
+                    <strong>서비스 이용 약관 동의</strong>
+                    <span class="term-desc">LMS 서비스 이용을 위한 필수 약관에 동의합니다.</span>
+                    <a href="#" class="view-term">보기</a>
+                </label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeTerms2">
+                <label for="agreeTerms2">
+                    <strong>개인정보 수집/이용 동의</strong>
+                    <span class="term-desc">결제 및 학습을 위해 개인정보 제공에 동의합니다.</span>
+                    <a href="#" class="view-term">보기</a>
+                </label>
+            </div>
+        </div>
+
+        <button onclick="confirmPayment()">결제하기</button>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
