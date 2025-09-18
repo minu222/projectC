@@ -1,0 +1,263 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+}
+
+header {
+    background: #fff;
+    padding: 25px;
+    text-align: center;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 28px;
+    color: #ff6600;
+}
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    background: url('https://source.unsplash.com/1600x900/?classroom,education') center/cover no-repeat;
+    position: relative;
+}
+
+.signup-box {
+    background: rgba(255, 255, 255, 0.97);
+    padding: 50px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 500px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.signup-box h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #555;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #ff6600;
+}
+
+/* 성별 버튼 */
+.gender-group {
+    display: flex;
+    gap: 10px;
+}
+
+.gender-btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #f8f9fa;
+    color: #333;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.gender-btn.active {
+    background: #ff6600;
+    color: #fff;
+    border-color: #ff6600;
+}
+
+/* 수신동의 */
+.agree-options {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+}
+
+.agree-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.agree-box input {
+    display: none;
+}
+
+.agree-box .checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.agree-box input:checked + .checkmark {
+    border-color: #ff6600;
+    background: #ff6600;
+}
+
+.agree-box input:checked + .checkmark::after {
+    content: "✔";
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.agree-label {
+    font-size: 14px;
+    color: #555;
+}
+
+/* 버튼 */
+.signup-btn {
+    width: 100%;
+    padding: 16px;
+    background: #ff6600;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.signup-btn:hover {
+    background: #e65c00;
+}
+
+.options {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.options a {
+    color: #555;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.options a:hover {
+    color: #ff6600;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.form-inline {
+    display: flex;
+    gap: 10px;
+}
+
+/* 인증 버튼 스타일 */
+.btn-orange {
+    padding: 12px 18px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.btn-orange:hover {
+    background-color: #e65c00;
+}
+/* 모달 배경 */
+.modal {
+    display: none; /* 기본 숨김 */
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 박스 */
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #333;
+}
+
+.modal-content p {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 10px 16px;
+    background: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background: #e65c00;
+}
+#name {
+    width: 80%;   /* 이름 입력칸만 줄어듦 */
+}#birth {
+     width: 80%;   /* 이름 입력칸만 줄어듦 */
+ }

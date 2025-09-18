@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>MyLMS</title>
+    <link href="css/common.css" rel="stylesheet">
+
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <div class="logo">MyLMS</div>
+        <nav class="nav-center">
+            <ul>
+                <li><a class="header-category" data-category="course" href="#">교육과정</a></li>
+                <li><a class="header-category" data-category="info" href="#">정보센터</a></li>
+                <li><a class="header-category" data-category="board" href="#">게시판</a></li>
+                <li><a class="header-category" data-category="myclass" href="#">나의 강의실</a></li>
+            </ul>
+        </nav>
+        <div class="auth-links" id="authLinks">
+            <a href="#" id="loginBtn">로그인</a> |
+            <a href="#" id="signupBtn">회원가입</a>
+            <div class="notification" id="notificationBtn" style="display:none;">
+                🔔<span class="badge">3</span>
+                <ul class="dropdown">
+                    <li><a href="#">새 쪽지: 안녕하세요!</a></li>
+                    <li><a href="#">새 이메일: 수강 안내</a></li>
+                    <li><a href="#">모두 보기</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script src="js/header.js"> </script>
+</body>
+</html>
