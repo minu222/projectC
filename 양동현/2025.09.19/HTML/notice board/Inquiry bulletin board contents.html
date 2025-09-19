@@ -1,0 +1,38 @@
+<!-- fragments/inquiry_detail.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의게시판 상세</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="inquiryDetailFragment(post, answer)">
+    <div class="board-container">
+        <div class="board-title" th:text="${post.title}">게시글 제목</div>
+        <div class="post-info">
+            <span>작성자: <span th:text="${post.author}">홍동</span></span>
+            <span>작성일: <span th:text="${post.date}">2023.01.31</span></span>
+            <span>조회수: <span th:text="${post.views}">27</span></span>
+        </div>
+        <div class="post-content" th:utext="${post.content}">
+            게시글 내용
+        </div>
+        <a th:href="@{/inquiry}" class="back-btn">목록으로 돌아가기</a>
+
+        <div class="answer-section" th:if="${answer != null}">
+            <h3>답변</h3>
+            <div class="answer-item">
+                <span class="tag" th:text="${answer.statusName}">답변완료</span>
+                <div class="author" th:text="${answer.author}">운영자</div>
+                <div class="date" th:text="'답변일: ' + ${answer.date}">답변일: 2023.02.08</div>
+                <div class="content" th:utext="${answer.content}">
+                    답변 내용
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

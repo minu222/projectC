@@ -1,0 +1,64 @@
+<!-- fragments/inquiry_write.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의게시판 작성 | MyLMS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="inquiryWriteFragment(post)">
+    <div class="board-container">
+        <div class="board-header">
+            <div class="board-title">문의게시판 작성</div>
+        </div>
+
+        <label for="title">제목 *</label>
+        <input type="text" id="title" name="title" placeholder="제목 (20자 이내로 입력하세요)" maxlength="20"
+               th:value="${post != null} ? ${post.title} : ''">
+
+        <!-- 비공개 옵션 -->
+        <div class="private-option">
+            <label for="private">비공개
+                <input type="checkbox" id="private" name="private" th:checked="${post != null} ? ${post.private} : false">
+            </label>
+        </div>
+
+        <!-- 에디터 툴바 -->
+        <div class="toolbar">
+            <select id="fontName">
+                <option value="Noto Sans KR" selected>본고딕</option>
+                <option value="Nanum Gothic">나눔고딕</option>
+                <option value="Gulim">굴림</option>
+                <option value="Batang">바탕</option>
+                <option value="Malgun Gothic">맑은 고딕</option>
+            </select>
+            <select id="fontSize">
+                <option value="12px">12px</option>
+                <option value="14px" selected>14px</option>
+                <option value="16px">16px</option>
+                <option value="18px">18px</option>
+                <option value="20px">20px</option>
+            </select>
+            <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+            <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+            <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+            <button type="button" onclick="execCmd('insertUnorderedList')">• 리스트</button>
+            <button type="button" onclick="execCmd('insertOrderedList')">1. 리스트</button>
+            <button type="button" onclick="execCmd('justifyLeft')">왼쪽</button>
+            <button type="button" onclick="execCmd('justifyCenter')">가운데</button>
+            <button type="button" onclick="execCmd('justifyRight')">오른쪽</button>
+        </div>
+
+        <div id="editor" class="editor" contenteditable="true" th:utext="${post != null} ? ${post.content} : ''"></div>
+
+        <div class="button-group">
+            <button type="button" class="cancel-btn" th:onclick="'location.href=\'/inquiry\''">취소</button>
+            <button type="submit" class="submit-btn" th:onclick="'submitInquiry()'">등록</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/editor.js}"></script>
+</body>
+</html>
