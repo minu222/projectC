@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,14 +9,43 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
+
     <style>
+      /* ===== Design Tokens ===== */
+      :root {
+        --primary: #1e3a8a;
+        --accent: #2563eb;
+        --text: #111827;
+        --muted: #4b5563;
+        --bg: #ffffff;
+        --border: #e5e7eb;
+        --ring: rgba(30, 58, 138, 0.18);
+        --card: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: #f3f4f6;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR",
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+
+      /* ===== Sidebar ===== */
       .sidebar {
-        overflow: hidden;
         position: relative;
-        padding-top: 80px;
         width: 260px;
-        background: #fff;
-        border-right: 1px solid #e5e7eb;
+        min-height: 100dvh;
+        background: var(--bg);
+        border-right: 1px solid var(--border);
+        padding-top: 80px;
         overflow-y: auto;
       }
 
@@ -27,7 +56,7 @@
         padding: 0;
       }
 
-      /* 상단 링크/토글 버튼 공통 모양 유지 */
+      /* 1뎁스: 링크/토글 공통 */
       .menu > li > .submenu-toggle,
       .menu > li > .link {
         display: flex;
@@ -37,12 +66,13 @@
         padding: 12px 16px;
         margin: 6px 10px;
         border-radius: 8px;
-        background: #1e3a8a;
+        background: var(--primary);
         color: #fff;
         font-weight: 700;
         font-size: 16px;
         text-decoration: none;
         cursor: pointer;
+        user-select: none;
       }
       .menu > li > .submenu-toggle:hover,
       .menu > li > .link:hover {
@@ -50,6 +80,7 @@
         transform: translateX(2px);
       }
 
+      /* 2뎁스 토글 버튼 */
       .submenu > li > .submenu-toggle {
         display: flex;
         align-items: center;
@@ -62,9 +93,10 @@
         color: #111827;
         font-weight: 600;
         cursor: pointer;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--border);
       }
 
+      /* 2~3뎁스 항목 */
       .submenu li ul li a,
       .submenu li a {
         display: block;
@@ -81,7 +113,7 @@
         color: #111827;
       }
 
-      /* ▼ JS 없이 열고 닫기: max-height 트릭 */
+      /* 열고닫기: 체크 + max-height */
       .submenu {
         max-height: 0;
         overflow: hidden;
@@ -89,16 +121,261 @@
       }
       .submenu-check {
         display: none;
-      } /* 접근성 배려하려면 visually-hidden 처리해도 OK */
-
-      /* 체크되면 인접한 submenu 펼침 */
+      }
       .submenu-check:checked + .submenu {
         transition: 0.5s ease-in-out;
-        max-height: 1200px;
-      } /* 필요시 값 키워도 됨 */
+        max-height: 1200px; /* 필요시 조정 */
+      }
+
+      /* ===== Popup (메일 쓰기) ===== */
+      .popup-overlay {
+        display: none;
+      }
+      .popup-overlay.is-open {
+        display: flex;
+      }
+
+      #mailPopup.popup-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        padding: 16px; /* 모바일 여백 */
+      }
+      #mailPopup .popup {
+        width: clamp(320px, 92vw, 900px);
+        max-height: min(90vh, 860px);
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #mailPopup .popup-header {
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      #mailPopup .popup-header button {
+        color: #fff;
+        font-size: 22px;
+        line-height: 1;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+      }
+      #mailPopup .popup-header button:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 6px;
+      }
+      #mailPopup .popup-body {
+        padding: clamp(14px, 3vw, 20px);
+        overflow: auto;
+        flex: 1;
+      }
+
+      #mailPopup .form-group {
+        margin-bottom: 16px;
+      }
+      #mailPopup .form-label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #111827;
+      }
+
+      /* 받는사람 */
+      #mailPopup .receiver-box {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr minmax(160px, 240px) auto;
+        align-items: start;
+      }
+      #mailPopup #receiverList.receiver-list {
+        min-height: 44px;
+        padding: 8px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fafafa;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+      #mailPopup .receiver-tag {
+        background: var(--primary);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+      #mailPopup .receiver-tag button {
+        color: #fff;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      #mailPopup #receiverInput {
+        height: 44px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+      #mailPopup #receiverInput:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      #mailPopup .address-book-btn {
+        height: 44px;
+        padding: 0 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+      }
+      #mailPopup .address-book-btn:hover {
+        filter: brightness(0.98);
+      }
+
+      /* 제목 */
+      #mailPopup .title-box {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr minmax(160px, 260px);
+      }
+      #mailPopup .title-box input,
+      #mailPopup .title-box select {
+        height: 42px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 14px;
+      }
+      #mailPopup .title-box input:focus,
+      #mailPopup .title-box select:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+
+      /* 파일 드롭 */
+      #mailPopup #fileDrop.file-drop-area {
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #f9fafb;
+        text-align: center;
+        padding: 22px;
+        color: #475569;
+        cursor: pointer;
+      }
+      #mailPopup #fileDrop.is-dragover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+        color: #1e3a8a;
+      }
+
+      /* 에디터 */
+      #mailPopup .editor-toolbar {
+        border: 1px solid var(--border);
+        border-bottom: none;
+        padding: 8px;
+        background: #f3f4f6;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      #mailPopup .editor-toolbar button,
+      #mailPopup .editor-toolbar select {
+        height: 34px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      #mailPopup .editor-toolbar button:hover {
+        background: #f9fafb;
+      }
+      #mailPopup .editor {
+        min-height: 300px;
+        border: 1px solid var(--border);
+        border-radius: 0 0 10px 10px;
+        padding: 12px;
+        background: #fff;
+        outline: none;
+      }
+      #mailPopup .editor:focus {
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+
+      /* 제출 */
+      #mailPopup .btn-submit {
+        margin-top: 16px;
+        height: 44px;
+        border: none;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      #mailPopup .btn-submit:hover {
+        filter: brightness(0.98);
+      }
+
+      /* 반응형 */
+      @media (max-width: 860px) {
+        #mailPopup .receiver-box {
+          grid-template-columns: 1fr 1fr auto;
+        }
+        #mailPopup .title-box {
+          grid-template-columns: 1fr 200px;
+        }
+      }
+      @media (max-width: 640px) {
+        #mailPopup.popup-overlay {
+          padding: 10px;
+        }
+        #mailPopup .receiver-box {
+          grid-template-columns: 1fr;
+        }
+        #mailPopup .address-book-btn {
+          justify-self: start;
+        }
+        #mailPopup .title-box {
+          grid-template-columns: 1fr;
+        }
+        #mailPopup .btn-submit {
+          width: 100%;
+        }
+      }
+
+      /* 접근성 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
     </style>
   </head>
   <body>
+    <!-- 사이드바 -->
     <div class="sidebar">
       <ul class="menu">
         <li>
@@ -125,24 +402,24 @@
               />
               <ul class="submenu">
                 <li>
-                  <a href="/instructor-info/index.html">
-                    <i class="fas fa-chalkboard-teacher"></i> 강사 정보
-                  </a>
+                  <a href="/instructor-info/index.html"
+                    ><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a
+                  >
                 </li>
                 <li>
-                  <a href="/student-info/index.html">
-                    <i class="fas fa-user-graduate"></i> 학생 정보
-                  </a>
+                  <a href="/student-info/index.html"
+                    ><i class="fas fa-user-graduate"></i> 학생 정보</a
+                  >
                 </li>
                 <li>
-                  <a href="/info-trash/index.html">
-                    <i class="fas fa-trash-alt"></i> 정보 휴지통
-                  </a>
+                  <a href="/info-trash/index.html"
+                    ><i class="fas fa-trash-alt"></i> 정보 휴지통</a
+                  >
                 </li>
                 <li>
-                  <a href="/member-details/index.html">
-                    <i class="fas fa-id-card"></i> 회원 상세 정보
-                  </a>
+                  <a href="/member-details/index.html"
+                    ><i class="fas fa-id-card"></i> 회원 상세 정보</a
+                  >
                 </li>
               </ul>
             </li>
@@ -157,7 +434,8 @@
           <input type="checkbox" id="toggle-mailing" class="submenu-check" />
           <ul class="submenu">
             <li>
-              <a href="/compose-instructor-email/index.html">
+              <!-- 페이지 이동 X, 팝업만 열기 -->
+              <a href="#" data-open-mail>
                 <i class="fas fa-envelope"></i> 강사 메일 쓰기
               </a>
             </li>
@@ -177,49 +455,49 @@
           <input type="checkbox" id="toggle-courses" class="submenu-check" />
           <ul class="submenu">
             <li>
-              <a href="/classroom-registration/index.html">
-                <i class="fas fa-plus-square"></i> 강의실 등록
-              </a>
+              <a href="/classroom-registration/index.html"
+                ><i class="fas fa-plus-square"></i> 강의실 등록</a
+              >
             </li>
             <li>
-              <a href="/classroom-edit/index.html">
-                <i class="fas fa-edit"></i> 강의실 수정
-              </a>
+              <a href="/classroom-edit/index.html"
+                ><i class="fas fa-edit"></i> 강의실 수정</a
+              >
             </li>
             <li>
-              <a href="/lecture-delete/index.html">
-                <i class="fas fa-trash"></i> 강의실 삭제
-              </a>
+              <a href="/lecture-delete/index.html"
+                ><i class="fas fa-trash"></i> 강의실 삭제</a
+              >
             </li>
             <li>
-              <a href="/classroom-student-info/index.html">
-                <i class="fas fa-users"></i> 강의실 학생 정보
-              </a>
+              <a href="/classroom-student-info/index.html"
+                ><i class="fas fa-users"></i> 강의실 학생 정보</a
+              >
             </li>
             <li>
-              <a href="/course-materials-management/index.html">
-                <i class="fas fa-folder-open"></i> 수업 자료 관리
-              </a>
+              <a href="/course-materials-management/index.html"
+                ><i class="fas fa-folder-open"></i> 수업 자료 관리</a
+              >
             </li>
             <li>
-              <a href="/exam-questions-management/index.html">
-                <i class="fas fa-file-alt"></i> 시험 문제 관리
-              </a>
+              <a href="/exam-questions-management/index.html"
+                ><i class="fas fa-file-alt"></i> 시험 문제 관리</a
+              >
             </li>
             <li>
-              <a href="/attendance-management/index.html">
-                <i class="fas fa-calendar-check"></i> 출석 관리
-              </a>
+              <a href="/attendance-management/index.html"
+                ><i class="fas fa-calendar-check"></i> 출석 관리</a
+              >
             </li>
             <li>
-              <a href="/classroom-list/index.html">
-                <i class="fas fa-folder-open"></i> 강의실 목록
-              </a>
+              <a href="/classroom-list/index.html"
+                ><i class="fas fa-folder-open"></i> 강의실 목록</a
+              >
             </li>
             <li>
-              <a href="/posts-manage/index.html">
-                <i class="fas fa-edit"></i> 게시글 관리
-              </a>
+              <a href="/posts-manage/index.html"
+                ><i class="fas fa-edit"></i> 게시글 관리</a
+              >
             </li>
           </ul>
         </li>
@@ -232,19 +510,19 @@
           <input type="checkbox" id="toggle-payments" class="submenu-check" />
           <ul class="submenu">
             <li>
-              <a href="/order-list/index.html">
-                <i class="fas fa-list"></i> 주문 목록
-              </a>
+              <a href="/order-list/index.html"
+                ><i class="fas fa-list"></i> 주문 목록</a
+              >
             </li>
             <li>
-              <a href="/payment-management/index.html">
-                <i class="fas fa-money-check-alt"></i> 결제 관리
-              </a>
+              <a href="/payment-management/index.html"
+                ><i class="fas fa-money-check-alt"></i> 결제 관리</a
+              >
             </li>
             <li>
-              <a href="/coupon-management/index.html">
-                <i class="fas fa-ticket-alt"></i> 쿠폰 관리
-              </a>
+              <a href="/coupon-management/index.html"
+                ><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a
+              >
             </li>
           </ul>
         </li>
@@ -257,28 +535,377 @@
           <input type="checkbox" id="toggle-revenue" class="submenu-check" />
           <ul class="submenu">
             <li>
-              <a href="/annual-revenue-stats/index.html">
-                <i class="fas fa-calendar"></i> 연별 매출 통계
-              </a>
+              <a href="/annual-revenue-stats/index.html"
+                ><i class="fas fa-calendar"></i> 연별 매출 통계</a
+              >
             </li>
             <li>
-              <a href="/monthly-revenue-stats/index.html">
-                <i class="fas fa-calendar-alt"></i> 월별 매출 통계
-              </a>
+              <a href="/monthly-revenue-stats/index.html"
+                ><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a
+              >
             </li>
             <li>
-              <a href="/course-revenue-stats/index.html">
-                <i class="fas fa-chalkboard"></i> 과정 매출 통계
-              </a>
+              <a href="/course-revenue-stats/index.html"
+                ><i class="fas fa-chalkboard"></i> 과정 매출 통계</a
+              >
             </li>
             <li>
-              <a href="/tax-management/index.html">
-                <i class="fas fa-file-invoice-dollar"></i> 세금 관리
-              </a>
+              <a href="/tax-management/index.html"
+                ><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a
+              >
             </li>
           </ul>
         </li>
       </ul>
     </div>
+
+    <!-- 메일쓰기 팝업 (초기 숨김) -->
+    <div
+      class="popup-overlay"
+      id="mailPopup"
+      role="dialog"
+      aria-modal="true"
+      aria-label="메일 쓰기"
+      hidden
+    >
+      <div class="popup">
+        <div class="popup-header">
+          메일 쓰기
+          <button type="button" class="popup-close" aria-label="닫기">
+            &times;
+          </button>
+        </div>
+        <div class="popup-body">
+          <!-- 받는사람 -->
+          <div class="form-group">
+            <label class="form-label">받는사람</label>
+            <div class="receiver-box">
+              <div id="receiverList" class="receiver-list"></div>
+              <input
+                type="text"
+                id="receiverInput"
+                placeholder="이메일 입력 후 Enter"
+              />
+              <button
+                type="button"
+                class="address-book-btn"
+                id="openAddressBook"
+              >
+                <i class="fa-solid fa-book"></i> 주소록
+              </button>
+            </div>
+          </div>
+
+          <!-- 제목 -->
+          <div class="form-group">
+            <label class="form-label">제목</label>
+            <div class="title-box">
+              <input type="text" id="mailTitle" placeholder="제목 입력" />
+              <select id="templateSelect">
+                <option value="">템플릿 선택</option>
+                <option>공지사항 안내</option>
+                <option>업데이트 안내</option>
+                <option>이벤트 초대</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 파일첨부 -->
+          <div class="form-group">
+            <label class="form-label">파일첨부</label>
+            <div id="fileDrop" class="file-drop-area">
+              파일을 끌어오거나 클릭하여 업로드하세요.
+            </div>
+          </div>
+
+          <!-- 내용 -->
+          <div class="form-group">
+            <label class="form-label">내용</label>
+            <div class="editor-toolbar">
+              <select id="fontSizeSel">
+                <option value="3">14px</option>
+                <option value="4">18px</option>
+                <option value="5">24px</option>
+              </select>
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="italic"><i>I</i></button>
+              <button type="button" data-cmd="underline"><u>U</u></button>
+              <button type="button" data-cmd="insertUnorderedList">
+                <i class="fa fa-list-ul"></i>
+              </button>
+              <button type="button" data-cmd="insertOrderedList">
+                <i class="fa fa-list-ol"></i>
+              </button>
+              <button type="button" id="linkBtn">
+                <i class="fa fa-link"></i>
+              </button>
+              <button type="button" id="imgBtn">
+                <i class="fa fa-image"></i>
+              </button>
+            </div>
+            <div class="editor" id="mailEditor" contenteditable="true">
+              여기에 내용을 입력하세요...
+            </div>
+          </div>
+
+          <!-- 보내기 -->
+          <button class="btn-submit" id="sendBtn">메일 보내기</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ===== Popup open/close + a11y + scroll lock =====
+      (function () {
+        const overlay = document.getElementById("mailPopup");
+        const body = document.body;
+        let lastFocus = null;
+
+        function lockScroll(lock) {
+          body.style.overflow = lock ? "hidden" : "";
+        }
+        function openPopup(trigger) {
+          lastFocus = trigger || document.activeElement;
+          overlay.classList.add("is-open");
+          overlay.removeAttribute("hidden");
+          lockScroll(true);
+          const first = overlay.querySelector(
+            'button, [href], input, select, textarea, [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
+          );
+          (first || overlay).focus();
+        }
+        function closePopup() {
+          overlay.classList.remove("is-open");
+          overlay.setAttribute("hidden", "");
+          lockScroll(false);
+          if (lastFocus && typeof lastFocus.focus === "function")
+            lastFocus.focus();
+        }
+        window.closePopup = closePopup; // (원한다면 외부 호출용)
+
+        // 메뉴에서 열기
+        document.addEventListener("click", (e) => {
+          const opener = e.target.closest("[data-open-mail]");
+          if (opener) {
+            e.preventDefault();
+            openPopup(opener);
+          }
+          if (e.target.closest(".popup-close")) {
+            e.preventDefault();
+            closePopup();
+          }
+        });
+
+        // 배경 클릭 닫기
+        overlay.addEventListener("mousedown", (e) => {
+          if (e.target === overlay) closePopup();
+        });
+
+        // ESC 닫기 + 포커스 트랩
+        overlay.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            closePopup();
+            return;
+          }
+          if (e.key === "Tab") {
+            const focusables = Array.from(
+              overlay.querySelectorAll(
+                'button, [href], input, select, textarea, [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
+              )
+            ).filter(
+              (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+            );
+            if (!focusables.length) return;
+            const first = focusables[0],
+              last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        });
+      })();
+
+      // ===== Receiver tags (간단한 데모) =====
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // ===== Receiver tags =====
+        (function () {
+          const list = document.getElementById("receiverList");
+          const input = document.getElementById("receiverInput");
+          if (!list || !input) return;
+
+          const emails = new Set();
+
+          function isEmail(s) {
+            // 아주 기본적인 형식 체크 (필요하면 강화)
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+          }
+
+          function addTag(raw) {
+            if (!raw) return;
+            // , ; 공백으로 여러 개 들어온 것도 분해
+            const parts = String(raw)
+              .split(/[,\s;]+/)
+              .map((v) => v.trim())
+              .filter(Boolean);
+            for (const part of parts) {
+              const email = part;
+              if (!isEmail(email)) {
+                // 형식이 아니면 스킵 (원하면 alert로 알려도 됨)
+                continue;
+              }
+              if (emails.has(email)) continue;
+
+              emails.add(email);
+              const tag = document.createElement("span");
+              tag.className = "receiver-tag";
+              tag.setAttribute("data-email", email);
+
+              const text = document.createElement("span");
+              text.textContent = email;
+
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.setAttribute("aria-label", "제거");
+              btn.innerHTML = "&times;";
+              btn.addEventListener("click", () => {
+                emails.delete(email);
+                tag.remove();
+              });
+
+              tag.append(text, btn);
+              list.appendChild(tag);
+            }
+          }
+
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const v = input.value.trim();
+              if (v) addTag(v);
+              input.value = "";
+            }
+          });
+
+          // 붙여넣기에서도 여러 개 처리
+          input.addEventListener("paste", (e) => {
+            const v = (e.clipboardData || window.clipboardData).getData("text");
+            if (v) {
+              e.preventDefault();
+              addTag(v);
+            }
+          });
+
+          // 외부에서 수신자 목록이 필요할 때 쓸 수 있도록(선택)
+          window.__getReceiverEmails = () => Array.from(emails);
+        })();
+
+        // ===== File drop (스타일 토글 + 파일 선택) =====
+        (function () {
+          const drop = document.getElementById("fileDrop");
+          if (!drop) return;
+
+          function prevent(e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+
+          ["dragenter", "dragover", "dragleave", "drop"].forEach((ev) => {
+            drop.addEventListener(ev, prevent);
+          });
+
+          ["dragenter", "dragover"].forEach((ev) => {
+            drop.addEventListener(ev, (e) => {
+              drop.classList.add("is-dragover");
+              if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+            });
+          });
+
+          ["dragleave", "drop"].forEach((ev) => {
+            drop.addEventListener(ev, () =>
+              drop.classList.remove("is-dragover")
+            );
+          });
+
+          drop.addEventListener("click", () => {
+            const f = document.createElement("input");
+            f.type = "file";
+            f.multiple = true;
+            f.addEventListener("change", () => {
+              console.log("FILES:", f.files);
+              // TODO: 여기서 업로드 로직으로 연결
+            });
+            f.click();
+          });
+
+          drop.addEventListener("drop", (e) => {
+            const files = e.dataTransfer?.files;
+            if (files && files.length) {
+              console.log("DROP FILES:", files);
+              // TODO: 업로드 로직 연결
+            }
+          });
+        })();
+
+        // ===== Rich text toolbar (execCommand 데모) =====
+        (function () {
+          const editor = document.getElementById("mailEditor");
+          const sizeSel = document.getElementById("fontSizeSel");
+          if (!editor) return;
+
+          // 버튼 기본 type=button 아니라면 form submit 방지
+          document
+            .querySelectorAll(".editor-toolbar button")
+            .forEach((b) => (b.type = "button"));
+
+          document
+            .querySelectorAll(".editor-toolbar [data-cmd]")
+            .forEach((btn) => {
+              btn.addEventListener("click", () => {
+                editor.focus();
+                document.execCommand(btn.dataset.cmd, false, "");
+              });
+            });
+
+          sizeSel?.addEventListener("change", function () {
+            editor.focus();
+            document.execCommand("fontSize", false, this.value);
+          });
+
+          document.getElementById("linkBtn")?.addEventListener("click", () => {
+            const url = prompt("링크 URL");
+            if (url) {
+              editor.focus();
+              document.execCommand("createLink", false, url);
+            }
+          });
+
+          document.getElementById("imgBtn")?.addEventListener("click", () => {
+            const url = prompt("이미지 URL");
+            if (url) {
+              editor.focus();
+              document.execCommand("insertImage", false, url);
+            }
+          });
+
+          document.getElementById("sendBtn")?.addEventListener("click", () => {
+            const receivers = (window.__getReceiverEmails?.() || []).join(", ");
+            const title = (
+              document.getElementById("mailTitle")?.value || ""
+            ).trim();
+            const html = editor.innerHTML;
+
+            console.log("SEND MAIL", { receivers, title, html });
+            alert("메일 전송 로직에 연결하세요!\\n(콘솔에 데이터 출력 중)");
+          });
+        })();
+      });
+    </script>
   </body>
 </html>

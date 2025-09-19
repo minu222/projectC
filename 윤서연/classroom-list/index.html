@@ -1,15 +1,8 @@
-<!-- =========================================================
-DW Academy • Admin Pages (v2)
-- 참고하신 최신 스타일(변수, topbar, container, content-box, search-box, table 등)을 일관 적용
-- 중복/충돌 나던 topbar 스타일 정리, 사이드바 없을 때 좌측 패딩 제거
-- 숫자열 tabular-nums, 접근성 라벨, 선택삭제 샘플 JS 포함
-- 파일 2개:
-  1) classroom-list.html (강의실 목록)
-  2) posts-manage.html   (게시글 관리)
-========================================================= -->
-
 <!-- ===============================
-  1) classroom-list.html
+DW Academy - 강의실 목록 (No JS)
+- 스크립트 없이 시각/가독성만 개선
+- :has()로 체크된 행 하이라이트 (지원 브라우저에서)
+- 모바일 카드형 테이블 전환
 =============================== -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
@@ -22,16 +15,23 @@ DW Academy • Admin Pages (v2)
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/common.css" />
-    <style>
-      /* ===== 공통 토큰 (요청안 스타일과 동일 계열) ===== */
 
-      /* ===== 검색/액션 ===== */
+    <style>
+      .header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      /* ===== 검색/액션 바 (시맨틱, 가독성) ===== */
       .search-area {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
         align-items: end;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
       }
       .search-left {
         display: flex;
@@ -53,7 +53,7 @@ DW Academy • Admin Pages (v2)
       .search-left select,
       .search-left input[type="text"] {
         padding: 8px 10px;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--border);
         background: #fff;
       }
       .search-left input[type="text"]:focus,
@@ -72,6 +72,7 @@ DW Academy • Admin Pages (v2)
       .search-left button:hover {
         filter: brightness(0.98);
       }
+
       .search-actions {
         display: flex;
         gap: 10px;
@@ -107,56 +108,75 @@ DW Academy • Admin Pages (v2)
         filter: brightness(0.98);
       }
 
-      /* ===== 테이블 ===== */
+      /* ===== 테이블 래퍼 ===== */
       .table-wrap {
         background: var(--card);
         border-radius: 14px;
         overflow: hidden;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--border);
       }
       .table-scroller {
         width: 100%;
         overflow-x: auto;
       }
+
       table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         min-width: 880px;
       }
       thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
         background: #f9fafb;
+        color: #0f172a;
         font-weight: 700;
         font-size: 14px;
         text-align: left;
-        border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
       }
-      td {
-        border-bottom: 1px solid #e5e7eb;
+      tbody td {
         padding: 12px 14px;
         font-size: 14px;
+        border-bottom: 1px solid var(--border);
       }
       tbody tr:last-child td {
         border-bottom: none;
       }
-      tbody tr:hover {
-        background: #fcfcfd;
+
+      /* 줄무늬 + 호버 */
+      tbody tr:nth-child(odd) {
+        background: #fafafa;
       }
-      .num {
-        font-variant-numeric: tabular-nums;
-        text-align: right;
+      tbody tr:hover {
+        background: var(--soft);
+      }
+
+      /* 체크박스 컬럼 고정 폭 */
+      colgroup col.chk {
+        width: 44px;
       }
       .center {
         text-align: center;
         color: #374151;
       }
-      input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        accent-color: var(--primary);
-        cursor: pointer;
+
+      /* 숫자열 가독성 */
+      .num {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
       }
 
+      /* 체크된 행 하이라이트 (:has 지원 브라우저) */
+      tbody tr:has(> td:first-child input[type="checkbox"]:checked) {
+        background: #eef6ff;
+        box-shadow: inset 0 0 0 9999px rgba(37, 99, 235, 0.06);
+      }
+
+      /* 상태 칩 */
       .status {
         display: inline-block;
         padding: 4px 10px;
@@ -177,7 +197,47 @@ DW Academy • Admin Pages (v2)
         color: #1e1b4b;
       }
 
-      /* 반응형 */
+      /* 액션 링크 버튼화 */
+      .actions a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+        padding: 0 10px;
+        margin-right: 6px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        color: #1f2937;
+        background: #fff;
+      }
+      .actions a:hover {
+        background: #f3f4f6;
+      }
+
+      .actions a.edit {
+        background: #ecfeff;
+        border-color: #a5f3fc;
+        color: #0b3a2f;
+      }
+
+      /* 체크박스 톤 */
+      input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+
+      /* 접근성 포커스 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
+
+      /* ===== 반응형: 모바일에서 카드형 전환 ===== */
       @media (max-width: 900px) {
         .search-area {
           grid-template-columns: 1fr;
@@ -192,26 +252,81 @@ DW Academy • Admin Pages (v2)
           flex: 1 1 auto;
           justify-content: center;
         }
-        table {
-          min-width: 720px;
-        }
-      }
 
-      /* 접근성 */
-      :focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-radius: 8px;
+        .table-wrap {
+          padding: 8px;
+        }
+        .table-scroller {
+          overflow: visible;
+        }
+        table {
+          min-width: 0;
+          border-collapse: separate;
+          border-spacing: 0 10px;
+        }
+        thead {
+          display: none;
+        }
+
+        tbody tr {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          background: #fff;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 10px;
+        }
+        tbody td {
+          border: none;
+          padding: 6px 8px;
+        }
+
+        tbody td[data-label]::before {
+          content: attr(data-label);
+          display: block;
+          font-size: 12px;
+          color: var(--muted);
+          margin-bottom: 2px;
+        }
+        /* 체크박스 + 번호는 한 줄로 */
+        tbody td:first-child {
+          grid-column: 1 / 2;
+          align-self: center;
+        }
+        tbody td:nth-child(2) {
+          grid-column: 2 / 3;
+          justify-self: end;
+        }
+        /* 액션은 전체 너비 */
+        tbody td.actions {
+          grid-column: 1 / -1;
+        }
       }
     </style>
   </head>
+
   <body>
     <header class="topbar"><div>DW Academy</div></header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
-          <div class="header"><h2>강의실 목록</h2></div>
+          <div class="header">
+            <h2>강의실 목록</h2>
+            <!-- 상태 범례(옵션) -->
+            <div
+              class="legend"
+              aria-hidden="true"
+              style="display: flex; gap: 8px; align-items: center"
+            >
+              <span class="status open">운영중</span>
+              <span class="status repair">점검</span>
+              <span class="status closed">휴강</span>
+            </div>
+          </div>
 
+          <!-- 검색/액션 -->
           <form class="search-area" method="get" th:action="@{/classrooms}">
             <div class="search-left">
               <label for="campus">캠퍼스:</label>
@@ -248,6 +363,7 @@ DW Academy • Admin Pages (v2)
                   담당자
                 </option>
               </select>
+
               <input
                 id="keyword"
                 name="keyword"
@@ -259,26 +375,40 @@ DW Academy • Admin Pages (v2)
                 <i class="fa-solid fa-magnifying-glass"></i> 검색
               </button>
             </div>
+
             <div class="search-actions">
-              <button class="btn-delete" type="button" id="btnDeleteRooms">
+              <!-- JS 없이 디자인만 유지 (동작은 서버/별도 스크립트에서) -->
+              <a class="btn-delete" href="#" onclick="return false;">
                 <i class="fa-solid fa-trash"></i> 선택 삭제
-              </button>
-              <a class="btn-write" th:href="@{/classrooms/new}"
-                ><i class="fa-solid fa-door-open"></i> 강의실 등록</a
-              >
+              </a>
+              <a class="btn-write" th:href="@{/classrooms/new}">
+                <i class="fa-solid fa-door-open"></i> 강의실 등록
+              </a>
             </div>
           </form>
 
+          <!-- 목록 -->
           <div class="table-wrap">
             <div class="table-scroller">
               <table aria-label="강의실 목록">
+                <colgroup>
+                  <col class="chk" />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                </colgroup>
                 <thead>
                   <tr>
                     <th>
+                      <!-- JS 없이 디자인만 노출 -->
                       <input
                         id="checkAllRooms"
                         type="checkbox"
-                        aria-label="전체 선택"
+                        aria-label="전체 선택(시각적)"
                       />
                     </th>
                     <th>번호</th>
@@ -290,20 +420,30 @@ DW Academy • Admin Pages (v2)
                     <th>관리</th>
                   </tr>
                 </thead>
+
                 <tbody>
+                  <!-- 서버 데이터 -->
                   <tr th:each="room, i: ${classrooms}">
-                    <td>
+                    <td data-label="선택">
                       <input
                         class="row-check room"
                         type="checkbox"
                         th:value="${room.id}"
                       />
                     </td>
-                    <td class="center" th:text="${i.count}">1</td>
-                    <td th:text="${room.name}">301호</td>
-                    <td th:text="${room.campus}">대전</td>
-                    <td class="num" th:text="${room.capacity}">30</td>
-                    <td>
+                    <td class="center" data-label="번호" th:text="${i.count}">
+                      1
+                    </td>
+                    <td data-label="강의실명" th:text="${room.name}">301호</td>
+                    <td data-label="캠퍼스" th:text="${room.campus}">대전</td>
+                    <td
+                      class="num"
+                      data-label="수용인원"
+                      th:text="${room.capacity}"
+                    >
+                      30
+                    </td>
+                    <td data-label="상태">
                       <span class="status open" th:if="${room.status=='OPEN'}"
                         >운영중</span
                       >
@@ -318,31 +458,50 @@ DW Academy • Admin Pages (v2)
                         >점검</span
                       >
                     </td>
-                    <td th:text="${room.manager}">김민수</td>
-                    <td>
-                      <a th:href="@{/classrooms/{id}(id=${room.id})}">보기</a>
-                      ·
-                      <a th:href="@{/classrooms/{id}/edit(id=${room.id})}"
-                        >수정</a
+                    <td data-label="담당자" th:text="${room.manager}">
+                      김민수
+                    </td>
+                    <td class="actions" data-label="관리">
+                      <a
+                        class="view"
+                        th:href="@{/classrooms/{id}(id=${room.id})}"
                       >
+                        <i class="fa-regular fa-eye"></i> 보기
+                      </a>
+                      <a
+                        class="edit"
+                        th:href="@{/classrooms/{id}/edit(id=${room.id})}"
+                      >
+                        <i class="fa-regular fa-pen-to-square"></i> 수정
+                      </a>
                     </td>
                   </tr>
+
                   <!-- 정적 예시 -->
                   <tr>
-                    <td>
+                    <td data-label="선택">
                       <input
                         class="row-check room"
                         type="checkbox"
                         value="101"
                       />
                     </td>
-                    <td class="center">1</td>
-                    <td>301호</td>
-                    <td>대전</td>
-                    <td class="num">30</td>
-                    <td><span class="status open">운영중</span></td>
-                    <td>김민수</td>
-                    <td><a href="#">보기</a> · <a href="#">수정</a></td>
+                    <td class="center" data-label="번호">1</td>
+                    <td data-label="강의실명">301호</td>
+                    <td data-label="캠퍼스">대전</td>
+                    <td class="num" data-label="수용인원">30</td>
+                    <td data-label="상태">
+                      <span class="status open">운영중</span>
+                    </td>
+                    <td data-label="담당자">김민수</td>
+                    <td class="actions" data-label="관리">
+                      <a class="view" href="#"
+                        ><i class="fa-regular fa-eye"></i> 보기</a
+                      >
+                      <a class="edit" href="#"
+                        ><i class="fa-regular fa-pen-to-square"></i> 수정</a
+                      >
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -351,27 +510,5 @@ DW Academy • Admin Pages (v2)
         </div>
       </main>
     </div>
-
-    <script>
-      // 전체 선택 & 선택 삭제 샘플
-      const allRooms = document.getElementById("checkAllRooms");
-      const roomChecks = () =>
-        Array.from(document.querySelectorAll("input.row-check.room"));
-      allRooms?.addEventListener("change", (e) =>
-        roomChecks().forEach((c) => (c.checked = e.target.checked))
-      );
-      document
-        .getElementById("btnDeleteRooms")
-        ?.addEventListener("click", () => {
-          const ids = roomChecks()
-            .filter((c) => c.checked)
-            .map((c) => c.value);
-          if (!ids.length) return alert("삭제할 강의실을 선택하세요.");
-          if (confirm(ids.length + "개 강의실을 삭제하시겠습니까?")) {
-            // TODO: fetch('/classrooms/bulk-delete', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(ids)});
-            console.log("DELETE rooms", ids);
-          }
-        });
-    </script>
   </body>
 </html>
