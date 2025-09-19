@@ -1,0 +1,33 @@
+<!-- fragments/lecture_review_register.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 후기 등록 | MyLMS</title>
+    <link rel="stylesheet" th:href="@{/css/Register a lecture review.css}">
+</head>
+<body>
+<div th:fragment="lectureReviewRegisterFragment(lecture)">
+    <div class="container">
+        <h2>강의 후기 등록</h2>
+
+        <div class="form-group">
+            <input type="text" value="강의 후기" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>제목</label>
+            <input type="text" th:value="${lecture.title}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>내용</label>
+            <textarea placeholder="내용을 작성하세요" th:text="${reviewContent}"></textarea>
+        </div>
+
+        <button type="submit">등록</button>
+    </div>
+</div>
+</body>
+</html>

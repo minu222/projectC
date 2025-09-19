@@ -1,0 +1,88 @@
+<!-- fragments/classroom_registration.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 등록</title>
+    <link rel="stylesheet" th:href="@{/css/Classroom registration.css}">
+</head>
+<body>
+<div th:fragment="classroomRegistrationFragment">
+
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h2>강의 등록</h2>
+        </div>
+
+        <!-- 기본 정보 카드 -->
+        <div class="card">
+            <h3>기본 정보</h3>
+            <label>과정구분</label>
+            <select id="courseType" name="courseType" th:value="${course?.type}">
+                <option value="VOD">VOD</option>
+                <option value="개인강의">개인강의</option>
+                <option value="다수강의">다수강의</option>
+            </select>
+
+            <label>과정명</label>
+            <input name="courseName" placeholder="강의 이름 입력" type="text" th:value="${course?.name}">
+
+            <label>메인 이미지</label>
+            <input accept="image/*" id="mainImage" type="file">
+            <img alt="이미지 미리보기" id="preview" th:src="@{${course?.image}}" />
+        </div>
+
+        <!-- 수업 정보 카드 -->
+        <div class="card">
+            <h3>수업 정보</h3>
+            <div class="row">
+                <div>
+                    <label>교육비</label>
+                    <div class="row">
+                        <input min="0" name="fee" type="number" th:value="${course?.fee}">
+                        <span>원</span>
+                    </div>
+                </div>
+                <div>
+                    <label>교육기간</label>
+                    <input name="period" placeholder="예: 2025-01-01 ~ 2025-02-01" type="text" th:value="${course?.period}">
+                </div>
+                <div>
+                    <label>1일 교육시간</label>
+                    <input id="dailyTime" min="1" name="dailyTime" type="number" th:value="${course?.dailyTime}">
+                    <span id="dailyTimeNote" style="font-size:13px; color:#888; display:none;">VOD 선택시 비활성화</span>
+                </div>
+            </div>
+
+            <label>교육대상</label>
+            <div id="targetField" th:text="${course?.target}"></div>
+        </div>
+
+        <!-- 상세 정보 카드 -->
+        <div class="card">
+            <h3>상세 정보</h3>
+            <label>과정설명</label>
+            <input name="description" placeholder="과정 제목" type="text" th:value="${course?.description}">
+
+            <label>과정소개</label>
+            <textarea name="introduction" rows="3" th:text="${course?.introduction}"></textarea>
+
+            <label>학습목표</label>
+            <textarea name="goal" rows="3" th:text="${course?.goal}"></textarea>
+
+            <label>시험 파일</label>
+            <input accept=".pdf,.doc,.docx,.hwp" name="examFile" type="file">
+        </div>
+
+        <!-- 등록 버튼 -->
+        <div style="text-align:right; margin-top:10px;">
+            <button class="btn-submit">등록</button>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/js/Classroom registration.js}"></script>
+</body>
+</html>

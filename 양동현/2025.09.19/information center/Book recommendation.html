@@ -1,0 +1,63 @@
+<!-- fragments/book-recommendation.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 추천</title>
+    <link rel="stylesheet" th:href="@{/css/Book recommendation.css}">
+</head>
+<body>
+<!-- 도서 추천 프래그먼트 -->
+<div th:fragment="bookRecommendationFragment">
+
+    <div class="container">
+        <div class="header">
+            <h2>도서추천</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="검색어 입력">
+                <button id="searchBtn">검색</button>
+            </div>
+        </div>
+
+        <div class="card-grid" id="cardGrid"></div>
+        <div class="pagination" id="pagination"></div>
+
+        <div class="action-buttons">
+            <button id="registerBtn">등록</button>
+            <button id="editBtn">수정</button>
+            <button id="deleteBtn">삭제</button>
+        </div>
+    </div>
+
+    <!-- 등록/수정 모달 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h3>도서 등록 / 수정</h3>
+            <label>강사 이름</label>
+            <input type="text" id="instructorInput">
+            <label>책 제목</label>
+            <input type="text" id="titleInput">
+            <label>소개글</label>
+            <input type="text" id="descInput">
+            <label>이미지 업로드</label>
+            <input type="file" id="imgInput" accept="image/*">
+            <button id="saveBtn">저장</button>
+        </div>
+    </div>
+
+    <!-- 삭제 모달 -->
+    <div class="modal-overlay" id="deleteOverlay">
+        <div class="modal-container">
+            <button class="modal-close" id="deleteClose">&times;</button>
+            <h3>도서 삭제</h3>
+            <div class="delete-list" id="deleteList"></div>
+            <button id="deleteConfirmBtn">삭제 선택 항목</button>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/js/Book recommendation.js}"></script>
+</body>
+</html>

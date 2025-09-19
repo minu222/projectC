@@ -1,0 +1,21 @@
+<!-- fragments/notice_detail.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 상세</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="noticeDetailFragment">
+    <div class="container">
+        <h2 id="title" th:text="${notice.title}">공지사항 제목</h2>
+        <div class="date" id="date" th:text="'등록일: ' + ${notice.regDate}">등록일: 2025-09-01</div>
+        <div class="content" id="content" th:text="${notice.content}">
+            공지사항 내용이 여기에 표시됩니다.
+        </div>
+        <a th:href="@{/notice/list}" class="back-btn">목록으로 돌아가기</a>
+    </div>
+</div>
+</body>
+</html>

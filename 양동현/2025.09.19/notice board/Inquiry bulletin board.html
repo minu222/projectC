@@ -1,0 +1,61 @@
+<!-- fragments/inquiry_board.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의게시판</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="inquiryBoardFragment(posts, page, totalPages, searchKeyword)">
+    <div class="board-container">
+        <div class="board-header">
+            <div class="board-title">문의게시판</div>
+            <div class="search">
+                <input type="text" placeholder="검색어를 입력해주세요" th:value="${searchKeyword}">
+                <button type="submit">검색</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>등록일</th>
+                <th>답변상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.id}">1</td>
+                <td>
+                    <a th:href="@{/inquiry/{id}(id=${post.id})}" th:text="${post.title}">질문 제목</a>
+                </td>
+                <td th:text="${post.author}">홍*동</td>
+                <td th:text="${post.date}">2025.08.25</td>
+                <td>
+                    <span class="status" th:classappend="${post.status}" th:text="${post.statusName}">답변대기</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button th:disabled="${page == 1}" th:onclick="'location.href=\'?page=' + ${page-1} + '\''">&laquo;</button>
+            <button th:disabled="${page == 1}" th:onclick="'location.href=\'?page=' + ${page-1} + '\''">&lt;</button>
+            <button th:each="i : ${#numbers.sequence(1,totalPages)}"
+                    th:classappend="${i == page} ? 'active'"
+                    th:text="${i}"
+                    th:onclick="'location.href=\'?page=' + ${i} + '\''">1</button>
+            <button th:disabled="${page == totalPages}" th:onclick="'location.href=\'?page=' + ${page+1} + '\''">&gt;</button>
+            <button th:disabled="${page == totalPages}" th:onclick="'location.href=\'?page=' + ${page+1} + '\''">&raquo;</button>
+        </div>
+
+        <button class="write-button" th:onclick="'location.href=\'/inquiry/write\''">문의하기</button>
+    </div>
+</div>
+</body>
+</html>
