@@ -1,0 +1,62 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f6;
+    margin: 0;
+    padding: 20px 0;
+}
+.container {
+    width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background: #f0f0f0;
+    color: #555;
+    text-align: left;
+}
+tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+tbody tr:hover {
+    background: #fff3d6; /* 호버 시 강조 */
+}
+td a {
+    text-decoration: none;
+    color: #333;
+}
+td a:hover {
+    color: #ffb400;
+}
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+.pagination button {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 3px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.pagination button.active {
+    background: #ffb400;
+    border-color: #ffb400;
+    color: #fff;
+}

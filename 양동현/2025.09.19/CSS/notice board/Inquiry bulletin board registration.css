@@ -1,0 +1,77 @@
+.board-container {
+    width: 1100px;
+    min-height: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.board-title {
+    font-size: 24px;
+    font-weight: bold;
+    font-color:#ff9800;
+}
+label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 500;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.toolbar {
+    margin: 15px 0;
+}
+.toolbar select,
+.toolbar button {
+    margin-right: 5px;
+    padding: 5px 8px;
+    font-size: 14px;
+}
+.editor {
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.button-group {
+    text-align: right;
+}
+.cancel-btn,
+.submit-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.cancel-btn {
+    background-color: #ccc;
+    margin-right: 10px;
+}
+.submit-btn {
+    background-color:#ff9800;
+    color: #fff;
+}
+.private-option {
+    margin-bottom: 20px;
+}
+.board-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff9800;
+}
