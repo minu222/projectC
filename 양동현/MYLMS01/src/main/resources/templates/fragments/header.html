@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyLMS</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        /* 간단한 헤더 스타일 */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+
+        .nav-center ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-center a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-center a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-links a {
+            color: #f1c40f;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 알림 버튼 */
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .badge {
+            background: red;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            color: black;
+            list-style: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 200px;
+            margin-top: 8px;
+        }
+
+        .dropdown li {
+            padding: 5px 0;
+        }
+
+        .dropdown li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dropdown li a:hover {
+            color: #2980b9;
+        }
+
+        .notification:hover .dropdown {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="nav-container">
+        <div class="logo">MyLMS</div>
+
+        <!-- 중앙 네비게이션 -->
+        <nav class="nav-center">
+            <ul>
+                <li><a class="header-category" data-category="course" href="#">교육과정</a></li>
+                <li><a class="header-category" data-category="info" href="#">정보센터</a></li>
+                <li><a class="header-category" data-category="board" href="#">게시판</a></li>
+                <li><a class="header-category" data-category="myclass" href="#">나의 강의실</a></li>
+            </ul>
+        </nav>
+
+        <!-- 로그인 / 회원가입 / 알림 -->
+        <div class="auth-links" id="authLinks">
+            <a href="#" id="loginBtn">로그인</a>
+            <span>|</span>
+            <a href="#" id="signupBtn">회원가입</a>
+
+            <div class="notification" id="notificationBtn" style="display:none;">
+                🔔<span class="badge">3</span>
+                <ul class="dropdown">
+                    <li><a href="#">새 쪽지: 안녕하세요!</a></li>
+                    <li><a href="#">새 이메일: 수강 안내</a></li>
+                    <li><a href="#">모두 보기</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>
