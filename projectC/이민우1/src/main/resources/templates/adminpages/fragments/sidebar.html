@@ -55,12 +55,12 @@
             <input type="checkbox" id="toggle-mailing" class="submenu-check" />
             <ul class="submenu">
                 <li>
-                    <a th:href="@{/admin/compose-instructor-email}">
+                    <a th:href="@{/email/compose-instructor-email}">
                         <i class="fas fa-envelope"></i> 강사 메일 쓰기
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/email-send-history}">
+                    <a th:href="@{/email/email-send-history}">
                         <i class="fas fa-envelope-open-text"></i> 이메일 발송 내역
                     </a>
                 </li>
@@ -75,20 +75,25 @@
             <input type="checkbox" id="toggle-courses" class="submenu-check" />
             <ul class="submenu">
                 <li>
-                    <a th:href="@{/admin/classroom-registration}">
+                    <a th:href="@{/admin/classrooms-registration}">
                         <i class="fas fa-plus-square"></i> 강의실 등록
                     </a>
                 </li>
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/classroom-edit}">-->
+<!--                        <i class="fas fa-edit"></i> 강의실 수정-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li>
-                    <a th:href="@{/admin/classroom-edit}">
-                        <i class="fas fa-edit"></i> 강의실 수정
+                    <a th:href="@{/admin/classrooms-list}">
+                        <i class="fas fa-edit"></i> 강의실 목록
                     </a>
                 </li>
-                <li>
-                    <a th:href="@{/admin/lecture-delete}">
-                        <i class="fas fa-trash"></i> 강의실 삭제
-                    </a>
-                </li>
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/lecture-delete}">-->
+<!--                        <i class="fas fa-trash"></i> 강의실 삭제-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li>
                     <a th:href="@{/admin/classroom-student-info}">
                         <i class="fas fa-users"></i> 강의실 학생 정보
@@ -120,17 +125,17 @@
             <input type="checkbox" id="toggle-payments" class="submenu-check" />
             <ul class="submenu">
                 <li>
-                    <a th:href="@{/admin/order-list}">
+                    <a th:href="@{/order/order-list}">
                         <i class="fas fa-list"></i> 주문 목록
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/payment-management}">
+                    <a th:href="@{/order/payment-management}">
                         <i class="fas fa-money-check-alt"></i> 결제 관리
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/coupon-management}">
+                    <a th:href="@{/order/coupon-management}">
                         <i class="fas fa-ticket-alt"></i> 쿠폰 관리
                     </a>
                 </li>
@@ -145,22 +150,22 @@
             <input type="checkbox" id="toggle-revenue" class="submenu-check" />
             <ul class="submenu">
                 <li>
-                    <a th:href="@{/admin/annual-revenue-stats}">
+                    <a th:href="@{/sales/annual-revenue-stats}">
                         <i class="fas fa-calendar"></i> 연별 매출 통계
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/monthly-revenue-stats}">
+                    <a th:href="@{/sales/monthly-revenue-stats}">
                         <i class="fas fa-calendar-alt"></i> 월별 매출 통계
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/course-revenue-stats}">
+                    <a th:href="@{/sales/course-revenue-stats}">
                         <i class="fas fa-chalkboard"></i> 과정 매출 통계
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/admin/tax-management}">
+                    <a th:href="@{/sales/tax-management}">
                         <i class="fas fa-file-invoice-dollar"></i> 세금 관리
                     </a>
                 </li>

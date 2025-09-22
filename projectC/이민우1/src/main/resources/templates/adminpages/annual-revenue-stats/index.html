@@ -1,150 +1,49 @@
 <!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>연별 매출 통계</title>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>DW Academy - 강사 정보</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/adminpages/css/common.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/annual-revenue-stats.css}">
+</head>
+<body>
+<div th:replace="adminpages/fragments/topbar :: topbar"></div>
+<div class="container">
+    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
 
-    <!-- Libs -->
-
-    <link rel="stylesheet" href="/common.css" />
-
-    <style>
-    
-
-      .content-box h2 {
-        margin: 0 0 14px;
-        font-size: clamp(18px, 2.6vw, 24px);
-        color: var(--primary);
-      }
-      .content-box p.helper {
-        margin: 6px 0 14px;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      /* 검색박스: 자동 칼럼 */
-      .search-box {
-        display: grid;
-        gap: 12px;
-        margin: 10px 0 16px;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      }
-      .search-box input[type="number"],
-      .search-box button {
-        height: 42px;
-        padding: 10px 12px;
-        font-size: 14px;
-        border-radius: 10px;
-      }
-      .search-box input[type="number"] {
-        border: 1px solid #e5e7eb;
-        background: #fff;
-      }
-      .search-box input[type="number"]:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-      }
-      .btn-primary {
-        border: none;
-        background: var(--primary);
-        color: #fff;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .btn-primary:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      /* 차트 컨테이너: 반응형 비율 고정 */
-      .chart-container {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        background: repeating-linear-gradient(
-            to right,
-            #f3f4f6 0,
-            #f3f4f6 1px,
-            transparent 1px,
-            transparent 40px
-          ),
-          repeating-linear-gradient(
-            to bottom,
-            #f3f4f6 0,
-            #f3f4f6 1px,
-            transparent 1px,
-            transparent 40px
-          );
-        border: 1px dashed #e5e7eb;
-        border-radius: 12px;
-      }
-      .chart-container::after {
-        content: "데이터 준비되면 차트가 표시됩니다";
-        position: absolute;
-        right: 12px;
-        bottom: 10px;
-        font-size: 12px;
-        color: var(--muted);
-      }
-      .chart-container > canvas {
-        position: absolute;
-        inset: 0;
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-      }
-      .chart-container > canvas {
-        position: absolute;
-        inset: 0;
-        width: 100% !important;
-        height: 100% !important;
-      }
-
-      /* 작은 화면 보조 여백 */
-      @media (max-width: 560px) {
-        .content-box {
-          border-radius: 12px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="topbar">
-      <div>DW Academy</div>
-    </header>
-
-    <div class="container">
-      <main class="main">
+    <main class="main">
         <div class="content-box">
-          <h2>연별 매출 통계</h2>
-          <p class="helper">
-            조회 구간의 연도별 매출 추이를 확인합니다. (예시 데이터)
-          </p>
+            <h2>연별 매출 통계</h2>
+            <p class="helper">
+                조회 구간의 연도별 매출 추이를 확인합니다. (예시 데이터)
+            </p>
 
-          <div class="search-box sales-yearly-search">
-            <input
-              id="startYear"
-              type="number"
-              placeholder="시작연도(예: 2021)"
-            />
-            <input
-              id="endYear"
-              type="number"
-              placeholder="종료연도(예: 2025)"
-            />
-            <button id="btnQuery" class="btn-primary">조회</button>
-          </div>
+            <div class="search-box sales-yearly-search">
+                <input
+                        id="startYear"
+                        type="number"
+                        placeholder="시작연도(예: 2021)"
+                />
+                <input
+                        id="endYear"
+                        type="number"
+                        placeholder="종료연도(예: 2025)"
+                />
+                <button id="btnQuery" class="btn-primary">조회</button>
+            </div>
 
-          <div class="chart-container">
-            <canvas
-              id="yearlyChart"
-              aria-label="연도별 매출 차트"
-              role="img"
-            ></canvas>
-          </div>
+            <div class="chart-container">
+                <canvas
+                        id="yearlyChart"
+                        aria-label="연도별 매출 차트"
+                        role="img"
+                ></canvas>
+            </div>
         </div>
-      </main>
-    </div>
-  </body>
+    </main>
+</div>
+</body>
 </html>
