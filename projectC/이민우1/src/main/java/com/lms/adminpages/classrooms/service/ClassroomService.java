@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClassroomService {
@@ -35,16 +36,19 @@ public class ClassroomService {
         return classroomDao.findAll();
     }
 
-    public void updateStatus(Integer classroomId, String status) {
-        if (!List.of("draft", "published", "closed").contains(status)) {
-            throw new IllegalArgumentException("잘못된 상태 값입니다.");
-        }
-        classroomDao.updateStatus(classroomId, status);
+
+    //상태 수정
+    @Transactional
+    public void updateStatus(Map<Integer, String> statusMap) {
+        if (statusMap == null || statusMap.isEmpty()) return;
+        statusMap.forEach(classroomDao::updateStatus);
     }
 
+    // 선택 삭제
     @Transactional
-    public void softDeleteByIds(List<Integer> ids) {
-        classroomDao.softDeleteByIds(ids);
+    public void deleteByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        classroomDao.deleteByIds(ids);
     }
 }
 

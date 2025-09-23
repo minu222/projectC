@@ -11,6 +11,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -22,6 +24,7 @@ public class ClassroomController {
         this.classroomService = classroomService;
     }
 
+    //-----------------------------------강의실 등록
     @GetMapping("/classrooms-registration")
     public String showRegisterForm(Model model) {
         model.addAttribute("classroom", new Classroom());
@@ -52,8 +55,9 @@ public class ClassroomController {
         ra.addFlashAttribute("message", "강의실이 등록되었습니다.");
         return "redirect:/admin/classrooms-registration";
     }
+//    ---------------------------------------------------
 
-
+//---------------------------강의실 목록-----------------
     @GetMapping("/classrooms-list")
     public String listClassrooms(
             @ModelAttribute("filter") CourseFilter filter,
@@ -78,29 +82,65 @@ public class ClassroomController {
     }
 
     // 상태 업데이트
-    @PostMapping("/classrooms/update-status")
-    public String updateClassroomStatus(@RequestParam Integer classroomId,
-                                        @RequestParam String status,
-                                        RedirectAttributes ra) {
-        try {
-            classroomService.updateStatus(classroomId, status);
-            ra.addFlashAttribute("message", "상태가 업데이트되었습니다.");
-        } catch (Exception e) {
-            ra.addFlashAttribute("error", "상태 업데이트 중 오류가 발생했습니다.");
+    @PostMapping("/classrooms/update-status-bulk")
+    public String updateStatusBulk(
+            @RequestParam Map<String, String> statusMap,
+            @RequestParam(value = "saveSingle", required = false) Integer singleId,
+            RedirectAttributes ra
+    ) {
+        Map<Integer, String> statusMapInt;
+
+        if (singleId != null) {
+            // 한 행만 저장
+            String status = statusMap.get("statusMap[" + singleId + "]");
+            statusMapInt = Map.of(singleId, status);
+        } else {
+            // 전체 저장
+            statusMapInt = statusMap.entrySet().stream()
+                    .filter(e -> e.getKey().startsWith("statusMap["))
+                    .collect(Collectors.toMap(
+                            e -> Integer.parseInt(e.getKey().replaceAll("statusMap\\[|\\]", "")),
+                            Map.Entry::getValue
+                    ));
         }
+
+        classroomService.updateStatus(statusMapInt);
+
+        ra.addFlashAttribute("successMessage", "강의실 상태가 업데이트되었습니다.");
         return "redirect:/admin/classrooms-list";
     }
 
+    //선택 삭제
     @PostMapping("/classrooms/delete-selected")
-    public String deleteSelected(@RequestParam("ids") List<Integer> ids, RedirectAttributes ra) {
-        try {
-            classroomService.softDeleteByIds(ids);
-            ra.addFlashAttribute("message", "선택한 강의실이 삭제 처리되었습니다.");
-        } catch (Exception e) {
-            ra.addFlashAttribute("error", "삭제 처리 중 오류가 발생했습니다.");
+    public String deleteSelected(
+            @RequestParam(value = "ids", required = false) List<Integer> ids,
+            RedirectAttributes ra
+    ) {
+        if (ids == null || ids.isEmpty()) {
+            ra.addFlashAttribute("errorMessage", "삭제할 강의실을 선택해주세요.");
+            return "redirect:/admin/classrooms-list";
         }
+
+        classroomService.deleteByIds(ids);
+        ra.addFlashAttribute("successMessage", "선택한 강의실이 삭제되었습니다.");
         return "redirect:/admin/classrooms-list";
+    }
+
+//    -----------------------------------------
+
+//    --------강의실 학생 정보-----
+    @GetMapping("/classroom-student-info")
+    public String classroomStudentInfo(){
+            return"adminpages/classroom-student-info/index";
+    }
+
+//    ----------------------------------------
+
+
+
+    //--------------수업 자료 관리--------------
+    @GetMapping("/course-materials-management")
+    public String courseMaterialsManagement() {
+        return  "adminpages/course-materials-management/index";
     }
 }
-
-

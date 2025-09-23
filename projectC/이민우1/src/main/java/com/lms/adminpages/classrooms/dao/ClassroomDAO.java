@@ -3,9 +3,11 @@ package com.lms.adminpages.classrooms.dao;
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -89,13 +91,15 @@ public class ClassroomDAO {
         );
     }
 
+
+    // 단일 강의실 상태 업데이트
     public void updateStatus(Integer classroomId, String status) {
         String sql = "UPDATE courses SET status = ? WHERE course_id = ?";
         jdbcTemplate.update(sql, status, classroomId);
     }
 
-
-    public void softDeleteByIds(List<Integer> ids) {
+    // 선택 삭제
+    public void deleteByIds(List<Integer> ids) {
         if (ids == null || ids.isEmpty()) return;
 
         String inSql = String.join(",", ids.stream().map(id -> "?").toArray(String[]::new));
@@ -104,7 +108,5 @@ public class ClassroomDAO {
         jdbcTemplate.update(sql, ids.toArray());
     }
 }
-
-
 
 
