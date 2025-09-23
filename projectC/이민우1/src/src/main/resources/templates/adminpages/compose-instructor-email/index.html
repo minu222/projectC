@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>메일 쓰기</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/common.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/compose-instructor-email.css}">
+</head>
+<body>
+<div th:replace="adminpages/fragments/topbar :: topbar"></div>
+
+<!-- form으로 바꿨고 enctype multipart/form-data -->
+
+
+<div class="popup-overlay" id="mailPopup">
+    <div class="popup">
+        <div class="popup-header">
+            메일 쓰기
+            <button type="button" onclick="closePopup()">&times;</button>
+        </div>
+        <div class="popup-body">
+            <!-- Thymeleaf Form -->
+            <form th:action="@{/email/compose-instructor-email}" th:object="${emailForm}" method="post" enctype="multipart/form-data" onsubmit="return prepareAndSubmit();">
+
+                <!-- Hidden recipients -->
+                <input type="hidden" th:field="*{recipients}" id="recipientsInput"/>
+
+                <!-- 받는사람 -->
+                <div class="form-group">
+                    <label class="form-label">받는사람</label>
+                    <div class="receiver-box">
+                        <div id="receiverList" class="receiver-list"></div>
+                        <input type="text" id="receiverInput" placeholder="이메일 입력 후 Enter"/>
+                        <button type="button" class="address-book-btn" onclick="openAddressBook()">
+                            <i class="fa-solid fa-book"></i> 주소록
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 제목 -->
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <div class="title-box">
+                    <input type="text" th:field="*{subject}" placeholder="제목 입력"/>
+                    <select>
+                        <option value="">템플릿 선택</option>
+                        <option>공지사항 안내</option>
+                        <option>업데이트 안내</option>
+                        <option>이벤트 초대</option>
+                    </select>
+                </div>
+                </div>
+                <!-- 파일첨부 -->
+                <div class="form-group">
+                    <label class="form-label">파일첨부</label>
+                    <input type="file" th:field="*{attachments}" id="fileInput" multiple/>
+                    <div id="fileList"></div>
+                </div>
+
+                <!-- 내용 -->
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <div class="editor-toolbar">
+                        <select onchange="document.execCommand('fontSize',false,this.value)">
+                            <option value="3">14px</option>
+                            <option value="4">18px</option>
+                            <option value="5">24px</option>
+                        </select>
+                        <button type="button" onclick="document.execCommand('bold',false,'')"><b>B</b></button>
+                        <button type="button" onclick="document.execCommand('italic',false,'')"><i>I</i></button>
+                        <button type="button" onclick="document.execCommand('underline',false,'')"><u>U</u></button>
+                        <button type="button" onclick="document.execCommand('insertUnorderedList',false,'')"><i class="fa fa-list-ul"></i></button>
+                        <button type="button" onclick="document.execCommand('insertOrderedList',false,'')"><i class="fa fa-list-ol"></i></button>
+                        <button type="button" onclick="createLink()"><i class="fa fa-link"></i></button>
+                        <button type="button" onclick="insertImage()"><i class="fa fa-image"></i></button>
+                    </div>
+                    <div class="editor" contenteditable="true" id="editor">
+                        여기에 내용을 입력하세요...
+                    </div>
+                    <input type="hidden" th:field="*{content}" id="contentInput"/>
+                </div>
+
+                <!-- 제출 버튼 -->
+                <button type="submit" class="btn-submit">메일 보내기</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+<script>
+    // recipients array
+    const recipients = [];
+    const receiverInput = document.getElementById('receiverInput');
+    const receiverList = document.getElementById('receiverList');
+    const recipientsInput = document.getElementById('recipientsInput');
+
+    receiverInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = receiverInput.value.trim();
+            if (val) { tryAddRecipient(val); receiverInput.value = ''; }
+        }
+    });
+
+    function tryAddRecipient(email) {
+        if (!validateEmail(email)) {
+            alert('올바른 이메일 주소를 입력하세요: ' + email);
+            return;
+        }
+        if (!recipients.includes(email)) {
+            recipients.push(email);
+            renderRecipients();
+        }
+    }
+
+    function renderRecipients() {
+        receiverList.innerHTML = '';
+        recipients.forEach((r, idx) => {
+            const chip = document.createElement('span');
+            chip.className = 'recipient-chip';
+            chip.innerHTML = `${r} <button type="button" onclick="removeRecipient(${idx})">&times;</button>`;
+            receiverList.appendChild(chip);
+        });
+    }
+
+    function removeRecipient(i) {
+        recipients.splice(i, 1);
+        renderRecipients();
+    }
+
+    function validateEmail(email) {
+        // 간단한 검증 (서버에서도 반드시 재검증)
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // 파일 드롭 및 선택 처리
+    const fileDrop = document.getElementById('fileDrop');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+
+    fileDrop.addEventListener('click', () => fileInput.click());
+    fileDrop.addEventListener('dragover', (e) => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileDrop.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        fileInput.files = files; // DTO와 자동 연동
+        renderFileList(files);
+    });
+
+
+    fileInput.addEventListener('change', () => renderFileList(fileInput.files));
+
+    function renderFileList(files) {
+        fileList.innerHTML = '';
+        Array.from(files).forEach(f => {
+            const div = document.createElement('div');
+            div.textContent = f.name + ' (' + Math.round(f.size/1024) + ' KB)';
+            fileList.appendChild(div);
+        });
+    }
+
+    // 편집기 도우미
+    function createLink() {
+        const url = prompt('링크 URL을 입력하세요');
+        if (url) document.execCommand('createLink', false, url);
+    }
+    function insertImage() {
+        const url = prompt('이미지 URL을 입력하세요');
+        if (url) document.execCommand('insertImage', false, url);
+    }
+
+    // 템플릿 적용 (간단 예)
+    function applyTemplate() {
+        const sel = document.getElementById('templateSelect');
+        if (!sel.value) return;
+        document.getElementById('subjectInput').value = sel.value;
+
+        const editor = document.getElementById('editor');
+        if (sel.value === '이벤트 초대') {
+            editor.innerHTML = '<h3>이벤트에 초대합니다</h3><p>상세 내용은 아래를 확인하세요.</p>';
+        } else if (sel.value === '공지사항 안내') {
+            editor.innerHTML = '<p>공지사항 내용을 입력해 주세요.</p>';
+        } else if (sel.value === '업데이트 안내') {
+            editor.innerHTML = '<p>업데이트 정보를 입력해 주세요.</p>';
+        }
+    }
+
+
+    // 폼 제출 전에 hidden 필드에 값 세팅
+    function prepareAndSubmit() {
+        if (recipients.length === 0) {
+            alert('수신자를 하나 이상 추가해주세요.');
+            return false;
+        }
+        // recipients 배열을 hidden input에 넣어 form 제출
+        document.getElementById('recipientsInput').value = recipients.join(',');
+        document.getElementById('contentInput').value = document.getElementById('editor').innerHTML;
+        return true;
+    }
+    function openAddressBook() {
+        // 구현 필요: 주소록 모달 띄우기 등 (프로젝트에 맞춰 연결)
+        alert('주소록 기능을 여기에 구현하세요 (예: 모달, Ajax 호출).');
+    }
+
+    function closePopup() {
+        // 단순히 이동하거나 숨기는 동작: 프로젝트 UI에 맞게 수정
+        window.location.href = '/home';
+    }
+</script>
+</body>
+</html>

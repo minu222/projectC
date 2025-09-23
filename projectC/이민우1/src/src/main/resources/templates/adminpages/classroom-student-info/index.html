@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 강의실 등록</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/adminpages/css/common.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/classroom-student-info.css}">
+</head>
+<body>
+<div th:replace="adminpages/fragments/topbar :: topbar"></div>
+<div class="container">
+    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
+    <main class="main">
+        <div class="content-box">
+          <h2>강의실 학생 정보</h2>
+
+            <div class="search-box classroom-students-search">
+                <form th:action="@{/admin/classrooms/students}" method="get">
+                    <input type="text" name="classroomCode" placeholder="강의실 코드" th:value="${param.classroomCode}" />
+                    <button class="btn-search" type="submit">조회</button>
+                </form>
+            </div>
+
+          <table class="data-table classroom-students-table">
+            <thead>
+              <tr>
+                <th>NO</th>
+                <th>학생명</th>
+                <th>연락처</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student, i : ${students}">
+                <td th:text="${i.index + 1}">1</td>
+                <td th:text="${student.name}">홍길동</td>
+                <td th:text="${student.phone}">010-1234-5678</td>
+                <td>
+                        <span class="badge"
+                              th:classappend="${student.status == '재학'} ? ' normal' : (student.status == '수료' ? ' done' : '')"
+                              th:text="${student.status}">
+                            재학
+                        </span>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(students)}">
+                <td colspan="4">등록된 학생이 없습니다.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

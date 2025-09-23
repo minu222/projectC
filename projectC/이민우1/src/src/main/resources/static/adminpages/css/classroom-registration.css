@@ -1,0 +1,132 @@
+/* 폼 레이아웃 */
+.classroom-form {
+    display: flex;
+    gap: 14px 16px; /* row col */
+    flex-direction: column;
+}
+.classroom-form > div {
+    gap: 14px 16px;
+    display: flex;
+}
+.classroom-form label {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+.classroom-form .full-row {
+    grid-column: 1 / -1;
+}
+
+/* 입력 요소 공통 */
+.form-input,
+.form-textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.form-input {
+    height: 42px;
+    padding: 10px 12px;
+}
+.form-textarea {
+    padding: 10px 12px;
+    resize: vertical;
+}
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #9ca3af;
+}
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-color: #cbd5e1;
+}
+
+/* number 스핀 버튼 정리 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 폼 액션 */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+.btn-submit,
+.btn-reset {
+    height: 42px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-submit {
+    border: none;
+    background: var(--primary);
+    color: #fff;
+}
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.btn-reset {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+}
+.btn-reset:hover {
+    background: #f9fafb;
+}
+
+/* 작은 화면 최적화 */
+@media (max-width: 680px) {
+    .classroom-form {
+        grid-template-columns: 1fr;
+    }
+    .form-actions {
+        justify-content: stretch;
+    }
+    .form-actions > * {
+        flex: 1 1 auto;
+    }
+}
+
+/* 접근성 보강 */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 8px;
+}
+
+/* 프린트 최적화(선택) */
+@media print {
+    .topbar {
+        position: static;
+        border: none;
+    }
+    .container {
+        min-height: auto;
+    }
+    .content-box {
+        box-shadow: none;
+    }
+    .form-actions {
+        display: none;
+    }
+}
