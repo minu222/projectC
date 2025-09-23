@@ -1,3 +1,10 @@
+// main 추가 회원가입 관련 
+// implementation 'org.springframework.boot:spring-boot-starter-validation' 
+// admin 추가 - 메일 관련
+// implementation 'org.springframework.boot:spring-boot-starter-mail' 
+
+
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.5'
@@ -26,6 +33,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
@@ -42,7 +50,3 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-
-25.09.18 10:47 추기
-implementation 'org.springframework.boot:spring-boot-starter-validation'
