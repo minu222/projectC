@@ -4,170 +4,241 @@
     <meta charset="UTF-8" />
     <title>시험 문제 관리</title>
     <link rel="stylesheet" href="/common.css" />
-  </head>
-  <style>
-    /* 검색 박스: 입력/셀렉트/버튼 4개가 자연스럽게 접힘 */
-   
-    .search-box.exam-search input[type="text"],
-    .search-box.exam-search select,
-    .search-box.exam-search .btn-search,
-    .search-box.exam-search .btn-submit {
-      height: 42px;
-      font-size: 14px;
-      border-radius: 10px;
-    }
-    .search-box.exam-search input[type="text"],
-    .search-box.exam-search select {
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-    }
-    .search-box.exam-search input[type="text"]:focus,
-    .search-box.exam-search select:focus {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-    }
-   
-    .btn-search:hover {
-      background: #f9fafb;
-    }
-    .btn-submit {
-      padding: 10px 14px;
-      border: none;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* 표 */
-    .data-table.exam-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .data-table.exam-table thead th {
-      background: #f9fafb;
-      font-weight: 700;
-      font-size: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-    }
-    .data-table.exam-table td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-      font-size: 14px;
-      vertical-align: top;
-    }
-    .data-table.exam-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    .data-table.exam-table tbody tr:hover {
-      background: #fcfcfd;
-    }
-
-    /* 열 디테일 */
-    .exam-table td:nth-child(1) {
-      width: 72px;
-      text-align: center;
-      color: #374151;
-    }
-    .exam-table td:nth-child(2) {
-      overflow-wrap: anywhere;
-    }
-    /* 유형/난이도 살짝 강조 (칩 느낌) */
-    .exam-table td:nth-child(3),
-    .exam-table td:nth-child(4) {
-      font-weight: 700;
-      color: #1f2937;
-      background: #f8fafc;
-      border-radius: 999px;
-      text-align: center;
-    }
-    /* 칩처럼 보이도록 내부 여백 — 셀에 직접 패딩을 주면 칩이 너무 커지므로 content-box로 보정 */
-    .exam-table td:nth-child(3),
-    .exam-table td:nth-child(4) {
-      padding: 8px 14px;
-      background-clip: padding-box;
-    }
-
-    /* 관리 링크: 편집/삭제 구분 색상 */
-    .exam-table td:last-child a {
-      text-decoration: none;
-      font-weight: 700;
-    }
-    .exam-table td:last-child a:first-child {
-      color: var(--primary);
-    }
-    .exam-table td:last-child a:last-child {
-      color: var(--danger);
-    }
-    .exam-table td:last-child a:hover {
-      text-decoration: underline;
-    }
-
-    /* 작은 화면: HTML 수정 없이 가로 스크롤 */
-    @media (max-width: 720px) {
-      .data-table.exam-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        border-radius: 12px;
+    <style>
+      /* 제목 */
+      .content-box h2 {
+        margin: 0 0 14px;
+        color: var(--primary);
+        font-size: 22px;
       }
-      .btn-submit {
-        width: 100%;
+
+      /* ===== 검색 박스: 비반응형(줄바꿈 금지) ===== */
+      .exam-search {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 8px 0 16px;
+        flex-wrap: nowrap;
       }
-    }
-
-    /* 접근성 */
-    :focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-      border-radius: 8px;
-    }
-
-    /* 프린트 최적화(선택) */
-    @media print {
-      .topbar {
-        position: static;
+      .exam-search input[type="text"],
+      .exam-search select,
+      .exam-search .btn-search,
+      .exam-search .btn-submit {
+        height: 42px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+      .exam-search input[type="text"],
+      .exam-search select {
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+      }
+      .exam-search input[type="text"]:focus,
+      .exam-search select:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      /* 고정 폭으로 잘림 허용 */
+      .exam-search input[type="text"] {
+        width: 320px;
+      }
+      .exam-search select {
+        width: 140px;
+      }
+      .exam-search .btn-search {
+        padding: 0 14px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #111827;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .exam-search .btn-search:hover {
+        background: #f9fafb;
+      }
+      .exam-search .btn-submit {
+        padding: 0 14px;
         border: none;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
       }
-      .container {
-        min-height: auto;
+      .exam-search .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
-      .content-box {
-        box-shadow: none;
+
+      /* ===== 표: 고정 레이아웃(잘림/줄바꿈 금지) ===== */
+      .exam-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        white-space: nowrap;
       }
-    }
-  </style>
+      .exam-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #f9fafb;
+        font-weight: 700;
+        font-size: 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        color: #0f172a;
+      }
+      .exam-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        font-size: 14px;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .exam-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .exam-table tbody tr:nth-child(odd) {
+        background: #fafafa;
+      }
+      .exam-table tbody tr:hover {
+        background: #fcfcfd;
+      }
+
+      /* col widths */
+      .col-no {
+        width: 72px;
+        text-align: center;
+        color: #374151;
+      }
+      .col-type {
+        width: 120px;
+      }
+      .col-level {
+        width: 110px;
+      }
+      .col-actions {
+        width: 140px;
+      }
+
+      /* 질문 컬럼은 남는 폭을 사용 */
+      .col-question {
+        width: auto;
+      }
+
+      /* 칩 스타일 (유형/난이도) */
+      .chip {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px;
+        background: #f8fafc;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+      }
+      .chip.blue {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e3a8a;
+      }
+      .chip.gray {
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+        color: #374151;
+      }
+      .chip.green {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: #bbf7d0;
+        color: #065f46;
+      }
+      .chip.orange {
+        background: rgba(245, 158, 11, 0.15);
+        border-color: #fed7aa;
+        color: #8a4b00;
+      }
+      .chip.red {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: #fecaca;
+        color: #7f1d1d;
+      }
+
+      /* 액션 버튼형 링크 */
+      .actions a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+        padding: 0 10px;
+        margin-right: 6px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid #e5e7eb;
+        color: #1f2937;
+        background: #fff;
+      }
+      .actions a:hover {
+        background: #f3f4f6;
+      }
+      .actions a.edit {
+        background: #ecfeff;
+        border-color: #a5f3fc;
+        color: #064e3b;
+      }
+      .actions a.del {
+        background: #fff;
+        border-color: color-mix(in srgb, var(--danger) 35%, #e5e7eb);
+        color: var(--danger);
+      }
+
+      /* 접근성 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+
   <body>
     <header class="topbar">
       <div>DW Academy</div>
     </header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
           <h2>시험 문제 관리</h2>
 
           <div class="search-box exam-search">
-            <input type="text" placeholder="과정/키워드" />
-            <select>
+            <input
+              type="text"
+              placeholder="과정/키워드"
+              aria-label="과정 또는 키워드"
+            />
+            <select aria-label="문항 유형">
               <option>객관식</option>
               <option>주관식</option>
             </select>
-            <button class="btn-search">검색</button>
-            <button class="btn-submit">문항 추가</button>
+            <button class="btn-search" aria-label="검색">검색</button>
+            <button class="btn-submit" aria-label="문항 추가">문항 추가</button>
           </div>
 
-          <table class="data-table exam-table">
+          <table class="data-table exam-table" aria-label="시험 문제 목록">
+            <colgroup>
+              <col class="col-no" />
+              <col class="col-question" />
+              <col class="col-type" />
+              <col class="col-level" />
+              <col class="col-actions" />
+            </colgroup>
             <thead>
               <tr>
                 <th>NO</th>
@@ -178,13 +249,40 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 예시 행 -->
               <tr>
-                <td>1</td>
-                <td>JSP의 역할은?</td>
-                <td>객관식</td>
-                <td>중</td>
-                <td><a href="#">수정</a> | <a href="#">삭제</a></td>
+                <td class="col-no">1</td>
+                <td class="col-question" title="JSP의 역할은?">
+                  JSP의 역할은?
+                </td>
+                <td><span class="chip blue">객관식</span></td>
+                <td><span class="chip orange">중</span></td>
+                <td class="actions">
+                  <a class="edit" href="#">수정</a>
+                  <a class="del" href="#">삭제</a>
+                </td>
               </tr>
+
+              <!-- 서버 렌더링 예시
+              <tr th:each="q, i : ${questions}">
+                <td class="col-no" th:text="${i.count}">1</td>
+                <td class="col-question" th:text="${q.title}" th:title="${q.title}">문항 제목</td>
+                <td>
+                  <span class="chip"
+                        th:classappend="${q.type=='객관식'} ? ' blue' : ' gray'"
+                        th:text="${q.type}">객관식</span>
+                </td>
+                <td>
+                  <span class="chip"
+                        th:classappend="${q.level=='상'} ? ' red' : (${q.level=='중'} ? ' orange' : ' green')"
+                        th:text="${q.level}">중</span>
+                </td>
+                <td class="actions">
+                  <a class="edit" th:href="@{/exams/{id}/edit(id=${q.id})}">수정</a>
+                  <a class="del" th:href="@{/exams/{id}/delete(id=${q.id})}">삭제</a>
+                </td>
+              </tr>
+              -->
             </tbody>
           </table>
         </div>

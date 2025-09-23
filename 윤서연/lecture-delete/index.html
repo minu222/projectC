@@ -4,105 +4,168 @@
     <meta charset="UTF-8" />
     <title>강의실 삭제</title>
     <link rel="stylesheet" href="/common.css" />
-  </head>
-  <style>
+    <style>
+      /* 제목 & 안내 */
+      .content-box h2 {
+        margin: 0 0 14px;
+        color: var(--primary);
+        font-size: 22px;
+      }
+      .helper {
+        margin: 6px 0 14px;
+        color: var(--muted);
+        font-size: 14px;
+      }
 
-    /* 검색/액션 박스 */
-  
-    .search-box.classroom-delete-box input[type="text"],
-    .search-box.classroom-delete-box .btn-search,
-    .search-box.classroom-delete-box .btn-delete {
-      height: 42px;
-      font-size: 14px;
-      border-radius: 10px;
-    }
-    .search-box.classroom-delete-box input[type="text"] {
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-    }
-    .search-box.classroom-delete-box input[type="text"]:focus {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-    }
-
-   
-    .btn-search:hover {
-      background: #f9fafb;
-    }
-
-    .btn-delete {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 14px;
-      border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
-      background: #fff;
-      color: var(--danger);
-    }
-    .btn-delete:hover {
-      background: color-mix(in srgb, var(--danger) 6%, #fff);
-    }
-
-    /* 주의 문구 */
-    .muted {
-      margin-top: 6px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .muted::before {
-      content: "⚠ ";
-    }
-
-    /* 작은 화면 */
-    @media (max-width: 560px) {
+      /* ===== 검색/액션 바 (고정 라인, 시맨틱) ===== */
       .search-box.classroom-delete-box {
-        grid-template-columns: 1fr;
+        display: grid;
+        gap: 12px;
+        margin: 8px 0 8px;
+        grid-template-columns: 1fr auto auto; /* 인풋 / 조회 / 삭제 */
+        align-items: end;
       }
-      .btn-search,
+      .search-box.classroom-delete-box input[type="text"],
+      .search-box.classroom-delete-box .btn-search,
+      .search-box.classroom-delete-box .btn-delete {
+        height: 42px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+      .search-box.classroom-delete-box input[type="text"] {
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+      }
+      .search-box.classroom-delete-box input[type="text"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      .btn-search {
+        padding: 0 14px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #111827;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .btn-search:hover {
+        background: #f9fafb;
+      }
+
       .btn-delete {
-        width: 100%;
+        padding: 0 14px;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 14px;
+        border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
+        background: #fff;
+        color: var(--danger);
       }
-    }
+      .btn-delete:hover {
+        background: color-mix(in srgb, var(--danger) 6%, #fff);
+      }
 
-    /* 접근성 */
-    :focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-      border-radius: 8px;
-    }
+      /* ===== 위험 안내 박스 ===== */
+      .danger-callout {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        border: 1px solid color-mix(in srgb, var(--danger) 35%, #e5e7eb);
+        background: color-mix(in srgb, var(--danger) 6%, #fff);
+        color: #7f1d1d;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-top: 10px;
+      }
+      .danger-callout .icon {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(220, 38, 38, 0.12);
+        font-weight: 900;
+      }
+      .danger-callout strong {
+        display: block;
+        margin-bottom: 2px;
+      }
 
-    /* 프린트 최적화(선택) */
-    @media print {
-      .topbar {
-        position: static;
-        border: none;
+      /* 접근성 포커스 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
       }
-      .container {
-        min-height: auto;
+
+      /* 작은 화면(버튼 스택) */
+      @media (max-width: 560px) {
+        .search-box.classroom-delete-box {
+          grid-template-columns: 1fr;
+        }
+        .btn-search,
+        .btn-delete {
+          width: 100%;
+        }
       }
-      .content-box {
-        box-shadow: none;
+
+      /* 프린트 */
+      @media print {
+        .topbar {
+          position: static;
+          border: none;
+        }
+        .container {
+          min-height: auto;
+        }
+        .content-box {
+          box-shadow: none;
+        }
       }
-    }
-  </style>
+    </style>
+  </head>
+
   <body>
     <header class="topbar">
       <div>DW Academy</div>
     </header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
           <h2>강의실 삭제</h2>
-          <div class="search-box classroom-delete-box">
-            <input type="text" placeholder="강의실 코드" />
-            <button class="btn-search">조회</button>
-            <button class="btn-delete">삭제</button>
+          <p class="helper">강의실 코드를 확인한 뒤 삭제를 진행하세요.</p>
+
+          <form
+            class="search-box classroom-delete-box"
+            method="post"
+            th:action="@{/classrooms/delete}"
+          >
+            <input
+              type="text"
+              name="roomCode"
+              placeholder="강의실 코드 (예: A-101)"
+              aria-label="강의실 코드"
+              required
+            />
+            <button type="button" class="btn-search" aria-label="조회">
+              조회
+            </button>
+            <button type="submit" class="btn-delete" aria-label="삭제">
+              삭제
+            </button>
+          </form>
+
+          <div class="danger-callout" role="alert" aria-live="polite">
+            <div class="icon">!</div>
+            <div>
+              <strong>삭제 주의</strong>
+              삭제 시 해당 강의실에 연결된 배정/출석/자료 등의 데이터가 영향을
+              받을 수 있습니다. 필요 시 먼저 이관 또는 백업을 진행하세요.
+            </div>
           </div>
-          <p class="muted">
-            ※ 삭제 시 관련 배정 정보가 영향을 받을 수 있습니다.
-          </p>
         </div>
       </main>
     </div>

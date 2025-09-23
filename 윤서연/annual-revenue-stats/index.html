@@ -2,18 +2,17 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>연별 매출 통계</title>
 
-    <!-- Libs -->
-
+    <!-- 전역 공통 CSS만 사용 -->
     <link rel="stylesheet" href="/common.css" />
 
+    <!-- 페이지 전용 최소 스타일 -->
     <style>
       .content-box h2 {
         margin: 0 0 14px;
-        font-size: clamp(18px, 2.6vw, 24px);
         color: var(--primary);
+        font-size: 22px;
       }
       .content-box p.helper {
         margin: 6px 0 14px;
@@ -21,34 +20,47 @@
         font-size: 14px;
       }
 
-      /* 검색박스: 자동 칼럼 */
-    
-      .search-box input[type="number"],
-      .search-box button {
+      /* 검색 박스: 한 줄 고정, 입력 폭 고정 */
+      .sales-yearly-search {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: nowrap; /* 줄바꿈 금지 */
+      }
+      .sales-yearly-search input[type="number"],
+      .sales-yearly-search button {
         height: 42px;
         padding: 10px 12px;
         font-size: 14px;
         border-radius: 10px;
       }
-      .search-box input[type="number"] {
+      .sales-yearly-search input[type="number"] {
+        width: 220px;
         border: 1px solid #e5e7eb;
         background: #fff;
       }
-      .search-box input[type="number"]:focus {
+      .sales-yearly-search input[type="number"]:focus {
         outline: none;
         box-shadow: 0 0 0 4px var(--ring);
       }
-
-      .btn-primary:disabled {
+      .sales-yearly-search .btn-primary {
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .sales-yearly-search .btn-primary:disabled {
         opacity: 0.6;
         cursor: not-allowed;
       }
 
-      /* 차트 컨테이너: 반응형 비율 고정 */
+      /* 차트 컨테이너: 고정 높이(비반응형) */
       .chart-container {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        height: 420px;
         background: repeating-linear-gradient(
             to right,
             #f3f4f6 0,
@@ -80,19 +92,6 @@
         width: 100% !important;
         height: 100% !important;
         display: block;
-      }
-      .chart-container > canvas {
-        position: absolute;
-        inset: 0;
-        width: 100% !important;
-        height: 100% !important;
-      }
-
-      /* 작은 화면 보조 여백 */
-      @media (max-width: 560px) {
-        .content-box {
-          border-radius: 12px;
-        }
       }
     </style>
   </head>

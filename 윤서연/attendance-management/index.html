@@ -4,164 +4,147 @@
     <meta charset="UTF-8" />
     <title>출석 관리</title>
     <link rel="stylesheet" href="/common.css" />
-  </head>
-  <style>
-    /* 콘텐츠 박스 */
 
-    .content-box h2 {
-      margin: 0 0 14px;
-      font-size: clamp(18px, 2.6vw, 24px);
-      color: var(--primary);
-    }
-
-    /* 검색 박스: 자동 칼럼 그리드 */
-   
-    .search-box.attendance-search input[type="text"],
-    .search-box.attendance-search input[type="date"],
-    .search-box.attendance-search .btn-primary {
-      height: 42px;
-      font-size: 14px;
-      border-radius: 10px;
-    }
-    .search-box.attendance-search input[type="text"],
-    .search-box.attendance-search input[type="date"] {
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-    }
-    .search-box.attendance-search input[type="text"]:focus,
-    .search-box.attendance-search input[type="date"]:focus {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-    }
-
-    /* 버튼 */
-    .btn-primary,
-    .btn-secondary {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      height: 42px;
-    }
-   
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .btn-secondary {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      color: #111827;
-    }
-    .btn-secondary:hover {
-      background: #f9fafb;
-    }
-
-    /* 테이블 */
-    .table-gap-top {
-      margin-top: 12px;
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .data-table thead th {
-      background: #f9fafb;
-      font-weight: 700;
-      font-size: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-    }
-    .data-table td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-      font-size: 14px;
-    }
-    .data-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    .data-table tbody tr:hover {
-      background: #fcfcfd;
-    }
-
-    /* 테이블 내부 폼 요소 크기 통일 */
-    .data-table select,
-    .data-table input[type="text"] {
-      width: 100%;
-      height: 38px;
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      padding: 6px 10px;
-      background: #fff;
-    }
-    .data-table select:focus,
-    .data-table input[type="text"]:focus {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-    }
-
-    /* 작은 화면에서 테이블 가로 스크롤 허용 (HTML 변경 없이) */
-    @media (max-width: 720px) {
-      .data-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        border-radius: 12px;
+    <!-- 페이지 전용: 비반응형 고정 레이아웃 -->
+    <style>
+      .content-box h2 {
+        margin: 0 0 14px;
+        color: var(--primary);
+        font-size: 22px;
       }
-    }
 
-    /* 액션 버튼 줄: 오른쪽 정렬, 좁아지면 스택 */
-    .actions-row.attendance-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-    @media (max-width: 560px) {
-      .actions-row.attendance-actions {
-        justify-content: stretch;
+      /* 검색 박스: 한 줄 고정, 폭 고정 */
+      .attendance-search {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: nowrap; /* 줄바꿈 금지 */
       }
-      .actions-row.attendance-actions > * {
-        flex: 1 1 auto;
+      .attendance-search input[type="text"],
+      .attendance-search input[type="date"],
+      .attendance-search .btn-primary {
+        height: 42px;
+        font-size: 14px;
+        border-radius: 10px;
       }
-    }
-
-    /* 접근성 보강 */
-    :focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-      border-radius: 8px;
-    }
-
-    /* 프린트 최적화(선택) */
-    @media print {
-      .topbar {
-        position: static;
+      .attendance-search input[type="text"],
+      .attendance-search input[type="date"] {
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        width: 220px; /* 고정 폭 */
+      }
+      .attendance-search input[type="date"] {
+        width: 180px;
+      } /* 날짜 입력은 조금 좁게 */
+      .attendance-search input:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
         border: none;
+        font-weight: 700;
+        padding: 10px 14px;
+        cursor: pointer;
       }
-      .container {
-        min-height: auto;
+      .btn-secondary {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        color: #111827;
+        font-weight: 700;
+        padding: 10px 14px;
+        cursor: pointer;
+        border-radius: 10px;
+        height: 42px;
       }
-      .content-box {
-        box-shadow: none;
+      .btn-secondary:hover {
+        background: #f9fafb;
       }
-      .actions-row.attendance-actions {
-        display: none;
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
-    }
-  </style>
+
+      /* 테이블: 고정 레이아웃 + 잘림 */
+      .data-table {
+        width: 100%;
+        table-layout: fixed; /* ★ 고정 레이아웃 */
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        white-space: nowrap; /* 줄바꿈 금지 */
+      }
+      .data-table thead th {
+        background: #f9fafb;
+        font-weight: 700;
+        font-size: 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+      }
+      .data-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr:hover {
+        background: #fcfcfd;
+      }
+
+      /* 테이블 내부 폼: 고정 크기 */
+      .data-table select,
+      .data-table input[type="text"] {
+        width: 100%;
+        height: 38px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        padding: 6px 10px;
+        background: #fff;
+      }
+      .data-table select:focus,
+      .data-table input[type="text"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+
+      .table-gap-top {
+        margin-top: 12px;
+      }
+
+      /* 액션 버튼 행: 오른쪽 정렬, 한 줄 고정 */
+      .attendance-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 14px;
+        flex-wrap: nowrap;
+      }
+
+      /* 접근성 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
+    </style>
+  </head>
   <body>
     <header class="topbar">
       <div>DW Academy</div>
     </header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
@@ -173,7 +156,17 @@
             <button class="btn-primary">조회</button>
           </div>
 
-          <table class="data-table table-gap-top">
+          <table class="data-table table-gap-top" aria-label="출석 테이블">
+            <colgroup>
+              <col style="width: 72px" />
+              <!-- NO -->
+              <col />
+              <!-- 학생 (가변) -->
+              <col style="width: 200px" />
+              <!-- 상태 -->
+              <col style="width: 300px" />
+              <!-- 비고 -->
+            </colgroup>
             <thead>
               <tr>
                 <th>NO</th>
@@ -195,6 +188,7 @@
                 </td>
                 <td><input type="text" placeholder="사유" /></td>
               </tr>
+              <!-- 필요 시 항목 반복 -->
             </tbody>
           </table>
 

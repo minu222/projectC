@@ -2,26 +2,34 @@
 <html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
-    <title>DW Academy</title>
+    <title>DW Academy · 이메일 발송 내역</title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/common.css" />
     <style>
-      /* 검색 영역 레이아웃 */
+      /* 제목 */
+      .content-box h2 {
+        margin: 0 0 14px;
+        color: var(--primary);
+        font-size: 22px;
+      }
+
+      /* ===== 검색바: 비반응형 · 한 줄 고정 ===== */
       .search-area {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
         gap: 12px;
-        align-items: end;
         margin-bottom: 12px;
+        flex-wrap: nowrap; /* 줄바꿈 방지 */
       }
       .search-left {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 10px 12px;
+        gap: 12px;
+        flex-wrap: nowrap;
       }
       .search-left label {
         font-weight: 700;
@@ -40,7 +48,17 @@
         border: 1px solid #e5e7eb;
         background: #fff;
       }
-      .search-left input[type="text"]:focus,
+      /* 고정 폭으로 잘림 허용 */
+      .search-left select[name="group"] {
+        width: 120px;
+      }
+      .search-left select[name="type"] {
+        width: 140px;
+      }
+      .search-left input[name="keyword"] {
+        width: 260px;
+      }
+      .search-left input:focus,
       .search-left select:focus {
         outline: none;
         box-shadow: 0 0 0 4px var(--ring);
@@ -57,11 +75,11 @@
         filter: brightness(0.98);
       }
 
-      /* 오른쪽 버튼들 */
       .search-actions {
         display: flex;
         gap: 10px;
         align-items: center;
+        flex-wrap: nowrap;
       }
       .btn-delete,
       .btn-write {
@@ -71,10 +89,10 @@
         font-weight: 800;
         cursor: pointer;
         font-size: 14px;
-        text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        text-decoration: none;
       }
       .btn-delete {
         border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
@@ -93,80 +111,91 @@
         filter: brightness(0.98);
       }
 
-      /* 테이블 */
+      /* ===== 표: 고정 레이아웃(잘림 허용) + 행 하이라이트 ===== */
       .content-box > table {
         width: 100%;
-        border-collapse: collapse;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
         background: #fff;
         border-radius: 14px;
         overflow: hidden;
+        white-space: nowrap; /* 줄바꿈 방지 */
       }
       .content-box > table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
         background: #f9fafb;
         font-weight: 700;
         font-size: 14px;
         text-align: left;
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
+        color: #0f172a;
       }
       .content-box > table td {
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
         font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
       }
       .content-box > table tbody tr:last-child td {
         border-bottom: none;
       }
+      .content-box > table tbody tr:nth-child(odd) {
+        background: #fafafa;
+      }
       .content-box > table tbody tr:hover {
         background: #fcfcfd;
       }
+      /* 체크된 행 강조 (:has 지원 브라우저) */
+      tbody tr:has(> td:first-child input:checked) {
+        background: #eef6ff;
+        box-shadow: inset 0 0 0 9999px rgba(37, 99, 235, 0.04);
+      }
 
       /* 열 정렬 & 숫자 가독성 */
-      .content-box > table td:nth-child(2) {
-        text-align: center;
+      .col-no {
         width: 72px;
+        text-align: center;
         color: #374151;
-      } /* 번호 */
-      .content-box > table td:nth-child(7), /* 발송일 */
-.content-box > table td:nth-child(8) {
-        /* 발송건수 */
-        font-variant-numeric: tabular-nums;
       }
-      .content-box > table td:nth-child(8) {
+      .col-check {
+        width: 44px;
+      }
+      .col-group {
+        width: 110px;
+      }
+      .col-user {
+        width: 140px;
+      }
+      .col-title {
+        width: auto;
+      } /* 제목은 남는폭 */
+      .col-sender {
+        width: 120px;
+      }
+      .col-date {
+        width: 140px;
+      }
+      .col-count {
+        width: 110px;
         text-align: right;
       }
+      .content-box > table td:nth-child(7), /* 발송일 */
+      .content-box > table td:nth-child(8) {
+        font-variant-numeric: tabular-nums;
+      }
 
-      /* 체크박스 톤 통일 */
+      /* 체크박스 */
       input[type="checkbox"] {
         width: 16px;
         height: 16px;
         accent-color: var(--primary);
         cursor: pointer;
-      }
-
-      /* 작은 화면 대응 */
-      @media (max-width: 900px) {
-        .search-area {
-          grid-template-columns: 1fr;
-        }
-        .search-actions {
-          justify-content: flex-start;
-          flex-wrap: wrap;
-        }
-      }
-      @media (max-width: 720px) {
-        .content-box > table {
-          display: block;
-          width: 100%;
-          overflow-x: auto;
-          white-space: nowrap;
-          border-radius: 12px;
-        }
-        .btn-write,
-        .btn-delete {
-          flex: 1 1 auto;
-          justify-content: center;
-        }
       }
 
       /* 접근성 */
@@ -175,33 +204,18 @@
         box-shadow: 0 0 0 4px var(--ring);
         border-radius: 8px;
       }
-
-      /* 프린트 최적화(선택) */
-      @media print {
-        .topbar {
-          position: static;
-          border: none;
-        }
-        .container {
-          min-height: auto;
-        }
-        .content-box {
-          box-shadow: none;
-        }
-      }
     </style>
   </head>
+
   <body>
     <header class="topbar">
       <div>DW Academy</div>
     </header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
-          <!-- 이메일 발송 내역 -->
-          <div class="header">
-            <h2>이메일 발송 내역</h2>
-          </div>
+          <div class="header"><h2>이메일 발송 내역</h2></div>
 
           <!-- 검색 + 버튼 영역 -->
           <form
@@ -209,44 +223,63 @@
             method="get"
             th:action="@{/messages/search}"
           >
-            <!-- 왼쪽: 검색 조건 -->
             <div class="search-left">
-              <label>소속:</label>
-              <select name="group">
+              <label for="group">소속:</label>
+              <select id="group" name="group">
                 <option value="">전체</option>
                 <option value="teacher">강사</option>
               </select>
 
-              <label>검색:</label>
-              <select name="type">
+              <label for="type">검색:</label>
+              <select id="type" name="type">
                 <option value="">전체</option>
                 <option value="userid">회원아이디</option>
                 <option value="title">제목</option>
                 <option value="sender">발송자</option>
               </select>
 
-              <input name="keyword" placeholder="검색어 입력" type="text" />
-              <button type="submit">
+              <input
+                name="keyword"
+                placeholder="검색어 입력"
+                type="text"
+                aria-label="검색어"
+              />
+              <button type="submit" aria-label="검색">
                 <i class="fa-solid fa-magnifying-glass"></i> 검색
               </button>
             </div>
 
-            <!-- 오른쪽: 버튼 영역 -->
             <div class="search-actions">
               <button class="btn-delete" type="button">
                 <i class="fa-solid fa-trash"></i> 선택 삭제
               </button>
-              <a class="btn-write" th:href="@{/messages/write}"
-                ><i class="fa-solid fa-envelope"></i> 메일 쓰기</a
-              >
+              <a class="btn-write" th:href="@{/messages/write}">
+                <i class="fa-solid fa-envelope"></i> 메일 쓰기
+              </a>
             </div>
           </form>
 
           <!-- 발송 내역 테이블 -->
-          <table>
+          <table aria-label="이메일 발송 내역">
+            <colgroup>
+              <col class="col-check" />
+              <col class="col-no" />
+              <col class="col-group" />
+              <col class="col-user" />
+              <col class="col-title" />
+              <col class="col-sender" />
+              <col class="col-date" />
+              <col class="col-count" />
+            </colgroup>
             <thead>
               <tr>
-                <th><input id="checkAll" type="checkbox" /></th>
+                <th>
+                  <input
+                    id="checkAll"
+                    type="checkbox"
+                    aria-label="전체 선택(시각적)"
+                  />
+                </th>
                 <th>번호</th>
                 <th>소속</th>
                 <th>회원아이디</th>
@@ -259,24 +292,35 @@
             <tbody>
               <tr>
                 <td><input class="row-check" type="checkbox" /></td>
-                <td>1</td>
+                <td class="col-no">1</td>
                 <td>강사</td>
                 <td>user01</td>
-                <td>공지사항 안내</td>
+                <td title="공지사항 안내">공지사항 안내</td>
                 <td>관리자</td>
                 <td>2025-09-08</td>
-                <td>50</td>
+                <td class="col-count">50</td>
               </tr>
               <tr>
                 <td><input class="row-check" type="checkbox" /></td>
-                <td>2</td>
+                <td class="col-no">2</td>
                 <td>강사</td>
                 <td>user02</td>
-                <td>업데이트 안내</td>
+                <td title="업데이트 안내">업데이트 안내</td>
                 <td>관리자</td>
                 <td>2025-09-07</td>
-                <td>30</td>
+                <td class="col-count">30</td>
               </tr>
+              <!-- 서버 렌더링 예시
+              <tr th:each="msg, i : ${messages}">
+                <td><input class="row-check" type="checkbox" th:value="${msg.id}"/></td>
+                <td class="col-no" th:text="${i.count}"></td>
+                <td th:text="${msg.groupName}"></td>
+                <td th:text="${msg.userId}"></td>
+                <td th:text="${msg.title}" th:title="${msg.title}"></td>
+                <td th:text="${msg.sender}"></td>
+                <td th:text="${#temporals.format(msg.sentAt, 'yyyy-MM-dd')}"></td>
+                <td class="col-count" th:text="${msg.sendCount}"></td>
+              </tr> -->
             </tbody>
           </table>
         </div>

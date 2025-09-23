@@ -12,16 +12,27 @@
   <style>
     /* 필터 영역 */
     .filter-box {
+      width: 100%;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 12px;
       align-items: end;
       margin-bottom: 12px;
     }
+    .filter-box > div:first-child {
+      gap: 20px;
+      display: flex;
+      width: 100%;
+    }
+    .filter-box > div:last-child {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
     .filter-box label {
-      display: grid;
+      min-width: max-content;
+      display: flex;
       gap: 8px;
-      grid-template-columns: auto minmax(130px, 160px) minmax(180px, 260px);
       align-items: center;
     }
     .filter-box label > select,
@@ -40,7 +51,7 @@
     }
 
     /* 검색 버튼 */
-    .filter-box > button {
+    .filter-box > div:first-child button {
       height: 40px;
       padding: 0 14px;
       border-radius: 10px;
@@ -101,13 +112,24 @@
 
     /* 테이블 */
     .content-box > table {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
       border-radius: 14px;
       overflow: hidden;
     }
+    .content-box > table thead {
+      display: flex;
+      background: yellowgreen;
+      width: 100%;
+    }
+    .content-box > table thead tr {
+      width: 100%;
+      display: flex;
+    }
     .content-box > table thead th {
+      flex: 1;
       background: #f9fafb;
       font-weight: 700;
       font-size: 14px;
@@ -115,7 +137,12 @@
       border-bottom: 1px solid #e5e7eb;
       padding: 12px 14px;
     }
+    .content-box > table tr {
+      display: flex;
+      width: 100%;
+    }
     .content-box > table td {
+      width: 100%;
       border-bottom: 1px solid #e5e7eb;
       padding: 12px 14px;
       font-size: 14px;
@@ -147,7 +174,12 @@
     .content-box > table td:nth-child(3) a:hover {
       text-decoration: underline;
     }
-
+    .content-box > table td:last-child {
+      display: flex;
+      gap: 5px;
+      text-align: center;
+      min-width: max-content;
+    }
     /* 배지 */
     .badge {
       display: inline-block;
@@ -169,44 +201,11 @@
       color: #7f1d1d;
     } /* 탈퇴 */
 
-    /* 작은 화면 대응 */
-    @media (max-width: 900px) {
-      .filter-box {
-        gap: 10px;
-      }
-    }
-    @media (max-width: 780px) {
-      .content-box > table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        border-radius: 12px;
-      }
-      .btn-delete {
-        flex: 1 1 auto;
-      }
-    }
-
     /* 접근성 */
     :focus-visible {
       outline: none;
       box-shadow: 0 0 0 4px var(--ring);
       border-radius: 8px;
-    }
-
-    /* 프린트 최적화(선택) */
-    @media print {
-      .topbar {
-        position: static;
-        border: none;
-      }
-      .container {
-        min-height: auto;
-      }
-      .content-box {
-        box-shadow: none;
-      }
     }
   </style>
   <body>
@@ -221,35 +220,39 @@
 
           <!-- 검색 필터 + 탈퇴 버튼 -->
           <div class="filter-box">
-            <label
-              >소속:
-              <select>
-                <option>- 전체 -</option>
-                <option>DW</option>
-                <option>JS</option>
-              </select>
-            </label>
-            <label
-              >검색:
-              <select>
-                <option>- 전체 -</option>
-                <option>이름</option>
-                <option>아이디</option>
-              </select>
-              <input placeholder="검색어 입력" type="text" />
-            </label>
-            <button>검색</button>
-
-            <div class="status-filter">
-              상태:
-              <label><input checked name="status" type="radio" /> 전체</label>
-              <label><input name="status" type="radio" /> 정상</label>
-              <label><input name="status" type="radio" /> 휴면</label>
-              <label><input name="status" type="radio" /> 탈퇴</label>
+            <div>
+              <label
+                >소속:
+                <select>
+                  <option>- 전체 -</option>
+                  <option>DW</option>
+                  <option>JS</option>
+                </select>
+              </label>
+              <label
+                >검색:
+                <select>
+                  <option>- 전체 -</option>
+                  <option>이름</option>
+                  <option>아이디</option>
+                </select>
+                <input placeholder="검색어 입력" type="text" />
+              </label>
+              <button>검색</button>
             </div>
 
-            <div style="margin-left: auto">
-              <button class="btn-delete">🗑 선택 탈퇴</button>
+            <div>
+              <div class="status-filter">
+                상태:
+                <label><input checked name="status" type="radio" /> 전체</label>
+                <label><input name="status" type="radio" /> 정상</label>
+                <label><input name="status" type="radio" /> 휴면</label>
+                <label><input name="status" type="radio" /> 탈퇴</label>
+              </div>
+
+              <div style="margin-left: auto">
+                <button class="btn-delete">🗑 선택 탈퇴</button>
+              </div>
             </div>
           </div>
 

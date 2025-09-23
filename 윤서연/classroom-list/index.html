@@ -1,14 +1,13 @@
 <!-- ===============================
-DW Academy - 강의실 목록 (No JS)
-- 스크립트 없이 시각/가독성만 개선
-- :has()로 체크된 행 하이라이트 (지원 브라우저에서)
-- 모바일 카드형 테이블 전환
+DW Academy - 강의실 목록 (No JS, Fixed Layout)
+- 비반응형 고정 레이아웃
+- 스크립트 없음
+- :has()로 체크된 행 하이라이트(지원 브라우저에서만)
 =============================== -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>DW Academy - 강의실 목록</title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -17,27 +16,29 @@ DW Academy - 강의실 목록 (No JS)
     <link rel="stylesheet" href="/common.css" />
 
     <style>
+      /* 헤더 */
       .header {
         display: flex;
-        align-items: end;
+        align-items: flex-end;
         justify-content: space-between;
         gap: 12px;
         margin-bottom: 12px;
       }
 
-      /* ===== 검색/액션 바 (시맨틱, 가독성) ===== */
+      /* ===== 검색/액션 바: 한 줄 고정 ===== */
       .search-area {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
         gap: 12px;
-        align-items: end;
         margin-bottom: 16px;
+        flex-wrap: nowrap; /* 줄바꿈 금지 */
       }
       .search-left {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 10px 12px;
+        gap: 12px;
+        flex-wrap: nowrap;
       }
       .search-left label {
         font-weight: 700;
@@ -55,6 +56,13 @@ DW Academy - 강의실 목록 (No JS)
         padding: 8px 10px;
         border: 1px solid var(--border);
         background: #fff;
+      }
+      /* 고정 폭 */
+      .search-left select {
+        width: 140px;
+      }
+      #keyword {
+        width: 220px;
       }
       .search-left input[type="text"]:focus,
       .search-left select:focus {
@@ -77,6 +85,7 @@ DW Academy - 강의실 목록 (No JS)
         display: flex;
         gap: 10px;
         align-items: center;
+        flex-wrap: nowrap;
       }
       .btn-delete,
       .btn-write {
@@ -108,23 +117,19 @@ DW Academy - 강의실 목록 (No JS)
         filter: brightness(0.98);
       }
 
-      /* ===== 테이블 래퍼 ===== */
+      /* ===== 테이블 ===== */
       .table-wrap {
         background: var(--card);
         border-radius: 14px;
         overflow: hidden;
         border: 1px solid var(--border);
       }
-      .table-scroller {
-        width: 100%;
-        overflow-x: auto;
-      }
-
       table {
         width: 100%;
+        table-layout: fixed; /* ★ 고정 레이아웃 */
         border-collapse: separate;
         border-spacing: 0;
-        min-width: 880px;
+        white-space: nowrap; /* 줄바꿈 금지 */
       }
       thead th {
         position: sticky;
@@ -134,19 +139,22 @@ DW Academy - 강의실 목록 (No JS)
         color: #0f172a;
         font-weight: 700;
         font-size: 14px;
-        text-align: left;
+        text-align: center;
         padding: 12px 14px;
         border-bottom: 1px solid var(--border);
       }
       tbody td {
+        text-align: center;
         padding: 12px 14px;
         font-size: 14px;
         border-bottom: 1px solid var(--border);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
       }
       tbody tr:last-child td {
         border-bottom: none;
       }
-
       /* 줄무늬 + 호버 */
       tbody tr:nth-child(odd) {
         background: #fafafa;
@@ -155,7 +163,7 @@ DW Academy - 강의실 목록 (No JS)
         background: var(--soft);
       }
 
-      /* 체크박스 컬럼 고정 폭 */
+      /* 체크박스 컬럼 */
       colgroup col.chk {
         width: 44px;
       }
@@ -164,7 +172,7 @@ DW Academy - 강의실 목록 (No JS)
         color: #374151;
       }
 
-      /* 숫자열 가독성 */
+      /* 숫자 정렬/자폭 */
       .num {
         font-variant-numeric: tabular-nums;
         text-align: right;
@@ -215,7 +223,6 @@ DW Academy - 강의실 목록 (No JS)
       .actions a:hover {
         background: #f3f4f6;
       }
-
       .actions a.edit {
         background: #ecfeff;
         border-color: #a5f3fc;
@@ -230,78 +237,11 @@ DW Academy - 강의실 목록 (No JS)
         cursor: pointer;
       }
 
-      /* 접근성 포커스 */
+      /* 포커스 접근성 */
       :focus-visible {
         outline: none;
         box-shadow: 0 0 0 4px var(--ring);
         border-radius: 8px;
-      }
-
-      /* ===== 반응형: 모바일에서 카드형 전환 ===== */
-      @media (max-width: 900px) {
-        .search-area {
-          grid-template-columns: 1fr;
-        }
-        .search-actions {
-          flex-wrap: wrap;
-        }
-      }
-      @media (max-width: 720px) {
-        .btn-write,
-        .btn-delete {
-          flex: 1 1 auto;
-          justify-content: center;
-        }
-
-        .table-wrap {
-          padding: 8px;
-        }
-        .table-scroller {
-          overflow: visible;
-        }
-        table {
-          min-width: 0;
-          border-collapse: separate;
-          border-spacing: 0 10px;
-        }
-        thead {
-          display: none;
-        }
-
-        tbody tr {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          background: #fff;
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          padding: 10px;
-        }
-        tbody td {
-          border: none;
-          padding: 6px 8px;
-        }
-
-        tbody td[data-label]::before {
-          content: attr(data-label);
-          display: block;
-          font-size: 12px;
-          color: var(--muted);
-          margin-bottom: 2px;
-        }
-        /* 체크박스 + 번호는 한 줄로 */
-        tbody td:first-child {
-          grid-column: 1 / 2;
-          align-self: center;
-        }
-        tbody td:nth-child(2) {
-          grid-column: 2 / 3;
-          justify-self: end;
-        }
-        /* 액션은 전체 너비 */
-        tbody td.actions {
-          grid-column: 1 / -1;
-        }
       }
     </style>
   </head>
@@ -314,7 +254,6 @@ DW Academy - 강의실 목록 (No JS)
         <div class="content-box">
           <div class="header">
             <h2>강의실 목록</h2>
-            <!-- 상태 범례(옵션) -->
             <div
               class="legend"
               aria-hidden="true"
@@ -377,7 +316,7 @@ DW Academy - 강의실 목록 (No JS)
             </div>
 
             <div class="search-actions">
-              <!-- JS 없이 디자인만 유지 (동작은 서버/별도 스크립트에서) -->
+              <!-- JS 없이 시각만 -->
               <a class="btn-delete" href="#" onclick="return false;">
                 <i class="fa-solid fa-trash"></i> 선택 삭제
               </a>
@@ -389,123 +328,117 @@ DW Academy - 강의실 목록 (No JS)
 
           <!-- 목록 -->
           <div class="table-wrap">
-            <div class="table-scroller">
-              <table aria-label="강의실 목록">
-                <colgroup>
-                  <col class="chk" />
-                  <col />
-                  <col />
-                  <col />
-                  <col />
-                  <col />
-                  <col />
-                  <col />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>
-                      <!-- JS 없이 디자인만 노출 -->
-                      <input
-                        id="checkAllRooms"
-                        type="checkbox"
-                        aria-label="전체 선택(시각적)"
-                      />
-                    </th>
-                    <th>번호</th>
-                    <th>강의실명</th>
-                    <th>캠퍼스</th>
-                    <th class="num">수용인원</th>
-                    <th>상태</th>
-                    <th>담당자</th>
-                    <th>관리</th>
-                  </tr>
-                </thead>
+            <table aria-label="강의실 목록">
+              <colgroup>
+                <col class="chk" />
+                <col style="width: 72px" />
+                <!-- 번호 -->
+                <col style="width: 220px" />
+                <!-- 강의실명 -->
+                <col style="width: 140px" />
+                <!-- 캠퍼스 -->
+                <col style="width: 120px" />
+                <!-- 수용인원 -->
+                <col style="width: 120px" />
+                <!-- 상태 -->
+                <col style="width: 160px" />
+                <!-- 담당자 -->
+                <col />
+                <!-- 관리(가변) -->
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>
+                    <input
+                      id="checkAllRooms"
+                      type="checkbox"
+                      aria-label="전체 선택(시각적)"
+                    />
+                  </th>
+                  <th>번호</th>
+                  <th>강의실명</th>
+                  <th>캠퍼스</th>
+                  <th class="num">수용인원</th>
+                  <th>상태</th>
+                  <th>담당자</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
 
-                <tbody>
-                  <!-- 서버 데이터 -->
-                  <tr th:each="room, i: ${classrooms}">
-                    <td data-label="선택">
-                      <input
-                        class="row-check room"
-                        type="checkbox"
-                        th:value="${room.id}"
-                      />
-                    </td>
-                    <td class="center" data-label="번호" th:text="${i.count}">
-                      1
-                    </td>
-                    <td data-label="강의실명" th:text="${room.name}">301호</td>
-                    <td data-label="캠퍼스" th:text="${room.campus}">대전</td>
-                    <td
-                      class="num"
-                      data-label="수용인원"
-                      th:text="${room.capacity}"
+              <tbody>
+                <!-- 서버 데이터 -->
+                <tr th:each="room, i: ${classrooms}">
+                  <td data-label="선택">
+                    <input
+                      class="row-check room"
+                      type="checkbox"
+                      th:value="${room.id}"
+                    />
+                  </td>
+                  <td class="center" data-label="번호" th:text="${i.count}">
+                    1
+                  </td>
+                  <td data-label="강의실명" th:text="${room.name}">301호</td>
+                  <td data-label="캠퍼스" th:text="${room.campus}">대전</td>
+                  <td
+                    class="num"
+                    data-label="수용인원"
+                    th:text="${room.capacity}"
+                  >
+                    30
+                  </td>
+                  <td data-label="상태">
+                    <span class="status open" th:if="${room.status=='OPEN'}"
+                      >운영중</span
                     >
-                      30
-                    </td>
-                    <td data-label="상태">
-                      <span class="status open" th:if="${room.status=='OPEN'}"
-                        >운영중</span
-                      >
-                      <span
-                        class="status closed"
-                        th:if="${room.status=='CLOSED'}"
-                        >휴강</span
-                      >
-                      <span
-                        class="status repair"
-                        th:if="${room.status=='REPAIR'}"
-                        >점검</span
-                      >
-                    </td>
-                    <td data-label="담당자" th:text="${room.manager}">
-                      김민수
-                    </td>
-                    <td class="actions" data-label="관리">
-                      <a
-                        class="view"
-                        th:href="@{/classrooms/{id}(id=${room.id})}"
-                      >
-                        <i class="fa-regular fa-eye"></i> 보기
-                      </a>
-                      <a
-                        class="edit"
-                        th:href="@{/classrooms/{id}/edit(id=${room.id})}"
-                      >
-                        <i class="fa-regular fa-pen-to-square"></i> 수정
-                      </a>
-                    </td>
-                  </tr>
+                    <span class="status closed" th:if="${room.status=='CLOSED'}"
+                      >휴강</span
+                    >
+                    <span class="status repair" th:if="${room.status=='REPAIR'}"
+                      >점검</span
+                    >
+                  </td>
+                  <td data-label="담당자" th:text="${room.manager}">김민수</td>
+                  <td class="actions" data-label="관리">
+                    <a
+                      class="view"
+                      th:href="@{/classrooms/{id}(id=${room.id})}"
+                    >
+                      <i class="fa-regular fa-eye"></i> 보기
+                    </a>
+                    <a
+                      class="edit"
+                      th:href="@{/classrooms/{id}/edit(id=${room.id})}"
+                    >
+                      <i class="fa-regular fa-pen-to-square"></i> 수정
+                    </a>
+                  </td>
+                </tr>
 
-                  <!-- 정적 예시 -->
-                  <tr>
-                    <td data-label="선택">
-                      <input
-                        class="row-check room"
-                        type="checkbox"
-                        value="101"
-                      />
-                    </td>
-                    <td class="center" data-label="번호">1</td>
-                    <td data-label="강의실명">301호</td>
-                    <td data-label="캠퍼스">대전</td>
-                    <td class="num" data-label="수용인원">30</td>
-                    <td data-label="상태">
-                      <span class="status open">운영중</span>
-                    </td>
-                    <td data-label="담당자">김민수</td>
-                    <td class="actions" data-label="관리">
-                      <a class="view" href="#"
-                        ><i class="fa-regular fa-eye"></i> 보기</a
-                      >
-                      <a class="edit" href="#"
-                        ><i class="fa-regular fa-pen-to-square"></i> 수정</a
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                <!-- 정적 예시 -->
+                <tr>
+                  <td data-label="선택">
+                    <input class="row-check room" type="checkbox" value="101" />
+                  </td>
+                  <td class="center" data-label="번호">1</td>
+                  <td data-label="강의실명">301호</td>
+                  <td data-label="캠퍼스">대전</td>
+                  <td class="num" data-label="수용인원">30</td>
+                  <td data-label="상태">
+                    <span class="status open">운영중</span>
+                  </td>
+                  <td data-label="담당자">김민수</td>
+                  <td class="actions" data-label="관리">
+                    <a class="view" href="#"
+                      ><i class="fa-regular fa-eye"></i> 보기</a
+                    >
+                    <a class="edit" href="#"
+                      ><i class="fa-regular fa-pen-to-square"></i> 수정</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </main>
