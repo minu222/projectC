@@ -16,7 +16,6 @@
 
     <!-- 페이지 전용(최소) -->
     <style>
-  
       /* 대시보드 컨테이너: 전역 .content-box의 고정폭(1280) 안에서만 배치 */
       .dashboard-wrap {
         width: 100%;
@@ -214,7 +213,7 @@
 
             <!-- 📢 알림 -->
             <section class="alerts" aria-label="최근 알림">
-              <h3>📢 최근 알림 / 처리 필요</h3>
+              <h3>최근 알림 / 처리 필요</h3>
               <ul>
                 <li th:each="notice : ${notices}" th:text="${notice}">
                   강사 김민수 강의자료 업로드 요청
