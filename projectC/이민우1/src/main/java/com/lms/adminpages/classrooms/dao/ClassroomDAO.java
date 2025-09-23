@@ -92,6 +92,23 @@ public class ClassroomDAO {
     }
 
 
+    public Classroom findByName(String title) {
+        String sql = "SELECT course_id, title, category, status, student_count, instructor_id " +
+                "FROM courses WHERE title LIKE ? AND deleted_at IS NULL LIMIT 1";
+        List<Classroom> result = jdbcTemplate.query(sql, new Object[]{"%" + title + "%"}, (rs, rowNum) ->
+                Classroom.builder()
+                        .classroomId(rs.getInt("course_id"))
+                        .title(rs.getString("title"))
+                        .category(rs.getString("category"))
+                        .status(rs.getString("status"))
+                        .studentCount(rs.getInt("student_count"))
+                        .instructorId(rs.getInt("instructor_id"))
+                        .build()
+        );
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+
     // 단일 강의실 상태 업데이트
     public void updateStatus(Integer classroomId, String status) {
         String sql = "UPDATE courses SET status = ? WHERE course_id = ?";

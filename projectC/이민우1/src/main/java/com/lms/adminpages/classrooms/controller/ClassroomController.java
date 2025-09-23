@@ -3,12 +3,16 @@ package com.lms.adminpages.classrooms.controller;
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
 import com.lms.adminpages.classrooms.service.ClassroomService;
+import com.lms.adminpages.users.dao.UserDao;
+import com.lms.adminpages.users.entity.User;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.relation.Role;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +23,27 @@ import java.util.stream.Collectors;
 public class ClassroomController {
 
     private final ClassroomService classroomService;
+    private final UserDao userDao;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ClassroomController(ClassroomService classroomService) {
+
+    public ClassroomController(ClassroomService classroomService, UserDao userDao, JdbcTemplate jdbcTemplate) {
         this.classroomService = classroomService;
+        this.userDao = userDao;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     //-----------------------------------강의실 등록
     @GetMapping("/classrooms-registration")
     public String showRegisterForm(Model model) {
         model.addAttribute("classroom", new Classroom());
+        String sql = "SELECT instructor_id, affiliation, bio FROM instructor_profile";
+        List<Map<String, Object>> instructors = jdbcTemplate.queryForList(sql);
+
+        model.addAttribute("instructors", instructors);
         List<String> categories = classroomService.findAllCategories();
         model.addAttribute("categories", categories);
+
 
         return "adminpages/classroom-registration/index";
     }
@@ -138,9 +152,4 @@ public class ClassroomController {
 
 
 
-    //--------------수업 자료 관리--------------
-    @GetMapping("/course-materials-management")
-    public String courseMaterialsManagement() {
-        return  "adminpages/course-materials-management/index";
-    }
 }

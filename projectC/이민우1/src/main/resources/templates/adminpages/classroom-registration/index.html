@@ -30,8 +30,13 @@
                         <input type="text" th:field="*{title}" placeholder="예: A-101" class="form-input" />
                     </label>
                     <label>
-                        강의자 ID
-                        <input type="number" th:field="*{instructorId}" class="form-input" />
+                        강의자
+                        <select th:field="*{instructorId}" class="form-input">
+                            <option th:each="instructor : ${instructors}"
+                                    th:value="${instructor['instructor_id']}"
+                                    th:text="${instructor['instructor_id']}">
+                            </option>
+                        </select>
                     </label>
                 </div>
                     <label class="full-row">

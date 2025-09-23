@@ -17,30 +17,42 @@
         <div class="content-box">
           <h2>수업 자료 관리</h2>
 
-          <div class="search-box materials-search">
-            <input type="text" placeholder="과정명" />
-            <button class="btn-search">조회</button>
-            <button class="btn-submit">새 자료 업로드</button>
-          </div>
+            <!-- 검색/업로드 -->
+            <div class="search-box materials-search">
+                <form th:action="@{/admin/course-materials-management}" method="get" style="display:inline;">
+                    <input type="text" name="q" placeholder="강의실명" th:value="${param.q}" />
+                    <button class="btn-search" type="submit">조회</button>
+                </form>
+                <a th:href="@{/admin/course-materials/upload}" class="btn-submit">새 자료 업로드</a>
+            </div>
 
-          <table class="data-table materials-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>파일명</th>
-                <th>등록일</th>
-                <th>비고</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>1주차_강의.pdf</td>
-                <td>2025-09-01</td>
-                <td><a href="#">다운로드</a></td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- 자료 목록 테이블 -->
+            <table class="data-table materials-table">
+                <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>강의실명</th>
+                    <th>파일경로</th>
+                    <th>다운로드</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="material, i : ${materials}">
+                    <td th:text="${i.index + 1}">1</td>
+                    <td th:text="${material.courseTitle}">강의실명</td>
+                    <td th:text="${material.filePath}">1주차_강의.pdf</td>
+                    <td>
+                        <a th:href="@{/admin/course-materials/{id}/download(id=${material.materialId})}">다운로드</a>
+                        <form th:action="@{/admin/course-materials/{id}/delete(id=${material.materialId})}" method="post" style="display:inline;">
+                            <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(materials)}">
+                    <td colspan="4">등록된 자료가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
       </main>
     </div>
