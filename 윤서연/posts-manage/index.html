@@ -10,12 +10,21 @@
     />
     <link rel="stylesheet" href="/common.css" />
     <style>
+      .header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      /* 검색 영역 */
       .search-area {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
         align-items: end;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
       }
       .search-left {
         display: flex;
@@ -40,8 +49,8 @@
         border: 1px solid #e5e7eb;
         background: #fff;
       }
-      .search-left input[type="text"]:focus,
-      .search-left select:focus {
+      .search-left select:focus,
+      .search-left input[type="text"]:focus {
         outline: none;
         box-shadow: 0 0 0 4px var(--ring);
       }
@@ -56,6 +65,7 @@
       .search-left button:hover {
         filter: brightness(0.98);
       }
+
       .search-actions {
         display: flex;
         gap: 10px;
@@ -91,6 +101,7 @@
         filter: brightness(0.98);
       }
 
+      /* 테이블 래퍼 */
       .table-wrap {
         background: var(--card);
         border-radius: 14px;
@@ -101,12 +112,17 @@
         width: 100%;
         overflow-x: auto;
       }
+
       table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         min-width: 960px;
       }
       thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
         background: #f9fafb;
         font-weight: 700;
         font-size: 14px;
@@ -114,7 +130,7 @@
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
       }
-      td {
+      tbody td {
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
         font-size: 14px;
@@ -125,10 +141,28 @@
       tbody tr:hover {
         background: #fcfcfd;
       }
+
+      /* 홀짝 줄무늬 */
+      tbody tr:nth-child(odd) {
+        background: #fafafa;
+      }
+
+      /* 체크된 행 하이라이트 (:has 지원 브라우저) */
+      tbody tr:has(> td:first-child input[type="checkbox"]:checked) {
+        background: #eef6ff;
+        box-shadow: inset 0 0 0 9999px rgba(37, 99, 235, 0.06);
+      }
+
+      .center {
+        text-align: center;
+        color: #374151;
+      }
       .num {
         font-variant-numeric: tabular-nums;
         text-align: right;
       }
+
+      /* 제목 링크 */
       .title-link {
         color: #111827;
         text-decoration: none;
@@ -138,6 +172,7 @@
         text-decoration: underline;
       }
 
+      /* 상태 칩 */
       .state {
         display: inline-flex;
         align-items: center;
@@ -146,29 +181,33 @@
         border-radius: 999px;
         font-weight: 800;
         font-size: 12px;
+        border: 1px solid transparent;
       }
-      .pub {
+      .state.pub {
         color: #064e3b;
         background: #ecfdf5;
-        border: 1px solid #a7f3d0;
+        border-color: #a7f3d0;
       }
-      .hid {
+      .state.hid {
         color: #7c2d12;
         background: #fff7ed;
-        border: 1px solid #fed7aa;
+        border-color: #fed7aa;
       }
-      .drf {
+      .state.drf {
         color: #1e1b8a;
         background: #e0e7ff;
-        border: 1px solid #c7d2fe;
+        border-color: #c7d2fe;
       }
 
+      /* 체크박스 톤 */
       input[type="checkbox"] {
         width: 16px;
         height: 16px;
         accent-color: var(--primary);
         cursor: pointer;
       }
+
+      /* 모바일 보조 */
       @media (max-width: 900px) {
         .search-area {
           grid-template-columns: 1fr;
@@ -183,10 +222,12 @@
           flex: 1 1 auto;
           justify-content: center;
         }
-        table {
-          min-width: 720px;
+        .table-wrap {
+          border-radius: 12px;
         }
       }
+
+      /* 포커스 접근성 */
       :focus-visible {
         outline: none;
         box-shadow: 0 0 0 4px var(--ring);
@@ -196,11 +237,13 @@
   </head>
   <body>
     <header class="topbar"><div>DW Academy</div></header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
           <div class="header"><h2>게시글 관리</h2></div>
 
+          <!-- 검색/액션 (시맨틱 유지, JS 없이 동작은 서버측 처리) -->
           <form class="search-area" method="get" th:action="@{/posts}">
             <div class="search-left">
               <label for="category">분류:</label>
@@ -240,6 +283,7 @@
                   작성자
                 </option>
               </select>
+
               <input
                 id="pkeyword"
                 name="keyword"
@@ -251,16 +295,19 @@
                 <i class="fa-solid fa-magnifying-glass"></i> 검색
               </button>
             </div>
+
             <div class="search-actions">
-              <button class="btn-delete" type="button" id="btnDeletePosts">
+              <!-- JS 없이 비주얼만 유지 -->
+              <a class="btn-delete" href="#" onclick="return false;">
                 <i class="fa-solid fa-trash"></i> 선택 삭제
-              </button>
-              <a class="btn-write" th:href="@{/posts/new}"
-                ><i class="fa-regular fa-square-plus"></i> 새 글 작성</a
-              >
+              </a>
+              <a class="btn-write" th:href="@{/posts/new}">
+                <i class="fa-regular fa-square-plus"></i> 새 글 작성
+              </a>
             </div>
           </form>
 
+          <!-- 목록 -->
           <div class="table-wrap">
             <div class="table-scroller">
               <table aria-label="게시글 목록">
@@ -270,7 +317,7 @@
                       <input
                         id="checkAllPosts"
                         type="checkbox"
-                        aria-label="전체 선택"
+                        aria-label="전체 선택(시각적)"
                       />
                     </th>
                     <th>번호</th>
@@ -282,7 +329,9 @@
                     <th>상태</th>
                   </tr>
                 </thead>
+
                 <tbody>
+                  <!-- 서버 데이터 -->
                   <tr th:each="p, i: ${posts}">
                     <td>
                       <input
@@ -316,6 +365,7 @@
                       >
                     </td>
                   </tr>
+
                   <!-- 정적 예시 -->
                   <tr>
                     <td>
@@ -341,29 +391,9 @@
               </table>
             </div>
           </div>
+          <!-- /목록 -->
         </div>
       </main>
     </div>
-
-    <script>
-      const allPosts = document.getElementById("checkAllPosts");
-      const postChecks = () =>
-        Array.from(document.querySelectorAll("input.row-check.post"));
-      allPosts?.addEventListener("change", (e) =>
-        postChecks().forEach((c) => (c.checked = e.target.checked))
-      );
-      document
-        .getElementById("btnDeletePosts")
-        ?.addEventListener("click", () => {
-          const ids = postChecks()
-            .filter((c) => c.checked)
-            .map((c) => c.value);
-          if (!ids.length) return alert("삭제할 게시글을 선택하세요.");
-          if (confirm(ids.length + "개 게시글을 삭제하시겠습니까?")) {
-            // TODO: fetch('/posts/bulk-delete', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(ids)});
-            console.log("DELETE posts", ids);
-          }
-        });
-    </script>
   </body>
 </html>

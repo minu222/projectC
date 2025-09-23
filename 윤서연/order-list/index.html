@@ -4,192 +4,138 @@
     <meta charset="UTF-8" />
     <title>주문 목록</title>
     <link rel="stylesheet" href="/common.css" />
-  </head>
-  <style>
-   
-    /* 검색 박스: 입력/셀렉트/버튼 3개가 자연스럽게 접힘 */
-    .search-box.orders-search {
-      display: grid;
-      gap: 12px;
-      margin: 8px 0 16px;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-    .search-box.orders-search input[type="text"],
-    .search-box.orders-search select,
-    .search-box.orders-search .btn-primary {
-      height: 42px;
-      font-size: 14px;
-      border-radius: 10px;
-    }
-    .search-box.orders-search input[type="text"],
-    .search-box.orders-search select {
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-    }
-    .search-box.orders-search input[type="text"]:focus,
-    .search-box.orders-search select:focus {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-    }
-   
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    <style>
+      /* 검색 박스: 입력/셀렉트/버튼 3개가 자연스럽게 접힘 */
+      .search-box.orders-search {
+        display: grid;
+        gap: 12px;
+        margin: 8px 0 16px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+      .search-box.orders-search input[type="text"],
+      .search-box.orders-search select,
+      .search-box.orders-search .btn-primary {
+        height: 42px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+      .search-box.orders-search input[type="text"],
+      .search-box.orders-search select {
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+      }
+      .search-box.orders-search input[type="text"]:focus,
+      .search-box.orders-search select:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
 
-    /* 표 */
-    .table-gap-top {
-      margin-top: 12px;
-    }
-    .data-table.orders-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .data-table.orders-table thead th {
-      background: #f9fafb;
-      font-weight: 700;
-      font-size: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-    }
-    .data-table.orders-table td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 14px;
-      font-size: 14px;
-    }
-    .data-table.orders-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    .data-table.orders-table tbody tr:hover {
-      background: #fcfcfd;
-    }
-
-    /* 열 디테일 */
-    .orders-table td:nth-child(1) {
-      font-variant-numeric: tabular-nums;
-    } /* 주문번호 */
-    .orders-table td:nth-child(4) {
-      /* 금액 */
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
-    /* 배지 (상태) */
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-    .badge.done {
-      background: rgba(16, 185, 129, 0.12);
-      color: #065f46;
-    } /* 결제완료 */
-    .badge.refund {
-      background: rgba(220, 38, 38, 0.12);
-      color: #7f1d1d;
-    } /* 환불 */
-    .badge.pending {
-      background: rgba(245, 158, 11, 0.15);
-      color: #8a4b00;
-    } /* 결제대기 등 */
-
-    /* 작은 화면: HTML 수정 없이 가로 스크롤 */
-    @media (max-width: 720px) {
+      /* 표 */
+      .table-gap-top {
+        margin-top: 12px;
+      }
       .data-table.orders-table {
-        display: block;
         width: 100%;
-        overflow-x: auto;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .data-table.orders-table thead th {
+        background: #f9fafb;
+        font-weight: 700;
+        font-size: 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+      }
+      .data-table.orders-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+      .data-table.orders-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table.orders-table tbody tr:hover {
+        background: #fcfcfd;
+      }
+
+      /* 열 디테일 */
+      .orders-table td:nth-child(1) {
+        font-variant-numeric: tabular-nums;
+      } /* 주문번호 */
+      .orders-table td:nth-child(4) {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
         white-space: nowrap;
-        border-radius: 12px;
-      }
-      .btn-primary {
-        width: 100%;
-      }
-    }
+      } /* 금액 */
 
-    /* 접근성 */
-    :focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 4px var(--ring);
-      border-radius: 8px;
-    }
-
-    /* 프린트 최적화(선택) */
-    @media print {
-      .topbar {
-        position: static;
-        border: none;
+      /* 배지 (상태) */
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
       }
-      .container {
-        min-height: auto;
-      }
-      .content-box {
-        box-shadow: none;
-      }
-    }
-  </style>
-  <body>
-    <header class="topbar">
-      <div>DW Academy</div>
-    </header>
-    <div class="container">
-      <main class="main">
-        <div class="content-box">
-          <h2>주문 목록</h2>
+      .badge.done {
+        background: rgba(16, 185, 129, 0.12);
+        color: #065f46;
+      } /* 결제완료 */
+      .badge.refund {
+        background: rgba(220, 38, 38, 0.12);
+        color: #7f1d1d;
+      } /* 환불 */
+      .badge.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #8a4b00;
+      } /* 결제대기 */
 
-          <div class="search-box orders-search">
-            <input type="text" placeholder="주문번호/이름" />
-            <select>
-              <option>전체</option>
-              <option>결제완료</option>
-              <option>환불</option>
-            </select>
-            <button class="btn-primary">검색</button>
-          </div>
+      /* 작은 화면: HTML 수정 없이 가로 스크롤 */
+      @media (max-width: 720px) {
+        .data-table.orders-table {
+          display: block;
+          width: 100%;
+          overflow-x: auto;
+          white-space: nowrap;
+          border-radius: 12px;
+        }
+        .btn-primary {
+          width: 100%;
+        }
+      }
 
-          <table class="data-table table-gap-top orders-table">
-            <thead>
-              <tr>
-                <th>주문번호</th>
-                <th>고객명</th>
-                <th>상품</th>
-                <th>금액</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>O-20250910-001</td>
-                <td>홍길동</td>
-                <td>자바 과정</td>
-                <td>₩350,000</td>
-                <td><span class="badge done">결제완료</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-    <script src="menu-loader.js" defer></script>
-  </body>
-</html>
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>주문 목록</title>
-    <link rel="stylesheet" href="./공통css.css" />
+      /* 접근성 */
+      :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring);
+        border-radius: 8px;
+      }
+
+      /* 프린트 */
+      @media print {
+        .topbar {
+          position: static;
+          border: none;
+        }
+        .container {
+          min-height: auto;
+        }
+        .content-box {
+          box-shadow: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="global-menu" class="mneuu" data-src="menu.html"></div>
+    <header class="topbar"><div>DW Academy</div></header>
+
     <div class="container">
       <main class="main">
         <div class="content-box">
@@ -205,7 +151,10 @@
             <button class="btn-primary">검색</button>
           </div>
 
-          <table class="data-table table-gap-top orders-table">
+          <table
+            class="data-table table-gap-top orders-table"
+            aria-label="주문 목록"
+          >
             <thead>
               <tr>
                 <th>주문번호</th>
@@ -223,6 +172,7 @@
                 <td>₩350,000</td>
                 <td><span class="badge done">결제완료</span></td>
               </tr>
+              <!-- 필요 시 서버 데이터로 반복 렌더링 -->
             </tbody>
           </table>
         </div>

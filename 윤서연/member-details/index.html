@@ -3,13 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <title>회원 관리 (마스터 · 디테일)</title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="/common.css" />
     <style>
-      /* ===== Two-column layout ===== */
+      /* ===== 2열 레이아웃 ===== */
       .two-col {
         display: flex;
         gap: 16px;
@@ -17,25 +13,22 @@
       }
       .list-col {
         flex: 2;
+        min-width: 0;
       }
       .detail-col {
         flex: 1;
         position: sticky;
         top: 72px;
         align-self: flex-start;
+        min-width: 320px;
       }
 
-      /* ===== List card (left) ===== */
+      /* ===== 카드 ===== */
       .card {
         background: var(--card);
         border: 1px solid #e5e7eb;
         border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      }
-      .card-body {
-        gap: 20px;
-        display: flex;
-        flex-direction: column;
       }
       .card-header {
         display: flex;
@@ -51,11 +44,17 @@
         font-weight: 800;
         color: var(--primary);
       }
+      .card-body {
+        padding: 14px 16px;
+      }
+
+      /* ===== 상단 필터 ===== */
       .filters {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
         align-items: end;
+        margin-bottom: 10px;
       }
       .filters-left {
         display: flex;
@@ -102,6 +101,7 @@
       .filters-left button:hover {
         filter: brightness(0.98);
       }
+
       .actions {
         display: flex;
         gap: 10px;
@@ -121,118 +121,55 @@
         align-items: center;
         gap: 8px;
       }
-      .btn-danger {
-        border-color: color-mix(in srgb, var(--danger) 40%, #e5e7eb);
-        color: var(--danger);
-      }
       .btn-primary {
         border: none;
         background: var(--primary);
         color: #fff;
       }
-      table {
-        flex-direction: column;
-        display: flex;
+      .btn-danger {
+        border-color: color-mix(in srgb, var(--danger) 40%, #e5e7eb);
+        color: var(--danger);
       }
-      thead {
-        position: relative;
+      .btn-line:hover {
+        background: #f9fafb;
+      }
+
+      /* ===== 표 ===== */
+      .table-wrap {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .table-scroller {
         width: 100%;
-        display: flex;
+        overflow-x: auto;
       }
-      thead tr {
-        justify-content: space-between;
-        gap: 10px;
-        display: flex;
+      table.member-table {
         width: 100%;
+        min-width: 980px;
+        border-collapse: collapse;
       }
-      thead tr th:first-child {
-        min-width: 50px;
-        max-width: 50px;
-      }
-      thead tr th:nth-child(2) {
-        max-width: 50px;
-      }
-      thead tr th:nth-child(5) {
-        min-width: 220px;
-        max-width: 220px;
-      }
-      thead tr th:nth-child(6) {
-        min-width: 120px;
-        max-width: 120px;
-      }
-      thead tr th:nth-child(7) {
-        min-width: 110px;
-        max-width: 110px;
-      }
-      thead tr th:nth-child(8) {
-        min-width: 110px;
-        max-width: 110px;
-      }
-      thead tr th:last-child {
-        min-width: 100px;
-        max-width: 100px;
-      }
-      thead tr th {
-        flex: 1;
-      }
-      tbody {
-        display: flex;
-      }
-      tbody tr {
-        gap: 10px;
-        justify-content: center;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        display: flex;
-      }
-      tbody tr td {
-        flex: 1;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-      }
-      tbody tr td:first-child {
-        min-width: 50px;
-        max-width: 50px;
-      }
-      tbody tr td:nth-child(2) {
-        max-width: 50px;
-      }
-      tbody tr td:nth-child(5) {
-        min-width: 220px;
-        max-width: 220px;
-      }
-      tbody tr td:nth-child(6) {
-        min-width: 120px;
-        max-width: 120px;
-      }
-      tbody tr td:nth-child(7) {
-        min-width: 110px;
-        max-width: 110px;
-      }
-      tbody tr td:nth-child(8) {
-        min-width: 110px;
-        max-width: 110px;
-      }
-      tbody tr td:last-child {
-        min-width: 100px;
-        max-width: 100px;
-      }
-      /* table.member-table thead th {
-        display: flex;
-        width: 100%;
+      table.member-table thead th {
         background: #f9fafb;
         font-weight: 700;
         font-size: 13px;
-        text-align: center;
+        text-align: left;
         border-bottom: 1px solid #e5e7eb;
         padding: 12px 14px;
-      } */
-
+        white-space: nowrap;
+      }
+      table.member-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+        font-size: 14px;
+        vertical-align: middle;
+      }
       table.member-table tbody tr:hover {
         background: #fcfcfd;
       }
+
+      /* 열 폭/정렬 */
       .col-no {
         width: 64px;
         text-align: center;
@@ -240,10 +177,11 @@
       }
       .col-actions {
         width: 132px;
+        white-space: nowrap;
       }
-      .col-date,
+      .col-email,
       .col-phone,
-      .col-email {
+      .col-date {
         font-variant-numeric: tabular-nums;
       }
       .member-id a {
@@ -254,12 +192,16 @@
       .member-id a:hover {
         text-decoration: underline;
       }
+
+      /* 체크박스 */
       input[type="checkbox"] {
         width: 16px;
         height: 16px;
         accent-color: var(--primary);
         cursor: pointer;
       }
+
+      /* 배지 */
       .badge {
         display: inline-block;
         padding: 4px 10px;
@@ -280,7 +222,7 @@
         color: #7f1d1d;
       }
 
-      /* ===== Detail card (right) ===== */
+      /* ===== 우측 디테일 카드 ===== */
       .detail-card {
         background: var(--card);
         border: 1px solid #e5e7eb;
@@ -304,7 +246,6 @@
       .detail-body {
         padding: 12px 16px;
       }
-
       .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -348,9 +289,7 @@
       .two {
         grid-column: 1 / -1;
       }
-
       .inline-actions {
-        word-break: keep-all;
         display: flex;
         gap: 8px;
         align-items: center;
@@ -362,24 +301,20 @@
         font-weight: 700;
         font-size: 13px;
         cursor: pointer;
-      }
-      .btn-reset {
-        border: 1px solid color-mix(in srgb, var(--danger) 40%, #e5e7eb);
-        color: var(--danger);
+        border: 1px solid #e5e7eb;
+        background: #fff;
       }
       .btn-unlock {
-        display: flex;
-        background: #fff;
-        border: 1px solid color-mix(in srgb, var(--primary) 40%, #e5e7eb);
+        border-color: color-mix(in srgb, var(--primary) 40%, #e5e7eb);
         color: var(--primary);
       }
-      .btn-reset:hover {
-        background: color-mix(in srgb, var(--danger) 6%, #fff);
+      .btn-reset {
+        border-color: color-mix(in srgb, var(--danger) 40%, #e5e7eb);
+        color: var(--danger);
       }
-      .btn-unlock:hover {
-        background: color-mix(in srgb, var(--primary) 6%, #fff);
+      .btn-sm:hover {
+        background: #f9fafb;
       }
-
       .detail-footer {
         display: flex;
         gap: 10px;
@@ -414,33 +349,17 @@
       .empty {
         color: var(--muted);
         font-size: 14px;
-        padding: 6px 0;
       }
 
-      @media (max-width: 1100px) {
-        .list-col {
-          flex-basis: 55%;
-          min-width: 0;
-        }
-      }
       @media (max-width: 920px) {
         .two-col {
           flex-direction: column;
-        }
-        .list-col {
-          min-width: auto;
         }
         .detail-col {
           position: static;
         }
       }
       @media (max-width: 760px) {
-        table.member-table {
-          display: block;
-          overflow-x: auto;
-          white-space: nowrap;
-          border-radius: 10px;
-        }
         .actions {
           flex-wrap: wrap;
         }
@@ -449,43 +368,50 @@
           flex: 1 1 auto;
           justify-content: center;
         }
+        .table-wrap {
+          border-radius: 10px;
+        }
       }
     </style>
   </head>
+
   <body>
     <header class="topbar"><div>DW Academy</div></header>
+
     <div class="container">
-      <div class="main">
+      <main class="main">
         <div class="two-col">
-          <!-- LEFT: 목록 -->
+          <!-- ========== LEFT: 목록 ========== -->
           <section class="list-col card">
             <div class="card-header">
               <h2 class="card-title">회원 관리</h2>
               <div class="actions">
-                <a class="btn-line" th:href="@{/messages/write}"
-                  ><i class="fa-solid fa-envelope"></i> 메일 쓰기</a
-                >
-                <a class="btn-line btn-primary" th:href="@{/admin/members/new}"
-                  ><i class="fa-solid fa-user-plus"></i> 신규 등록</a
-                >
+                <a class="btn-line" th:href="@{/messages/write}">
+                  <i class="fa-solid fa-envelope"></i> 메일 쓰기
+                </a>
+                <a class="btn-line btn-primary" th:href="@{/admin/members/new}">
+                  <i class="fa-solid fa-user-plus"></i> 신규 등록
+                </a>
                 <button class="btn-line btn-danger" type="button">
                   <i class="fa-solid fa-user-slash"></i> 선택 탈퇴
                 </button>
               </div>
             </div>
-            <div class="card-body" style="padding: 14px 16px">
+
+            <div class="card-body">
               <form class="filters" method="get" th:action="@{/admin/members}">
                 <div class="filters-left">
-                  <label class="only-select"
-                    >소속:
+                  <label class="only-select">
+                    소속:
                     <select name="group">
                       <option value="">- 전체 -</option>
                       <option value="DW">DW</option>
                       <option value="JS">JS</option>
                     </select>
                   </label>
-                  <label
-                    >검색:
+
+                  <label>
+                    검색:
                     <select name="type">
                       <option value="">- 전체 -</option>
                       <option value="name">이름</option>
@@ -498,130 +424,153 @@
                       placeholder="검색어 입력"
                     />
                   </label>
+
                   <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i> 검색
                   </button>
                 </div>
               </form>
 
-              <table class="member-table" aria-label="회원 목록">
-                <thead>
-                  <tr>
-                    <th><input id="checkAll" type="checkbox" /></th>
-                    <th class="col-no">No</th>
-                    <th>아이디</th>
-                    <th>이름</th>
-                    <th class="col-email">이메일</th>
-                    <th class="col-phone">전화번호</th>
-                    <th class="col-date">가입일</th>
-                    <th>상태</th>
-                    <th class="col-actions">관리</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr th:each="member, stat : ${members}">
-                    <td>
-                      <input
-                        class="row-check"
-                        th:value="${member.id}"
-                        type="checkbox"
-                      />
-                    </td>
-                    <td class="col-no" th:text="${stat.count}">1</td>
-                    <td class="member-id">
-                      <a
-                        th:href="@{/admin/members/{id}(id=${member.id})}"
-                        th:text="${member.username}"
-                        >user01</a
-                      >
-                    </td>
-                    <td th:text="${member.name}">홍길동</td>
-                    <td class="col-email" th:text="${member.email}">
-                      user01@example.com
-                    </td>
-                    <td class="col-phone" th:text="${member.phone}">
-                      010-1234-5678
-                    </td>
-                    <td
-                      class="col-date"
-                      th:text="${#dates.format(member.createdAt,'yyyy-MM-dd')}"
-                    >
-                      2025-09-01
-                    </td>
-                    <td>
-                      <span
-                        class="badge green"
-                        th:if="${member.status == '정상'}"
-                        >정상</span
-                      >
-                      <span
-                        class="badge gray"
-                        th:if="${member.status == '휴면'}"
-                        >휴면</span
-                      >
-                      <span class="badge red" th:if="${member.status == '탈퇴'}"
-                        >탈퇴</span
-                      >
-                    </td>
-                    <td class="col-actions">
-                      <a
-                        href="#"
-                        class="btn-detail"
-                        th:attr="
-                           data-id=${member.id},
-                           data-username=${member.username},
-                           data-name=${member.name},
-                           data-email=${member.email},
-                           data-phone=${member.phone},
-                           data-tel=${member.tel},
-                           data-address=${member.address},
-                           data-role=${member.role},
-                           data-status=${member.status},
-                           data-loginfails=${member.loginFailCount},
-                           data-join=${#dates.format(member.createdAt,'yyyy-MM-dd HH:mm')},
-                           data-last=${#dates.format(member.lastLogin,'yyyy-MM-dd HH:mm')}
-                         "
-                      >
-                        상세
-                      </a>
-                      <span> | </span>
-                      <a th:href="@{/admin/members/{id}/edit(id=${member.id})}"
-                        >수정</a
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table-wrap">
+                <div class="table-scroller">
+                  <table class="member-table" aria-label="회원 목록">
+                    <thead>
+                      <tr>
+                        <th><input id="checkAll" type="checkbox" /></th>
+                        <th class="col-no">No</th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th class="col-email">이메일</th>
+                        <th class="col-phone">전화번호</th>
+                        <th class="col-date">가입일</th>
+                        <th>상태</th>
+                        <th class="col-actions">관리</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Thymeleaf 데이터 -->
+                      <tr th:each="member, stat : ${members}">
+                        <td>
+                          <input
+                            class="row-check"
+                            th:value="${member.id}"
+                            type="checkbox"
+                          />
+                        </td>
+                        <td class="col-no" th:text="${stat.count}">1</td>
+                        <td class="member-id">
+                          <a
+                            th:href="@{/admin/members/{id}(id=${member.id})}"
+                            th:text="${member.username}"
+                            >user01</a
+                          >
+                        </td>
+                        <td th:text="${member.name}">홍길동</td>
+                        <td class="col-email" th:text="${member.email}">
+                          user01@example.com
+                        </td>
+                        <td class="col-phone" th:text="${member.phone}">
+                          010-1234-5678
+                        </td>
+                        <td
+                          class="col-date"
+                          th:text="${#dates.format(member.createdAt,'yyyy-MM-dd')}"
+                        >
+                          2025-09-01
+                        </td>
+                        <td>
+                          <span
+                            class="badge green"
+                            th:if="${member.status == '정상'}"
+                            >정상</span
+                          >
+                          <span
+                            class="badge gray"
+                            th:if="${member.status == '휴면'}"
+                            >휴면</span
+                          >
+                          <span
+                            class="badge red"
+                            th:if="${member.status == '탈퇴'}"
+                            >탈퇴</span
+                          >
+                        </td>
+                        <td class="col-actions">
+                          <a th:href="@{/admin/members/{id}(id=${member.id})}"
+                            >상세</a
+                          >
+                          <span> | </span>
+                          <a
+                            th:href="@{/admin/members/{id}/edit(id=${member.id})}"
+                            >수정</a
+                          >
+                        </td>
+                      </tr>
+
+                      <!-- 정적 예시 -->
+                      <tr>
+                        <td><input class="row-check" type="checkbox" /></td>
+                        <td class="col-no">1</td>
+                        <td class="member-id"><a href="#">user01</a></td>
+                        <td>홍길동</td>
+                        <td class="col-email">user01@example.com</td>
+                        <td class="col-phone">010-1234-5678</td>
+                        <td class="col-date">2025-09-01</td>
+                        <td><span class="badge green">정상</span></td>
+                        <td class="col-actions">
+                          <a href="#">상세</a> <span> | </span>
+                          <a href="#">수정</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </section>
 
-          <!-- RIGHT: 상세 패널 (처음엔 비어있음) -->
+          <!-- ========== RIGHT: 상세 ======== -->
           <aside class="detail-col">
-            <div class="detail-card" id="detailCard" aria-live="polite">
+            <div class="detail-card">
               <div class="detail-head">
                 <h3 class="detail-title">회원 상세</h3>
-                <span id="detailId" class="empty">선택된 회원 없음</span>
+                <!-- 선택된 회원 표시 (서버에서 전달 시) -->
+                <span
+                  class="empty"
+                  th:text="${selectedMember != null ? ('ID: ' + selectedMember.username) : '선택된 회원 없음'}"
+                  >선택된 회원 없음</span
+                >
               </div>
-              <form id="detailForm">
+
+              <!-- 선택된 회원이 있을 때만 폼 채움 -->
+              <form th:if="${selectedMember != null}">
                 <div class="detail-body">
                   <div class="form-grid">
                     <div class="form-row">
                       <label>이름</label>
-                      <input class="input" name="name" placeholder="—" />
+                      <input
+                        class="input"
+                        name="name"
+                        th:value="${selectedMember.name}"
+                      />
                     </div>
                     <div class="form-row">
                       <label>아이디</label>
                       <input
                         class="input readonly"
                         name="username"
-                        placeholder="—"
+                        th:value="${selectedMember.username}"
                         readonly
                       />
                     </div>
 
                     <div class="form-row">
                       <label>구분(권한)</label>
-                      <select class="select" name="role">
+                      <select
+                        class="select"
+                        name="role"
+                        th:value="${selectedMember.role}"
+                      >
                         <option value="USER">일반 회원</option>
                         <option value="TEACHER">강사</option>
                         <option value="ADMIN">관리자</option>
@@ -629,7 +578,11 @@
                     </div>
                     <div class="form-row">
                       <label>회원 상태</label>
-                      <select class="select" name="status">
+                      <select
+                        class="select"
+                        name="status"
+                        th:value="${selectedMember.status}"
+                      >
                         <option value="정상">정상</option>
                         <option value="휴면">휴면</option>
                         <option value="탈퇴">탈퇴</option>
@@ -639,19 +592,35 @@
 
                     <div class="form-row">
                       <label>이메일</label>
-                      <input class="input" name="email" placeholder="—" />
+                      <input
+                        class="input"
+                        name="email"
+                        th:value="${selectedMember.email}"
+                      />
                     </div>
                     <div class="form-row">
                       <label>휴대전화</label>
-                      <input class="input" name="phone" placeholder="—" />
+                      <input
+                        class="input"
+                        name="phone"
+                        th:value="${selectedMember.phone}"
+                      />
                     </div>
                     <div class="form-row">
                       <label>유선전화</label>
-                      <input class="input" name="tel" placeholder="—" />
+                      <input
+                        class="input"
+                        name="tel"
+                        th:value="${selectedMember.tel}"
+                      />
                     </div>
                     <div class="form-row two">
                       <label>주소</label>
-                      <input class="input" name="address" placeholder="—" />
+                      <input
+                        class="input"
+                        name="address"
+                        th:value="${selectedMember.address}"
+                      />
                     </div>
 
                     <div class="form-row">
@@ -660,14 +629,10 @@
                         <input
                           class="input readonly"
                           name="loginFailCount"
-                          placeholder="0회"
+                          th:value="${selectedMember.loginFailCount + '회'}"
                           readonly
                         />
-                        <button
-                          type="button"
-                          class="btn-sm btn-unlock"
-                          id="btnUnlock"
-                        >
+                        <button type="button" class="btn-sm btn-unlock">
                           풀어주기
                         </button>
                       </div>
@@ -680,11 +645,7 @@
                           value="********"
                           readonly
                         />
-                        <button
-                          type="button"
-                          class="btn-sm btn-reset"
-                          id="btnResetPw"
-                        >
+                        <button type="button" class="btn-sm btn-reset">
                           비밀번호 초기화
                         </button>
                       </div>
@@ -695,31 +656,45 @@
                       <textarea
                         class="textarea"
                         name="memo"
-                        placeholder="내부 관리 메모"
+                        th:text="${selectedMember.memo}"
                       ></textarea>
                     </div>
 
                     <div class="form-row">
                       <label>가입일</label>
-                      <input class="input readonly" name="joinDate" readonly />
+                      <input
+                        class="input readonly"
+                        th:value="${#dates.format(selectedMember.createdAt,'yyyy-MM-dd HH:mm')}"
+                        readonly
+                      />
                     </div>
                     <div class="form-row">
                       <label>최근접속일</label>
-                      <input class="input readonly" name="lastLogin" readonly />
+                      <input
+                        class="input readonly"
+                        th:value="${#dates.format(selectedMember.lastLogin,'yyyy-MM-dd HH:mm')}"
+                        readonly
+                      />
                     </div>
                   </div>
                 </div>
                 <div class="detail-footer">
-                  <button type="button" class="btn btn-close" id="btnClear">
-                    비우기
-                  </button>
+                  <button type="reset" class="btn btn-close">비우기</button>
                   <button type="submit" class="btn btn-save">저장</button>
                 </div>
               </form>
+
+              <!-- 선택된 회원이 없을 때 빈 상태 -->
+              <div class="detail-body" th:if="${selectedMember == null}">
+                <p class="empty">
+                  왼쪽 목록에서 <strong>상세</strong>를 클릭하면 정보가 여기에
+                  표시됩니다.
+                </p>
+              </div>
             </div>
           </aside>
         </div>
-      </div>
+      </main>
     </div>
   </body>
 </html>
