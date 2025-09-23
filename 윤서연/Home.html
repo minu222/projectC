@@ -4,29 +4,30 @@
     <meta charset="UTF-8" />
     <title>DW Academy - 관리자 메인</title>
 
-    <!-- Libs -->
+    <!-- Libs (필요 시) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
 
-    <!-- 공통 CSS (전역 고정 레이아웃/토큰) -->
+    <!-- 전역 고정 레이아웃/토큰 -->
     <link rel="stylesheet" href="/common.css" />
 
-    <!-- 페이지 전용(최소) -->
+    <!-- 페이지 전용 -->
     <style>
-      /* 대시보드 컨테이너: 전역 .content-box의 고정폭(1280) 안에서만 배치 */
+      /* 대시보드 컨테이너: .content-box(1280) 내부 전용 */
       .dashboard-wrap {
         width: 100%;
       }
 
-      /* 통계 카드: 6열 고정, 줄바꿈 금지 */
+      /* 통계 카드: 6열 고정 (줄바꿈 금지) */
       .stats {
         display: grid;
         grid-template-columns: repeat(6, 1fr); /* ★ 고정 6열 */
         gap: 20px;
         margin-bottom: 28px;
+        white-space: nowrap;
       }
       .card {
         background: var(--card);
@@ -64,13 +65,14 @@
         padding-left: 18px;
       }
 
-      /* 검색 박스: 한 줄 고정, 입력 폭 고정 */
+      /* 검색 박스: 한 줄 고정, 고정 폭 */
       .search-box {
         display: flex;
         align-items: center;
         gap: 12px;
         margin-bottom: 16px;
-        flex-wrap: nowrap; /* 줄바꿈 금지 */
+        flex-wrap: nowrap; /* ★ 줄바꿈 금지 */
+        white-space: nowrap;
       }
       .search-box input,
       .search-box select,
@@ -96,18 +98,18 @@
         cursor: pointer;
       }
 
-      /* 표: 고정 폭 테이블 */
+      /* 표: 고정 레이아웃 + 줄바꿈 금지 */
       .table-wrap {
         background: var(--card);
         border-radius: 14px;
         border: 1px solid #e5e7eb;
-        overflow: hidden; /* 넘치면 자름(전역이 어차피 숨김) */
+        overflow: hidden; /* 넘치는 부분 자름(전역도 숨김) */
       }
       .data-table {
         width: 100%;
         table-layout: fixed; /* ★ 고정 레이아웃 */
         border-collapse: collapse;
-        white-space: nowrap; /* 줄바꿈 금지 */
+        white-space: nowrap; /* ★ 줄바꿈 금지 */
       }
       .data-table thead th {
         background: #f9fafb;
@@ -122,7 +124,7 @@
         font-size: 14px;
         border-bottom: 1px solid #e5e7eb;
         overflow: hidden;
-        text-overflow: ellipsis; /* 텍스트 넘침 … 처리 */
+        text-overflow: ellipsis; /* 넘침 … 처리 */
       }
       .data-table tbody tr:last-child td {
         border-bottom: none;
@@ -189,7 +191,7 @@
           <h2>관리자 메인</h2>
 
           <div class="dashboard-wrap">
-            <!-- 📊 통계 카드 -->
+            <!-- 📊 통계 카드 (6고정) -->
             <section class="stats" aria-label="통계 카드">
               <div class="card" th:text="${studentCount} + '명'">
                 120명<span>총 회원(학생)</span>
@@ -221,7 +223,7 @@
               </ul>
             </section>
 
-            <!-- 🔍 검색 + 테이블 -->
+            <!-- 🔍 검색 + 테이블 (줄바꿈 없음) -->
             <section aria-label="검색 및 목록">
               <div class="search-box">
                 <input placeholder="과정명 검색" type="text" />
@@ -250,44 +252,38 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td data-label="NO">1</td>
-                      <td data-label="년도/차수">2025/01</td>
-                      <td data-label="과정명">스마트테스트</td>
-                      <td data-label="소속">(주)위런소프트</td>
-                      <td data-label="수강생">홍길동</td>
-                      <td data-label="진도율">90%</td>
-                      <td data-label="상태">
-                        <span class="badge normal">정상</span>
-                      </td>
+                      <td>1</td>
+                      <td>2025/01</td>
+                      <td>스마트테스트</td>
+                      <td>(주)위런소프트</td>
+                      <td>홍길동</td>
+                      <td>90%</td>
+                      <td><span class="badge normal">정상</span></td>
                     </tr>
                     <tr>
-                      <td data-label="NO">2</td>
-                      <td data-label="년도/차수">2024/33</td>
-                      <td data-label="과정명">인터넷활용</td>
-                      <td data-label="소속">(주)위런소프트</td>
-                      <td data-label="수강생">이영희</td>
-                      <td data-label="진도율">75%</td>
-                      <td data-label="상태">
-                        <span class="badge cancel">수강취소</span>
-                      </td>
+                      <td>2</td>
+                      <td>2024/33</td>
+                      <td>인터넷활용</td>
+                      <td>(주)위런소프트</td>
+                      <td>이영희</td>
+                      <td>75%</td>
+                      <td><span class="badge cancel">수강취소</span></td>
                     </tr>
                     <tr>
-                      <td data-label="NO">3</td>
-                      <td data-label="년도/차수">2024/20</td>
-                      <td data-label="과정명">엑셀활용</td>
-                      <td data-label="소속">(주)위런소프트</td>
-                      <td data-label="수강생">김민수</td>
-                      <td data-label="진도율">100%</td>
-                      <td data-label="상태">
-                        <span class="badge done">수료</span>
-                      </td>
+                      <td>3</td>
+                      <td>2024/20</td>
+                      <td>엑셀활용</td>
+                      <td>(주)위런소프트</td>
+                      <td>김민수</td>
+                      <td>100%</td>
+                      <td><span class="badge done">수료</span></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </section>
 
-            <!-- 💰 매출 리포트 -->
+            <!-- 💰 매출 리포트 (고정 높이) -->
             <section class="sales-report" aria-label="매출 리포트">
               <h3>💰 이번 달 매출 리포트</h3>
               <div class="chart-container">
@@ -298,7 +294,5 @@
         </div>
       </main>
     </div>
-
-    <!-- (선택) 샘플 차트 렌더 — 데이터 연결 전 임시 -->
   </body>
 </html>

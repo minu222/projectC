@@ -5,6 +5,14 @@
     <title>회원 관리 (마스터 · 디테일)</title>
     <link rel="stylesheet" href="/common.css" />
     <style>
+      /* === 이 페이지만 컨테이너 가로폭 확장 (왼쪽 박스 스크롤 제거 목적) === */
+      .container {
+        width: 1600px;
+      } /* ★ 공통 1280px → 1600px로 확장 */
+      .table-scroller {
+        overflow: visible;
+      } /* 내부 가로 스크롤 제거 */
+
       /* ===== 2열 레이아웃 ===== */
       .two-col {
         display: flex;
@@ -133,21 +141,24 @@
       .btn-line:hover {
         background: #f9fafb;
       }
+      .inline-actions {
+        flex-wrap: wrap; /* 폭이 모자라면 버튼 자체가 다음 줄로 이동 */
+        gap: 8px;
+      }
 
       /* ===== 표 ===== */
       .table-wrap {
         border: 1px solid #e5e7eb;
         border-radius: 12px;
-        overflow: hidden;
+        overflow: hidden; /* 내부 스크롤 제거 후 가장자리 깔끔하게 */
         background: #fff;
       }
       .table-scroller {
         width: 100%;
-        overflow-x: auto;
       }
       table.member-table {
         width: 100%;
-        min-width: 980px;
+        min-width: 980px; /* 좌측 카드 폭을 충분히 확보 */
         border-collapse: collapse;
       }
       table.member-table thead th {
@@ -303,6 +314,10 @@
         cursor: pointer;
         border: 1px solid #e5e7eb;
         background: #fff;
+        white-space: nowrap; /* 줄바꿈 금지 */
+        word-break: keep-all; /* 한글 글자 단위 분해 금지 */
+        flex: 0 0 auto; /* 버튼 자체 폭 유지(찌그러지지 않게) */
+        letter-spacing: normal;
       }
       .btn-unlock {
         border-color: color-mix(in srgb, var(--primary) 40%, #e5e7eb);
@@ -386,14 +401,12 @@
             <div class="card-header">
               <h2 class="card-title">회원 관리</h2>
               <div class="actions">
-                <a class="btn-line" th:href="@{/messages/write}">
-                  <i class="fa-solid fa-envelope"></i> 메일 쓰기
-                </a>
+                <a class="btn-line" th:href="@{/messages/write}"> 메일 쓰기 </a>
                 <a class="btn-line btn-primary" th:href="@{/admin/members/new}">
-                  <i class="fa-solid fa-user-plus"></i> 신규 등록
+                  신규 등록
                 </a>
                 <button class="btn-line btn-danger" type="button">
-                  <i class="fa-solid fa-user-slash"></i> 선택 탈퇴
+                  선택 탈퇴
                 </button>
               </div>
             </div>
@@ -425,9 +438,7 @@
                     />
                   </label>
 
-                  <button type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i> 검색
-                  </button>
+                  <button type="submit">검색</button>
                 </div>
               </form>
 
@@ -534,7 +545,6 @@
             <div class="detail-card">
               <div class="detail-head">
                 <h3 class="detail-title">회원 상세</h3>
-                <!-- 선택된 회원 표시 (서버에서 전달 시) -->
                 <span
                   class="empty"
                   th:text="${selectedMember != null ? ('ID: ' + selectedMember.username) : '선택된 회원 없음'}"
@@ -542,7 +552,6 @@
                 >
               </div>
 
-              <!-- 선택된 회원이 있을 때만 폼 채움 -->
               <form th:if="${selectedMember != null}">
                 <div class="detail-body">
                   <div class="form-grid">
@@ -684,7 +693,6 @@
                 </div>
               </form>
 
-              <!-- 선택된 회원이 없을 때 빈 상태 -->
               <div class="detail-body" th:if="${selectedMember == null}">
                 <p class="empty">
                   왼쪽 목록에서 <strong>상세</strong>를 클릭하면 정보가 여기에
