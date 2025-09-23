@@ -1,1 +1,17 @@
 타임리프, 백엔드연동 방식으로 수정한 파일들
+
+
+classroom-list/index.html
+classroom-registration/index.html
+
+compose-instructor-email/index.html
+email-send-history/index.html
+
+fragments/sidebar.html
+fragments/topbar.html
+fragments/dashboard.html
+
+instructor-info/index.html
+student-info/index.html
+
+home.html
