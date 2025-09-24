@@ -3,13 +3,246 @@
   <head>
     <meta charset="UTF-8" />
     <title>시험 문제 관리</title>
-  
-   
   </head>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* ========== 검색 박스 ========== */
+    .search-box.exam-search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0 18px;
+      white-space: nowrap;
+    }
+    .search-box.exam-search input[type="text"],
+    .search-box.exam-search select {
+      height: 40px;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 10px;
+      color: #e5f0ff;
+      background: linear-gradient(
+        180deg,
+        rgba(22, 34, 74, 0.9),
+        rgba(15, 26, 56, 0.9)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.34);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-box.exam-search input[type="text"] {
+      width: 260px;
+    }
+    .search-box.exam-search select {
+      width: 140px;
+    }
+    .search-box.exam-search :is(input, select):focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
 
+    /* 버튼 */
+    .btn-search,
+    .btn-submit {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+      transition: transform 0.05s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease;
+      color: #fff;
+      border: 1px solid rgba(61, 122, 255, 0.4);
+    }
+    .btn-search {
+      color: #dbe7ff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(120, 140, 200, 0.6),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+      border-color: rgba(120, 140, 200, 0.4);
+    }
+    .btn-submit {
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    .btn-search:hover,
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+    .btn-search:focus,
+    .btn-submit:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* ========== 테이블 ========== */
+    .data-table.exam-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      white-space: nowrap;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 17, 32, 0.65),
+        rgba(16, 28, 64, 0.65)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.3);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+    }
+    .exam-table thead th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #bcd1ff;
+      background: linear-gradient(
+        180deg,
+        rgba(32, 52, 110, 0.55),
+        rgba(22, 36, 84, 0.3)
+      );
+      border-bottom: 1px solid rgba(84, 129, 255, 0.35);
+    }
+    .exam-table td {
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #e4efff;
+      border-bottom: 1px dashed rgba(84, 129, 255, 0.26);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .exam-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .exam-table tbody tr:hover {
+      background: rgba(24, 182, 255, 0.06);
+    }
+
+    /* 열 폭 (colgroup) */
+    .exam-table col.col-no {
+      width: 72px;
+    }
+    .exam-table col.col-type {
+      width: 120px;
+    }
+    .exam-table col.col-level {
+      width: 100px;
+    }
+    .exam-table col.col-actions {
+      width: 150px;
+    }
+    /* 번호 숫자 정렬 */
+    .exam-table td.col-no {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* 칩(문항 유형/난이도) */
+    .chip {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid currentColor;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.06);
+    }
+    .chip.blue {
+      background: rgba(99, 102, 241, 0.12);
+      color: #8aa0ff;
+    } /* 객관식 */
+    .chip.gray {
+      background: rgba(160, 170, 190, 0.12);
+      color: #b9c4da;
+    } /* 주관식 등 */
+    .chip.red {
+      background: rgba(255, 91, 124, 0.12);
+      color: #ff6b8a;
+    } /* 상 */
+    .chip.orange {
+      background: rgba(255, 200, 91, 0.12);
+      color: #ffb347;
+    } /* 중 */
+    .chip.green {
+      background: rgba(42, 216, 155, 0.12);
+      color: #1fc493;
+    } /* 하 */
+
+    /* 관리 액션 */
+    td.actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    td.actions a {
+      display: inline-block;
+      height: 32px;
+      line-height: 32px;
+      padding: 0 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #dbe7ff;
+      border: 1px solid rgba(120, 140, 200, 0.35);
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(120, 140, 200, 0.5),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+    }
+    td.actions a.edit {
+      border-color: rgba(61, 122, 255, 0.4);
+      color: #fff;
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    td.actions a.del {
+      border-color: rgba(255, 120, 150, 0.35);
+      color: #ffdbe4;
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(255, 120, 150, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #3a1a2a, #2a1220);
+    }
+    td.actions a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+    td.actions a:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* 포커스 보조 */
+    button:focus,
+    a:focus,
+    select:focus,
+    input:focus {
+      outline: none;
+    }
+  </style>
   <body>
-
-
     <div class="container">
       <main class="main">
         <div class="content-box">
