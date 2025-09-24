@@ -13,14 +13,314 @@ DW Academy - 강의실 목록 (No JS, Fixed Layout)
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
- 
-
-  
+    <link rel="stylesheet" href="/style.css" />
   </head>
+  <style>
+    /* Header 영역 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 14px;
+    }
+    .header h2 {
+      font-weight: 800;
+      color: #e6f1ff;
+      text-shadow: 0 0 22px rgba(24, 182, 255, 0.2);
+    }
 
+    /* 상태 배지(범례 + 표 공용) */
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid currentColor;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.06);
+    }
+    .status.open {
+      background: rgba(42, 216, 155, 0.12);
+      color: #1fc493;
+    }
+    .status.repair {
+      background: rgba(255, 200, 91, 0.12);
+      color: #ffb347;
+    }
+    .status.closed {
+      background: rgba(255, 91, 124, 0.12);
+      color: #ff6b8a;
+    }
+
+    /* 검색/액션 바 */
+    .search-area {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 8px 0 16px;
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid rgba(84, 129, 255, 0.26);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+    }
+    .search-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+    .search-left label {
+      color: #bcd1ff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .search-left select,
+    .search-left input[type="text"] {
+      height: 40px;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 10px;
+      color: #e5f0ff;
+      background: linear-gradient(
+        180deg,
+        rgba(22, 34, 74, 0.9),
+        rgba(15, 26, 56, 0.9)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.34);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-left select {
+      width: 140px;
+    }
+    .search-left #keyword {
+      width: 220px;
+    }
+    .search-left button[type="submit"] {
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      color: #fff;
+      border: 1px solid rgba(61, 122, 255, 0.4);
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+    }
+    .search-left :is(select, input, button):focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* 우측 액션 링크 */
+    .search-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .search-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid rgba(120, 140, 200, 0.35);
+      color: #dbe7ff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(120, 140, 200, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+    }
+    .search-actions .btn-write {
+      border-color: rgba(61, 122, 255, 0.4);
+      color: #fff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    .search-actions a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+
+    /* 테이블 래퍼 */
+    .table-wrap {
+      background: linear-gradient(
+        180deg,
+        rgba(10, 17, 32, 0.65),
+        rgba(16, 28, 64, 0.65)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.3);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+    }
+
+    /* 테이블 */
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      white-space: nowrap;
+    }
+    .table-wrap thead th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #bcd1ff;
+      background: linear-gradient(
+        180deg,
+        rgba(32, 52, 110, 0.55),
+        rgba(22, 36, 84, 0.3)
+      );
+      border-bottom: 1px solid rgba(84, 129, 255, 0.35);
+    }
+    .table-wrap td {
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #e4efff;
+      border-bottom: 1px dashed rgba(84, 129, 255, 0.26);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .table-wrap tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .table-wrap tbody tr:hover {
+      background: rgba(24, 182, 255, 0.06);
+    }
+
+    /* 번호/숫자/가운데 정렬 */
+    td.center {
+      text-align: center;
+    }
+    td.num {
+      text-align: right;
+    }
+    col.chk {
+      width: 52px;
+    }
+
+    /* 체크박스 스타일(시각 강화) */
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #3d7aff;
+      filter: drop-shadow(0 0 6px rgba(61, 122, 255, 0.3));
+    }
+
+    /* 전체선택 헤더 체크박스 정렬 */
+    thead th:first-child {
+      text-align: center;
+    }
+
+    /* 행 하이라이트: :has 지원 브라우저에서만 동작 */
+    tbody tr:has(.row-check:checked) {
+      background: rgba(61, 122, 255, 0.12);
+      box-shadow: inset 0 0 0 9999px rgba(61, 122, 255, 0.08);
+    }
+    tbody tr:has(.row-check:checked) td {
+      border-bottom-color: rgba(84, 129, 255, 0.5);
+    }
+
+    /* 관리 액션 */
+    td.actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    td.actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #dbe7ff;
+      border: 1px solid rgba(120, 140, 200, 0.35);
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(120, 140, 200, 0.5),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+    }
+    td.actions a.view {
+      border-color: rgba(120, 200, 170, 0.35);
+      color: #dff7ee;
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(80, 200, 170, 0.5),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #173b37, #102b29);
+    }
+    td.actions a.edit {
+      border-color: rgba(61, 122, 255, 0.4);
+      color: #fff;
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    td.actions a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+
+    /* 폼 요소 포커스 */
+    select:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* 숫자열 굵기 약간 강화 */
+    tbody td.num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* 접근성(헤더 라벨 유사 표시) — 모바일은 아니지만 가독성 보정용 */
+    td[data-label] {
+      position: relative;
+    }
+
+    /* 아이콘 살짝 빛 */
+    i[class^="fa-"],
+    i[class*=" fa-"] {
+      filter: drop-shadow(0 0 6px rgba(61, 122, 255, 0.25));
+    }
+  </style>
   <body>
-  
-
     <div class="container">
       <main class="main">
         <div class="content-box">

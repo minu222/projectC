@@ -3,15 +3,138 @@
   <head>
     <meta charset="UTF-8" />
     <title>강의실 등록</title>
-   
-
-    <!-- 페이지 전용(최소) -->
- 
+    <link rel="stylesheet" href="/style.css" />
   </head>
+  <style>
+    /* ===== Form Card ===== */
+    .classroom-form {
+      display: block;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid rgba(84, 129, 255, 0.26);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+    }
 
+    /* 첫 줄 2열 */
+    .classroom-form > div:first-child {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* 라벨 공통 */
+    .classroom-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      color: #bcd1ff;
+      font-weight: 600;
+    }
+
+    /* Inputs & Textarea */
+    .form-input,
+    .classroom-form input[type="text"],
+    .classroom-form input[type="number"],
+    .form-textarea,
+    .classroom-form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #e5f0ff;
+      border-radius: 10px;
+      background: linear-gradient(
+        180deg,
+        rgba(22, 34, 74, 0.9),
+        rgba(15, 26, 56, 0.9)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.34);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .form-textarea,
+    .classroom-form textarea {
+      resize: none;
+      line-height: 1.5;
+    }
+
+    /* Focus */
+    .classroom-form :is(input, textarea):focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* 비고 전체 폭 */
+    .full-row {
+      grid-column: 1 / -1;
+    }
+
+    /* Actions */
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+    .btn-reset,
+    .btn-submit {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+      transition: transform 0.05s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    /* 초기화(보조) */
+    .btn-reset {
+      color: #dbe7ff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(120, 140, 200, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+      border: 1px solid rgba(120, 140, 200, 0.4);
+    }
+    .btn-reset:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(120, 140, 200, 0.22);
+    }
+    .btn-reset:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(120, 140, 200, 0.25),
+        0 0 18px rgba(120, 140, 200, 0.18);
+    }
+
+    /* 등록(주요) */
+    .btn-submit {
+      color: #fff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+      border: 1px solid rgba(61, 122, 255, 0.4);
+    }
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+    .btn-submit:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+  </style>
   <body>
-
-
     <div class="container">
       <main class="main">
         <div class="content-box">
