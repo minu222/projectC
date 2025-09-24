@@ -1,6 +1,7 @@
 package com.lms.adminpages.classrooms.dao;
 
 import com.lms.adminpages.classrooms.entity.CourseMaterial;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ public class CourseMaterialDAO {
     private final RowMapper<CourseMaterial> materialMapper = (rs, rowNum) -> CourseMaterial.builder()
             .materialId(rs.getInt("material_id"))
             .courseId(rs.getInt("course_id"))
+            .courseTitle(rs.getString("course_title"))
             .name(rs.getString("name"))
             .filePath(rs.getString("file_path"))
             .fileType(rs.getString("file_type"))
@@ -26,38 +28,35 @@ public class CourseMaterialDAO {
             .hasReplay(rs.getBoolean("has_replay"))
             .build();
 
-    // 전체 조회
-    public List<CourseMaterial> findAll() {
-        String sql = "SELECT m.material_id, m.course_id, m.name, m.file_path, m.file_type, m.has_exam, m.has_replay, " +
-                "c.title AS course_title " +
-                "FROM course_materials m " +
-                "JOIN courses c ON m.course_id = c.course_id";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> CourseMaterial.builder()
-                .materialId(rs.getInt("material_id"))
-                .courseId(rs.getInt("course_id"))
-                .name(rs.getString("name"))
-                .filePath(rs.getString("file_path"))
-                .fileType(rs.getString("file_type"))
-                .hasExam(rs.getBoolean("has_exam"))
-                .hasReplay(rs.getBoolean("has_replay"))
-                .courseTitle(rs.getString("course_title")) // 여기서 세팅
-                .build()
+    //수업자료 목록에서 전체 자료 조회
+    public List<CourseMaterial> findAll() {
+        String sql = """
+        SELECT m.material_id, m.course_id, m.name, m.file_path, m.file_type, m.has_exam, m.has_replay,
+               c.title AS course_title
+        FROM course_materials m
+        JOIN courses c ON m.course_id = c.course_id
+    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(CourseMaterial.class));
+    }
+
+
+    //수업자료 목록에서 강의실명으로 검색기능
+    public List<CourseMaterial> searchByCourseTitle(String keyword) {
+        String sql = """
+        SELECT m.material_id, m.course_id, m.name, m.file_path, m.file_type, m.has_exam, m.has_replay,
+               c.title AS course_title
+        FROM course_materials m
+        JOIN courses c ON m.course_id = c.course_id
+        WHERE c.title LIKE ?
+    """;
+
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(CourseMaterial.class),
+                "%" + keyword + "%"
         );
     }
-
-    // 과정별 조회
-    public List<CourseMaterial> findByCourseTitle(String courseTitle) {
-        String sql = "SELECT * FROM course_materials WHERE course_title = ?";
-        return jdbcTemplate.query(sql, materialMapper, courseTitle);
-    }
-
-    // 파일명 검색
-    public List<CourseMaterial> searchMaterials(String keyword) {
-        String sql = "SELECT * FROM course_materials WHERE name LIKE ?";
-        return jdbcTemplate.query(sql, materialMapper, "%" + keyword + "%");
-    }
-
     // 단건 조회
     public CourseMaterial findById(Integer id) {
         String sql = "SELECT * FROM course_materials WHERE material_id = ?";

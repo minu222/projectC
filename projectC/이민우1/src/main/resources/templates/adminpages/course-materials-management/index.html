@@ -39,8 +39,8 @@
                 <tbody>
                 <tr th:each="material, i : ${materials}">
                     <td th:text="${i.index + 1}">1</td>
-                    <td th:text="${material.courseTitle}">강의실명</td>
-                    <td th:text="${material.filePath}">1주차_강의.pdf</td>
+                    <td th:text="${material.courseTitle}"></td>
+                    <td th:text="${material.filePath}"></td>
                     <td>
                         <a th:href="@{/admin/course-materials/{id}/download(id=${material.materialId})}">다운로드</a>
                         <form th:action="@{/admin/course-materials/{id}/delete(id=${material.materialId})}" method="post" style="display:inline;">

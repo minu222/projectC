@@ -39,20 +39,13 @@ public class CourseMaterialController {
         this.classroomDAO = classroomDAO;
     }
 
-    /** 자료 목록 조회 */
     @GetMapping("/course-materials-management")
-    public String list(@RequestParam(value = "q", required = false) String keyword,
-                       Model model) {
-        List<CourseMaterial> materials;
-        if (keyword != null && !keyword.isBlank()) {
-            materials = courseMaterialService.searchMaterials(keyword);
-        } else {
-            materials = courseMaterialService.getAllMaterials();
-        }
+    public String listCourseMaterials(@RequestParam(value = "q", required = false) String keyword, Model model) {
+        List<CourseMaterial> materials = courseMaterialService.searchMaterials(keyword);
         model.addAttribute("materials", materials);
-        model.addAttribute("keyword", keyword);
-        return "adminpages/course-materials-management/index"; // 타임리프 경로
+        return "adminpages/course-materials-management/index"; // Thymeleaf 템플릿 경로
     }
+
 
     /** 업로드 폼 이동 */
     @GetMapping("/course-materials/upload")

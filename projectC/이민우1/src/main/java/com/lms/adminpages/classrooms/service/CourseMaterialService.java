@@ -15,16 +15,11 @@ public class CourseMaterialService {
         this.courseMaterialDao = courseMaterialDao;
     }
 
-    public List<CourseMaterial> getAllMaterials() {
-        return courseMaterialDao.findAll();
-    }
-
-    public List<CourseMaterial> getMaterialsByCourse(String courseTitle) {
-        return courseMaterialDao.findByCourseTitle(courseTitle);
-    }
-
     public List<CourseMaterial> searchMaterials(String keyword) {
-        return courseMaterialDao.searchMaterials(keyword);
+        if (keyword == null || keyword.isEmpty()) {
+            return courseMaterialDao.findAll(); // 검색어 없으면 전체 조회
+        }
+        return courseMaterialDao.searchByCourseTitle(keyword); // 검색어 있으면 검색
     }
 
     public CourseMaterial getMaterial(Integer id) {
