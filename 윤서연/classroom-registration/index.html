@@ -3,129 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>강의실 등록</title>
-    <link rel="stylesheet" href="/common.css" />
+   
 
     <!-- 페이지 전용(최소) -->
-    <style>
-      /* 제목 */
-      .content-box h2 {
-        margin: 0 0 14px;
-        color: var(--primary);
-        font-size: 22px;
-      }
-
-      /* 폼: 2열 고정 그리드 (비반응형) */
-      .classroom-form {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* ★ 고정 2열 */
-        gap: 16px;
-      }
-      /* 첫 줄(코드, 인원)을 그리드에 바로 배치 */
-      .classroom-form > div {
-        display: flex;
-        gap: 20px;
-      }
-      .classroom-form label {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #111827;
-      }
-      .classroom-form .full-row {
-        grid-column: 1 / -1;
-      }
-
-      /* 입력 공통 */
-      .form-input,
-      .form-textarea {
-        width: 100%;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        color: var(--text);
-        border-radius: 10px;
-        font-size: 14px;
-        transition: box-shadow 0.15s ease, border-color 0.15s ease;
-      }
-      .form-input {
-        height: 42px;
-        padding: 10px 12px;
-      }
-      .form-textarea {
-        padding: 10px 12px;
-        resize: vertical;
-      }
-      .form-input::placeholder,
-      .form-textarea::placeholder {
-        color: #9ca3af;
-      }
-      .form-input:focus,
-      .form-textarea:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-color: #cbd5e1;
-      }
-
-      /* number 스핀 제거 */
-      input[type="number"]::-webkit-outer-spin-button,
-      input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
-
-      /* 액션: 오른쪽 정렬, 한 줄 고정 */
-      .form-actions {
-        grid-column: 1 / -1;
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-        margin-top: 4px;
-        flex-wrap: nowrap; /* 줄바꿈 금지 */
-      }
-      .btn-submit,
-      .btn-reset {
-        height: 42px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        font-weight: 700;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .btn-submit {
-        border: none;
-        background: var(--primary);
-        color: #fff;
-      }
-      .btn-submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-      .btn-reset {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        color: #111827;
-      }
-      .btn-reset:hover {
-        background: #f9fafb;
-      }
-
-      /* 접근성 */
-      :focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-radius: 8px;
-      }
-    </style>
+ 
   </head>
 
   <body>
-    <header class="topbar">
-      <div>DW Academy</div>
-    </header>
+
 
     <div class="container">
       <main class="main">

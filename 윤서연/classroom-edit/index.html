@@ -3,163 +3,200 @@
   <head>
     <meta charset="UTF-8" />
     <title>강의실 수정</title>
-    <link rel="stylesheet" href="/common.css" />
-
-    <!-- 페이지 전용(최소) -->
+    <link rel="stylesheet" href="/style.css" />
     <style>
-      /* 제목 고정 스타일 */
-      .content-box h2 {
-        margin: 0 0 14px;
-        color: var(--primary);
-        font-size: 22px;
-      }
-
-      /* 검색 박스: 한 줄 고정, 폭 고정 */
-      .classroom-edit-search {
+      /* Search row */
+      .search-box.classroom-edit-search {
         display: flex;
-        align-items: center;
         gap: 12px;
-        margin-bottom: 16px;
-        flex-wrap: nowrap; /* 줄바꿈 금지 */
+        align-items: center;
+        margin: 12px 0 18px;
+        white-space: nowrap;
       }
-      .classroom-edit-search input[type="text"],
-      .classroom-edit-search .btn-search {
-        height: 42px;
-        font-size: 14px;
-        border-radius: 10px;
-      }
-      .classroom-edit-search input[type="text"] {
+      .search-box.classroom-edit-search input[type="text"] {
         width: 260px;
-        padding: 10px 12px;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-      }
-      .classroom-edit-search input[type="text"]:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-      }
-      .btn-search {
-        padding: 0 14px;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        color: #111827;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .btn-search:hover {
-        background: #f9fafb;
-      }
-
-      /* 폼 레이아웃: 2열 고정 그리드 */
-      .classroom-edit-form {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-      .classroom-edit-form > div {
-        display: flex;
-        gap: 20px;
-      }
-      .classroom-edit-form label {
-        display: grid;
-        gap: 8px;
+        height: 40px;
+        padding: 8px 12px;
         font-size: 14px;
-        font-weight: 600;
-        color: #111827;
-      }
-      .classroom-edit-form .full-row {
-        grid-column: 1 / -1;
-      }
-
-      /* 입력 요소 */
-      .form-input,
-      .form-textarea {
-        width: 100%;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        color: var(--text);
         border-radius: 10px;
-        font-size: 14px;
+        color: #e5f0ff;
+        background: linear-gradient(
+          180deg,
+          rgba(22, 34, 74, 0.9),
+          rgba(15, 26, 56, 0.9)
+        );
+        border: 1px solid rgba(84, 129, 255, 0.34);
         transition: box-shadow 0.15s ease, border-color 0.15s ease;
       }
-      .form-input {
-        height: 42px;
-        padding: 10px 12px;
-      }
-      .form-textarea {
-        padding: 10px 12px;
-        resize: vertical;
-      }
-      .form-input::placeholder,
-      .form-textarea::placeholder {
-        color: #9ca3af;
-      }
-      .form-input:focus,
-      .form-textarea:focus {
+      .search-box.classroom-edit-search input[type="text"]:focus {
         outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-color: #cbd5e1;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+      }
+      .btn-search {
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 800;
+        color: #fff;
+        border: 1px solid rgba(61, 122, 255, 0.4);
+        background: radial-gradient(
+            140px 60px at 80% -40%,
+            rgba(61, 122, 255, 0.8),
+            transparent 70%
+          ),
+          linear-gradient(180deg, #1b2f72, #142963);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+        transition: transform 0.05s ease, box-shadow 0.15s ease;
+      }
+      .btn-search:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+          0 0 24px rgba(61, 122, 255, 0.22);
+      }
+      .btn-search:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
       }
 
-      /* number 스핀 제거 */
-      input[type="number"]::-webkit-outer-spin-button,
-      input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      input[type="number"] {
-        -moz-appearance: textfield;
+      /* Form wrapper (카드) */
+      .classroom-edit-form {
+        display: block;
+        padding: 18px;
+        border-radius: 14px;
+        background: var(--card);
+        border: 1px solid rgba(84, 129, 255, 0.26);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+          0 0 36px rgba(61, 122, 255, 0.08);
       }
 
-      /* 액션 버튼: 오른쪽 정렬, 한 줄 고정 */
-      .form-actions {
+      /* 첫 줄: 2열 그룹 */
+      .classroom-edit-form > div:first-child {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      /* 라벨 + 인풋 공통 */
+      .classroom-edit-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 13px;
+        color: #bcd1ff;
+        font-weight: 600;
+      }
+
+      /* 인풋/텍스트에어리어 */
+      .form-input,
+      .classroom-edit-form input[type="text"],
+      .classroom-edit-form input[type="number"],
+      .form-textarea,
+      .classroom-edit-form textarea {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        color: #e5f0ff;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(22, 34, 74, 0.9),
+          rgba(15, 26, 56, 0.9)
+        );
+        border: 1px solid rgba(84, 129, 255, 0.34);
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      }
+      .form-textarea,
+      .classroom-edit-form textarea {
+        resize: none;
+        line-height: 1.5;
+      }
+
+      /* 포커스 */
+      .classroom-edit-form :is(input, textarea):focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+      }
+
+      /* 비고(풀 폭) */
+      .full-row {
         grid-column: 1 / -1;
+      }
+
+      /* Actions */
+      .form-actions {
         display: flex;
         gap: 10px;
         justify-content: flex-end;
-        margin-top: 4px;
-        flex-wrap: nowrap; /* 줄바꿈 금지 */
+        margin-top: 12px;
       }
-      .btn-submit,
-      .btn-reset {
-        height: 42px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        font-weight: 700;
-        cursor: pointer;
-        font-size: 14px;
-      }
+      .btn-reset,
       .btn-submit {
-        border: none;
-        background: var(--primary);
-        color: #fff;
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 800;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+        transition: transform 0.05s ease, box-shadow 0.15s ease,
+          border-color 0.15s ease;
       }
-      .btn-submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
+
+      /* 삭제(보조/경고 톤) */
       .btn-reset {
-        background: #fff;
-        border: 1px solid #f3d2d2;
-        color: var(--danger);
+        color: #ffdbe4;
+        background: radial-gradient(
+            140px 60px at 80% -40%,
+            rgba(255, 120, 150, 0.55),
+            transparent 70%
+          ),
+          linear-gradient(180deg, #3a1a2a, #2a1220);
+        border: 1px solid rgba(255, 120, 150, 0.4);
       }
       .btn-reset:hover {
-        background: #fff6f6;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+          0 0 24px rgba(255, 120, 150, 0.22);
+      }
+      .btn-reset:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 120, 150, 0.25),
+          0 0 18px rgba(255, 120, 150, 0.18);
       }
 
-      /* 접근성 */
-      :focus-visible {
+      /* 저장(주요) */
+      .btn-submit {
+        color: #fff;
+        background: radial-gradient(
+            140px 60px at 80% -40%,
+            rgba(61, 122, 255, 0.8),
+            transparent 70%
+          ),
+          linear-gradient(180deg, #1b2f72, #142963);
+        border: 1px solid rgba(61, 122, 255, 0.4);
+      }
+      .btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+          0 0 24px rgba(61, 122, 255, 0.22);
+      }
+      .btn-submit:focus {
         outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-radius: 8px;
+        box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+      }
+
+      /* Table-like spacing helpers (없어도 무방) */
+      .helper-note {
+        color: #9cb4dc;
+        font-size: 13px;
       }
     </style>
+    <!-- 페이지 전용(최소) -->
   </head>
   <body>
-    <header class="topbar">
-      <div>DW Academy</div>
-    </header>
-
     <div class="container">
       <main class="main">
         <div class="content-box">
