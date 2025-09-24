@@ -3,13 +3,539 @@
   <head>
     <meta charset="UTF-8" />
     <title>회원 관리 (마스터 · 디테일)</title>
-    
-  
   </head>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      min-height: 100vh;
+    }
 
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background: linear-gradient(
+          transparent 31px,
+          rgba(33, 56, 112, 0.28) 32px
+        ),
+        linear-gradient(90deg, transparent 31px, rgba(33, 56, 112, 0.28) 32px);
+      background-size: 32px 32px, 32px 32px;
+    }
+
+    /* Layout */
+
+    .two-col {
+      display: flex;
+
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* Cards */
+    .card {
+      flex: 4;
+      background: var(--card);
+      border: 1px solid rgba(84, 129, 255, 0.26);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(84, 129, 255, 0.22);
+      background: linear-gradient(
+        180deg,
+        rgba(25, 40, 88, 0.35),
+        rgba(18, 30, 64, 0.2)
+      );
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #e6f1ff;
+      text-shadow: 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+    .card-body {
+      padding: 12px;
+    }
+
+    /* Actions (우상단) */
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      color: #dbe7ff;
+      border: 1px solid rgba(120, 140, 200, 0.35);
+      background: radial-gradient(
+          120px 54px at 80% -40%,
+          rgba(120, 140, 200, 0.5),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: transform 0.05s ease, box-shadow 0.15s ease;
+    }
+    .btn-line.btn-primary {
+      color: #fff;
+      border-color: rgba(61, 122, 255, 0.4);
+      background: radial-gradient(
+          120px 54px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    .btn-line.btn-danger {
+      color: #ffdbe4;
+      border-color: rgba(255, 120, 150, 0.45);
+      background: radial-gradient(
+          120px 54px at 80% -40%,
+          rgba(255, 120, 150, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #3a1a2a, #2a1220);
+    }
+    .btn-line:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(61, 122, 255, 0.22);
+    }
+
+    /* Filters (상단 폼) */
+    .filters {
+      padding: 6px 2px 10px;
+    }
+    .filters-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+    .filters label {
+      color: #bcd1ff;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filters .only-select select {
+      margin-left: 4px;
+    }
+    .filters select,
+    .filters input[type="text"] {
+      height: 40px;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 10px;
+      color: #e5f0ff;
+      background: linear-gradient(
+        180deg,
+        rgba(22, 34, 74, 0.9),
+        rgba(15, 26, 56, 0.9)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.34);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .filters select {
+      width: 140px;
+    }
+    .filters input[type="text"] {
+      width: 220px;
+    }
+    .filters button[type="submit"] {
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      color: #fff;
+      border: 1px solid rgba(61, 122, 255, 0.4);
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+    }
+    .filters :is(select, input, button):focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    /* Table Wrap & Scroller */
+    .table-wrap {
+      border: 1px solid rgba(84, 129, 255, 0.26);
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 17, 32, 0.6),
+        rgba(16, 28, 64, 0.62)
+      );
+      box-shadow: inset 0 0 0 1px rgba(84, 129, 255, 0.08);
+    }
+    .table-scroller {
+      max-height: 520px;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    /* Member Table */
+    .member-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      white-space: nowrap;
+    }
+    .member-table thead th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #bcd1ff;
+      background: linear-gradient(
+        180deg,
+        rgba(32, 52, 110, 0.55),
+        rgba(22, 36, 84, 0.3)
+      );
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      border-bottom: 1px solid rgba(84, 129, 255, 0.35);
+    }
+    .member-table thead th:first-child {
+      text-align: center;
+      width: 52px;
+    }
+    .member-table thead th.col-no {
+      width: 72px;
+    }
+    .member-table thead th.col-email {
+      width: 220px;
+    }
+    .member-table thead th.col-phone {
+      width: 150px;
+    }
+    .member-table thead th.col-date {
+      width: 140px;
+    }
+    .member-table thead th.col-actions {
+      width: 120px;
+    }
+
+    .member-table td {
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #e4efff;
+      border-bottom: 1px dashed rgba(84, 129, 255, 0.26);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .member-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .member-table tbody tr:hover {
+      background: rgba(24, 182, 255, 0.06);
+    }
+
+    /* 숫자/날짜 정렬 */
+    .member-table .col-no,
+    .member-table .col-date {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* 링크(아이디) */
+    .member-table .member-id a {
+      color: #dbe7ff;
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px dashed rgba(84, 129, 255, 0.45);
+    }
+    .member-table .member-id a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(61, 122, 255, 0.6);
+    }
+    .member-table .member-id a:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    /* 체크박스 & 선택 행 하이라이트 */
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #3d7aff;
+      filter: drop-shadow(0 0 6px rgba(61, 122, 255, 0.3));
+    }
+    .member-table tbody tr:has(.row-check:checked) {
+      background: rgba(61, 122, 255, 0.12);
+      box-shadow: inset 0 0 0 9999px rgba(61, 122, 255, 0.08);
+    }
+    .member-table tbody tr:has(.row-check:checked) td {
+      border-bottom-color: rgba(84, 129, 255, 0.5);
+    }
+
+    /* 상태 배지 */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid currentColor;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.06);
+    }
+    .badge.green {
+      background: rgba(42, 216, 155, 0.12);
+      color: #1fc493;
+    }
+    .badge.gray {
+      background: rgba(160, 170, 190, 0.12);
+      color: #b9c4da;
+    }
+    .badge.red {
+      background: rgba(255, 91, 124, 0.12);
+      color: #ff6b8a;
+    }
+
+    /* 목록 - 행 내부 액션 */
+    .member-table .col-actions {
+      text-align: center;
+    }
+    .member-table .col-actions a {
+      color: #dbe7ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .member-table .col-actions span {
+      color: #6f88b8;
+      padding: 0 4px;
+    }
+
+    /* ========= Detail Panel ========= */
+    .detail-col {
+      flex: 1.8;
+      position: sticky;
+      top: 100px;
+    }
+    .detail-card {
+      background: var(--card2);
+      border: 1px solid rgba(84, 129, 255, 0.26);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 36px rgba(61, 122, 255, 0.08);
+      overflow: hidden;
+    }
+    .detail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(84, 129, 255, 0.22);
+      background: linear-gradient(
+        180deg,
+        rgba(30, 48, 104, 0.35),
+        rgba(18, 30, 64, 0.2)
+      );
+    }
+    .detail-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #e6f1ff;
+      text-shadow: 0 0 14px rgba(24, 182, 255, 0.18);
+    }
+    .detail-head .empty {
+      color: #a9bce2;
+      font-size: 13px;
+    }
+
+    .detail-body {
+      padding: 14px;
+    }
+    .detail-body .empty {
+      color: #bcd1ff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-row.two {
+      grid-column: 1 / -1;
+    }
+    .form-row label {
+      color: #bcd1ff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #e5f0ff;
+      border-radius: 10px;
+      background: linear-gradient(
+        180deg,
+        rgba(22, 34, 74, 0.9),
+        rgba(15, 26, 56, 0.9)
+      );
+      border: 1px solid rgba(84, 129, 255, 0.34);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .textarea {
+      min-height: 120px;
+      resize: none;
+      line-height: 1.5;
+    }
+    .readonly {
+      opacity: 0.9;
+      color: #cfe1ff;
+    }
+    .inline-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .btn-sm {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      border: 1px solid rgba(61, 122, 255, 0.4);
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+    .btn-sm.btn-unlock {
+      word-break: keep-all;
+      color: #dff7ee;
+      border-color: rgba(80, 200, 170, 0.4);
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(80, 200, 170, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #173b37, #102b29);
+    }
+    .btn-sm.btn-reset {
+      word-break: keep-all;
+      color: #ffdbe4;
+      border-color: rgba(255, 120, 150, 0.45);
+      background: radial-gradient(
+          120px 48px at 80% -40%,
+          rgba(255, 120, 150, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #3a1a2a, #2a1220);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+
+    .detail-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(84, 129, 255, 0.22);
+      background: linear-gradient(
+        180deg,
+        rgba(18, 30, 64, 0.2),
+        rgba(12, 22, 48, 0.18)
+      );
+    }
+    .btn {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(61, 122, 255, 0.4);
+      color: #fff;
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(61, 122, 255, 0.8),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1b2f72, #142963);
+    }
+    .btn.btn-close {
+      color: #dbe7ff;
+      border-color: rgba(120, 140, 200, 0.4);
+      background: radial-gradient(
+          140px 60px at 80% -40%,
+          rgba(120, 140, 200, 0.55),
+          transparent 70%
+        ),
+        linear-gradient(180deg, #1a244a, #111a36);
+    }
+    .btn.btn-save {
+      border-color: rgba(61, 122, 255, 0.45);
+    }
+
+    /* 접근성 포커스 */
+    a:focus,
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring), 0 0 18px rgba(24, 182, 255, 0.18);
+    }
+  </style>
   <body>
-
-
     <div class="container">
       <main class="main">
         <div class="two-col">

@@ -3,7 +3,14 @@
   margin: 0;
   padding: 0;
 }
+
+@font-face {
+  font-family: "pretendard";
+  src: url(/woff/Pretendard-Light.woff);
+}
 body {
+  font-family: "pretendard";
+  --card2: rgba(14, 22, 46, 0.78);
   margin-top: 0;
   margin-right: 0;
   margin-left: 0;
