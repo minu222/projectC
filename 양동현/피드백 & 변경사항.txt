@@ -2,3 +2,91 @@
 
 회원정보수정 부분 전체 사이즈 줄여주세요 
 강의실 등록 부분 확인해주세요
+
+
+
+
+
+
+
+# MyLms 시험 모듈 — 1페이지 요약(간소화 구조)
+
+## 목적
+
+객관식 기반 시험을 **엑셀→업로드→응시→자동채점→리뷰/다운로드**까지 단순한 흐름으로 운영.
+
+---
+
+## 역할 & 한 줄 요약
+
+* **관리자**: 엑셀 템플릿 배포(형식 통일)
+* **강사**: 템플릿으로 문제 작성→엑셀 업로드→시험 회차 열고 닫기
+* **학생**: 시험 보기(타이머)→제출→결과/정오표 확인(다운로드 가능)
+
+---
+
+## 데이터(딱 6개)
+
+* **Exam**(시험정의): `id, courseId, title, createdBy`
+* **ExamSession**(회차): `id, examId, open/close, timeLimitMin, partial/negative 옵션`
+* **Question**: `id, examId, number, type(SINGLE/MULTI), stem, points`
+* **Choice**: `id, questionId, number, text, answer(정답)`
+* **ExamSubmission**: `id, examSessionId, studentId, started/submittedAt, status, totalScore`
+* **Answer**: `id, submissionId, questionId, selectedChoiceIdsCsv, autoScore`
+
+---
+
+## 파일 포맷(엑셀)
+
+* **Questions 시트**: `Q_NO | TYPE | STEM | POINTS`
+* **Choices 시트**: `Q_NO | CHOICE_NO | TEXT | IS_ANSWER(TRUE/FALSE)`
+
+> 업로드시 검증: SINGLE 정답=1개, MULTI 정답≥1개.
+
+---
+
+## 핵심 흐름(5단계)
+
+1. **관리자**: 템플릿 제공
+2. **강사**: 템플릿 작성 후 **업로드** → 서버가 **유효성 검사 + 미리보기**
+3. **강사**: 시험 **회차 생성**(시간/부분점수 옵션) 후 **공개**
+4. **학생**: 시험 **응시**(타이머·선다형 UI) → **제출**
+5. **서버**: 즉시 **자동채점** → **리뷰 페이지/다운로드** 제공
+
+---
+
+## 자동채점 규칙(간단)
+
+* SINGLE: 선택 == 정답이면 득점, 아니면 0점
+* MULTI: (옵션) 부분점수, 오선택 페널티 가능
+
+---
+
+## 화면(최소)
+
+* **강사**: 시험목록 / 엑셀업로드 미리보기 / 회차설정 / (선택) 재채점
+* **학생**: 시험목록 / 시험보기(타이머) / 결과·정오표 보기·다운로드
+
+---
+
+## 엔드포인트(대표)
+
+* 강사: `GET /teacher/exams`, `POST /teacher/exams/upload`, `POST /teacher/exams/{id}/sessions`
+* 학생: `GET /student/exams`, `GET /student/exams/{sessionId}/take`, `POST /student/exams/{sessionId}/submit`, `GET /student/submissions/{id}/review`
+
+---
+
+## 배포 체크리스트(필수 6)
+
+* [ ] Gradle: Web/Thymeleaf/JPA + POI 의존성
+* [ ] DB: 엔티티 6개 생성(JPA ddl-auto=update)
+* [ ] 메뉴 연결: 학생/강사 사이드바
+* [ ] 엑셀 업로드 & 검증 OK
+* [ ] 자동채점 함수 동작 확인
+* [ ] 리뷰 페이지에서 정오표 확인/다운로드
+
+---
+
+## 선택 옵션(나중에)
+
+* 문항/보기 섞기, 자동저장(AJAX), 재채점 버튼, 결과 공개 시점(즉시/검수 후), 정답률 통계, PDF/엑셀 보고서
