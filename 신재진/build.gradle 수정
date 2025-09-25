@@ -1,8 +1,9 @@
 // main 추가 회원가입 관련 
 // implementation 'org.springframework.boot:spring-boot-starter-validation' 
-// implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
 // admin 추가 - 메일 관련
 // implementation 'org.springframework.boot:spring-boot-starter-mail' 
+
 
 
 
