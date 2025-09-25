@@ -102,4 +102,108 @@
 
 * 문항/보기 섞기, 자동저장(AJAX), 재채점 버튼, 결과 공개 시점(즉시/검수 후), 정답률 통계, PDF/엑셀 보고서
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+실시간 영상 작업 
+
+
+1) 목표 (한 줄)
+
+같은 강의실 화면에서 VOD ↔ LIVE가 자동 전환되도록 한다.
+→ 교사는 YouTube Live 동영상 ID + 활성화 체크만 저장, 학생 화면은 영상칸에 즉시 라이브 재생.
+
+
+2) 최소 데이터 모델 (필드 2~3개)
+
+course.youtubeLiveId : String // 예: AbCdEf12345
+
+course.liveEnabled : boolean // 라이브 ON/OFF 토글
+(VOD URL은 기존 컬럼/로직 그대로 사용)
+
+이 두 값으로 화면에서 VOD와 LIVE 중 무엇을 그릴지 결정.
+
+3) 화면 렌더링 구조 (조건부 렌더링)
+
+강의실 컨트롤러(MyClassController.lectureRoom)가 다음 모델 속성만 추가로 내려줍니다.
+
+isLive = course.liveEnabled
+
+youtubeLiveId = course.youtubeLiveId
+
+템플릿(templates/myclass/lectureroom.html)의 “영상칸”을 조건부로 표시:
+
+isLive == true → YouTube iframe(라이브)
+
+isLive == false → 기존 <video>(VOD)
+
+나머지 UI(목차/메모/채팅/배속버튼 등)는 그대로 유지.
+단, 라이브일 때는 배속·탐색 버튼 숨김(선택) + LIVE 배지만 추가.
+
+
+5) 운영 플로우 (누가, 언제, 무엇을)
+강사(설정)
+
+YouTube Studio에서 라이브 생성/예약
+
+라이브 URL의 ID 추출 (예: https://youtube.com/watch?v=AbCdEf12345 → AbCdEf12345)
+
+MyLMS 강의 관리 > 라이브 설정 폼에 ID 기입 + “라이브 활성화” 체크 후 저장
+
+학생(시청)
+
+강의실 접속 /myclass/lectureroom?courseId=...
+
+서버가 liveEnabled 확인 → true이면 iframe(라이브), false이면 video(VOD) 렌더
+
+라이브 중에는 배속/탐색 비노출(선택), 상단에 LIVE 배지 표시
+
+관리(비활성 전환)
+
+방송 종료 후 강사가 liveEnabled=false로 저장하면, 같은 화면이 다시 VOD 플레이어로 표시
+
+
+6) 예외/에지 케이스 처리
+
+라이브가 아직 “대기중”: YouTube가 자체 대기화면을 보여줌 → 상단 안내문 “잠시 후 시작” 정도만 추가 가능
+
+youtubeLiveId 미입력 or liveEnabled=true인데 ID null: 서버에서 LIVE 미제공 안내 화면으로 포워드(간단한 not-available 템플릿)
+
+학교/사내망 차단: youtube.com 차단 환경이면 재생 불가 → HLS 대안(B안) 안내
+
+
+7) 보안/권한
+
+라이브 설정 저장 API는 TEACHER/ADMIN만 허용
+
+시청 접근 권한은 기존 강의 수강자 검증 로직 재사용
+
+유튜브 공개범위는 **“Unlisted(미등록)”**를 권장(URL 알아야만 접근)
+
+
+8) 체크리스트 (적용·검증)
+
+ course 엔티티에 youtubeLiveId, liveEnabled 필드 추가
+
+ 강사용 라이브 설정 폼(코스 상세/설정 탭에 배치)
+
+ 컨트롤러에서 isLive, youtubeLiveId 모델 추가
+
+ 템플릿의 “영상칸”을 iframe/VOD 조건부 렌더링으로 교체
+
+ 라이브 시 배속/탐색 UI 숨김, LIVE 배지 노출
+
+ 라이브 대기/종료, ID 누락 등 예외 메시지 확인
+
+9) 왜 이 구조가 안전하고 단순한가
+
+플레이어 교체만으로 구현: 기존 레이아웃/목차/메모/채팅 UI에 영향 최소화
+
+서버는 단지 두 개의 값(ID, 활성화)만 판단 → 유지관리 쉬움
+
+초기 비용 0원, 트래픽·인프라 부담 없음(유튜브가 처리)
+
+
+
+
+
 
