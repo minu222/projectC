@@ -201,6 +201,9 @@ input[type="checkbox"] {
 .btn-sm,
 .btn-close,
 .btn-save {
+  align-items: center;
+  display: flex;
+  gap: 10px;
   height: 40px;
   padding: 0 16px;
   border-radius: 10px;
