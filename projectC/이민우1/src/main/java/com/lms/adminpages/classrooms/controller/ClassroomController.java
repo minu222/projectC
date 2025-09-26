@@ -26,7 +26,6 @@ public class ClassroomController {
     private final UserDao userDao;
     private final JdbcTemplate jdbcTemplate;
 
-
     public ClassroomController(ClassroomService classroomService, UserDao userDao, JdbcTemplate jdbcTemplate) {
         this.classroomService = classroomService;
         this.userDao = userDao;
@@ -37,9 +36,7 @@ public class ClassroomController {
     @GetMapping("/classrooms-registration")
     public String showRegisterForm(Model model) {
         model.addAttribute("classroom", new Classroom());
-        String sql = "SELECT instructor_id, affiliation, bio FROM instructor_profile";
-        List<Map<String, Object>> instructors = jdbcTemplate.queryForList(sql);
-
+        List<User> instructors = classroomService.findAllInstructors();
         model.addAttribute("instructors", instructors);
         List<String> categories = classroomService.findAllCategories();
         model.addAttribute("categories", categories);
@@ -69,9 +66,10 @@ public class ClassroomController {
         ra.addFlashAttribute("message", "강의실이 등록되었습니다.");
         return "redirect:/admin/classrooms-registration";
     }
-//    ---------------------------------------------------
+//    --------------
 
-//---------------------------강의실 목록-----------------
+
+    //---------------------------강의실 목록-----------------
     @GetMapping("/classrooms-list")
     public String listClassrooms(
             @ModelAttribute("filter") CourseFilter filter,
@@ -141,15 +139,5 @@ public class ClassroomController {
     }
 
 //    -----------------------------------------
-
-//    --------강의실 학생 정보-----
-    @GetMapping("/classroom-student-info")
-    public String classroomStudentInfo(){
-            return"adminpages/classroom-student-info/index";
-    }
-
-//    ----------------------------------------
-
-
 
 }

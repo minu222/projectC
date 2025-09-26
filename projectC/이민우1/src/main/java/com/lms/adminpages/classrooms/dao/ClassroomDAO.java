@@ -2,24 +2,21 @@ package com.lms.adminpages.classrooms.dao;
 
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
+import com.lms.adminpages.users.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
 public class ClassroomDAO {
 
     private final JdbcTemplate jdbcTemplate;
-
     public ClassroomDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // 강의실(강좌) 저장
     public void save(Classroom classroom) {
         String sql = "INSERT INTO courses (instructor_id, title, description, category, price, is_free, avg_rating, status, student_count, expiry_date, live_limit) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -38,7 +35,6 @@ public class ClassroomDAO {
         );
     }
 
-    // 모든 카테고리 조회
     public List<String> findAllCategories() {
         String sql = "SELECT DISTINCT category FROM courses";
         return jdbcTemplate.queryForList(sql, String.class);
@@ -76,9 +72,26 @@ public class ClassroomDAO {
         );
     }
 
+    public List<User> findAllInstructors() {
+        String sql = "SELECT user_id, nickname FROM users WHERE role = 'instructor'";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> User.builder()
+                .user_id(rs.getInt("user_id"))
+                .nickname(rs.getString("nickname"))
+                .build()
+        );
+    }
+
+
+
     public List<Classroom> findAll() {
-        String sql = "SELECT course_id, title, category, status, student_count, instructor_id " +
-                "FROM courses WHERE deleted_at IS NULL ORDER BY course_id DESC";
+        String sql = """
+        SELECT c.course_id, c.title, c.category, c.status, c.student_count, c.instructor_id,
+               u.nickname AS instructorNickname
+        FROM courses c
+        LEFT JOIN users u ON c.instructor_id = u.user_id
+        WHERE c.deleted_at IS NULL
+        ORDER BY c.course_id DESC
+    """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> Classroom.builder()
                 .classroomId(rs.getInt("course_id"))
@@ -87,6 +100,7 @@ public class ClassroomDAO {
                 .status(rs.getString("status"))
                 .studentCount(rs.getInt("student_count"))
                 .instructorId(rs.getInt("instructor_id"))
+                .instructorNickname(rs.getString("instructorNickname")) // 👈 여기 추가
                 .build()
         );
     }
@@ -125,5 +139,3 @@ public class ClassroomDAO {
         jdbcTemplate.update(sql, ids.toArray());
     }
 }
-
-

@@ -2,6 +2,7 @@ package com.lms.adminpages.classrooms.service;
 
 import com.lms.adminpages.classrooms.dao.MockExamDAO;
 import com.lms.adminpages.classrooms.entity.MockExam;
+import com.lms.adminpages.users.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,13 @@ public class MockExamService {
         return mockExamDao.findAll();
     }
 
-    public List<MockExam> searchExamsByInstructorId(Integer instructorId) {
+    /// 강사 목록 조회
+    public List<User> findAllInstructors() {
+        return mockExamDao.findAllInstructors();
+    }
+
+    // instructorId로 시험 문제 검색
+    public List<MockExam> findByInstructorId(int instructorId) {
         return mockExamDao.findByInstructorId(instructorId);
     }
 

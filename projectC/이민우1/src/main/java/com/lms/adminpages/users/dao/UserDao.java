@@ -1,9 +1,6 @@
 package com.lms.adminpages.users.dao;
 
 import com.lms.adminpages.users.entity.User;
-import com.lms.adminpages.users.entity.User.Role;
-import com.lms.adminpages.users.entity.User.Status;
-import com.lms.adminpages.users.entity.User.Gender;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class UserDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public UserDao(JdbcTemplate jdbcTemplate) {
@@ -53,7 +49,6 @@ public class UserDao {
         return jdbcTemplate.query(sql.toString(), params.toArray(), new UserRowMapper());
     }
 
-
     // =============================
     // 동적 필터 적용 가능한 학생 조회
     // =============================
@@ -89,7 +84,7 @@ public class UserDao {
     }
 
 
-    // =============================
+
     // 공통 RowMapper
     public class UserRowMapper implements RowMapper<User> {
         @Override
@@ -128,13 +123,10 @@ public class UserDao {
         }
     }
 
-
     public void updateStatusToDeleted(int[] ids) {
         String sql = "UPDATE users SET status = 'deleted' WHERE user_id = ?";
         for (int id : ids) {
             jdbcTemplate.update(sql, id);
         }
     }
-
-
 }

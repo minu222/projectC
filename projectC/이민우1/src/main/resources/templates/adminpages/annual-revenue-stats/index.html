@@ -1,49 +1,45 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>DW Academy - 강사 정보</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/adminpages/css/common.css}">
-    <link rel="stylesheet" th:href="@{/adminpages/css/topbar.css}">
-    <link rel="stylesheet" th:href="@{/adminpages/css/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/adminpages/css/annual-revenue-stats.css}">
-</head>
-<body>
-<div th:replace="adminpages/fragments/topbar :: topbar"></div>
-<div class="container">
-    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>연별 매출 통계</title>
 
-    <main class="main">
+    <!-- 페이지 전용 최소 스타일 -->
+  </head>
+  <link rel="stylesheet" href="/style.css" />
+
+  <body>
+    <div class="container">
+      <main class="main">
         <div class="content-box">
-            <h2>연별 매출 통계</h2>
-            <p class="helper">
-                조회 구간의 연도별 매출 추이를 확인합니다. (예시 데이터)
-            </p>
+          <h2>연별 매출 통계</h2>
+          <p class="helper">
+            조회 구간의 연도별 매출 추이를 확인합니다. (예시 데이터)
+          </p>
 
-            <div class="search-box sales-yearly-search">
-                <input
-                        id="startYear"
-                        type="number"
-                        placeholder="시작연도(예: 2021)"
-                />
-                <input
-                        id="endYear"
-                        type="number"
-                        placeholder="종료연도(예: 2025)"
-                />
-                <button id="btnQuery" class="btn-primary">조회</button>
-            </div>
+          <div class="search-box sales-yearly-search">
+            <input
+              id="startYear"
+              type="number"
+              placeholder="시작연도(예: 2021)"
+            />
+            <input
+              id="endYear"
+              type="number"
+              placeholder="종료연도(예: 2025)"
+            />
+            <button id="btnQuery" class="btn-primary">조회</button>
+          </div>
 
-            <div class="chart-container">
-                <canvas
-                        id="yearlyChart"
-                        aria-label="연도별 매출 차트"
-                        role="img"
-                ></canvas>
-            </div>
+          <div class="chart-container">
+            <canvas
+              id="yearlyChart"
+              aria-label="연도별 매출 차트"
+              role="img"
+            ></canvas>
+          </div>
         </div>
-    </main>
-</div>
-</body>
+      </main>
+    </div>
+  </body>
 </html>

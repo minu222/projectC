@@ -15,17 +15,17 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    // 상태, 소속, 검색어 필터 적용한 강사 목록
+
     public List<User> getInstructors(String status, String department, String keywordType, String keyword) {
         System.out.println(userDao.findInstructors(status, department, keywordType, keyword));
         return userDao.findInstructors(status, department, keywordType, keyword);
     }
 
 
-
     public List<User> getStudents(String status, String department, String keywordType, String keyword) {
         return userDao.findStudents(status, department, keywordType, keyword);
     }
+
 
     public void deleteUsers(int[] ids) {
         userDao.updateStatusToDeleted(ids);

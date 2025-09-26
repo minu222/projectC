@@ -43,4 +43,6 @@ public class Classroom {
 
     private LocalDateTime deletedAt; // 삭제일 (soft delete)
 
+    private String instructorNickname;
+
 }
