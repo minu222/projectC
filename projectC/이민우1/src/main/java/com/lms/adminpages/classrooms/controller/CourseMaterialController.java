@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 
 @Controller
@@ -31,7 +32,7 @@ public class CourseMaterialController {
     private final CourseMaterialService courseMaterialService;
 
     // 파일 업로드 기본 경로 (실제 경로는 환경에 맞게 수정)
-    private final String uploadDir = "C:/uploads/course-materials/";
+    private final String uploadDir = "C:/minwoo/java/Workspace/projectC/src/main/resources/upload/";
     private final ClassroomDAO classroomDAO;
 
     public CourseMaterialController(CourseMaterialService courseMaterialService, ClassroomDAO classroomDAO) {
@@ -74,24 +75,25 @@ public class CourseMaterialController {
         }
         Integer classroomId = classroom.getClassroomId();
 
-        // 1. 파일 저장
-        String uploadDir = "C:/uploads/course-materials/";
+        // 1. 디렉토리 생성
         File dir = new File(uploadDir);
         if (!dir.exists()) dir.mkdirs();
 
-        String fileName = file.getOriginalFilename();
-        String filePath = uploadDir + fileName;
-        file.transferTo(new File(filePath));
+        // 2. 파일 저장
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename(); // 충돌 방지
+        File savedFile = new File(uploadDir, fileName);
+        file.transferTo(savedFile);
 
-        // 2. DB 저장
+        // 3. DB 저장
         CourseMaterial material = CourseMaterial.builder()
                 .courseId(classroomId)
-                .name(fileName)
-                .filePath(filePath)
+                .name(file.getOriginalFilename()) // 원래 파일명 표시
+                .filePath(savedFile.getAbsolutePath())
                 .fileType(file.getContentType())
                 .hasExam(exam)
                 .hasReplay(replay)
                 .build();
+
 
         courseMaterialService.saveMaterial(material);
         ra.addFlashAttribute("message", "자료가 업로드되었습니다.");

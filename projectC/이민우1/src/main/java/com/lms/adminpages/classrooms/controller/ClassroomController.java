@@ -26,7 +26,6 @@ public class ClassroomController {
     private final UserDao userDao;
     private final JdbcTemplate jdbcTemplate;
 
-
     public ClassroomController(ClassroomService classroomService, UserDao userDao, JdbcTemplate jdbcTemplate) {
         this.classroomService = classroomService;
         this.userDao = userDao;
@@ -37,9 +36,7 @@ public class ClassroomController {
     @GetMapping("/classrooms-registration")
     public String showRegisterForm(Model model) {
         model.addAttribute("classroom", new Classroom());
-        String sql = "SELECT instructor_id, affiliation, bio FROM instructor_profile";
-        List<Map<String, Object>> instructors = jdbcTemplate.queryForList(sql);
-
+        List<User> instructors = classroomService.findAllInstructors();
         model.addAttribute("instructors", instructors);
         List<String> categories = classroomService.findAllCategories();
         model.addAttribute("categories", categories);
@@ -54,14 +51,23 @@ public class ClassroomController {
             RedirectAttributes ra) {
 
         // 강사 ID 숫자 체크
-        try {
-            Integer instructorId = classroom.getInstructorId();
-            if (instructorId == null) {
-                ra.addFlashAttribute("errorMessage", "강사 ID를 입력해주세요.");
-                return "redirect:/admin/classrooms-registration";
-            }
-        } catch (NumberFormatException e) {
-            ra.addFlashAttribute("errorMessage", "강사 ID는 숫자만 입력 가능합니다.");
+
+        Integer instructorId = classroom.getInstructorId();
+        if (instructorId == null) {
+            ra.addFlashAttribute("errorMessage", "강사 ID를 입력해주세요.");
+            return "redirect:/admin/classrooms-registration";
+        }
+
+        // 강사 존재 여부 및 상태 확인
+        User instructor = classroomService.findUserById(instructorId);
+        if (instructor == null) {
+            ra.addFlashAttribute("errorMessage", "존재하지 않는 강사 ID입니다.");
+            return "redirect:/admin/classrooms-registration";
+        }
+
+        if ("deleted".equalsIgnoreCase(instructor.getStatus().name())) {
+            // status가 enum 이라면 .name()으로 비교
+            ra.addFlashAttribute("errorMessage", "해당 강사는 탈퇴된 상태입니다.");
             return "redirect:/admin/classrooms-registration";
         }
 
@@ -69,9 +75,10 @@ public class ClassroomController {
         ra.addFlashAttribute("message", "강의실이 등록되었습니다.");
         return "redirect:/admin/classrooms-registration";
     }
-//    ---------------------------------------------------
+//    --------------
 
-//---------------------------강의실 목록-----------------
+
+    //---------------------------강의실 목록-----------------
     @GetMapping("/classrooms-list")
     public String listClassrooms(
             @ModelAttribute("filter") CourseFilter filter,
@@ -142,14 +149,10 @@ public class ClassroomController {
 
 //    -----------------------------------------
 
-//    --------강의실 학생 정보-----
-    @GetMapping("/classroom-student-info")
-    public String classroomStudentInfo(){
-            return"adminpages/classroom-student-info/index";
+
+    @GetMapping("/attendance-management")
+    public String attendanceClassroom() {
+        return "adminpages/attendance-management/index";
     }
-
-//    ----------------------------------------
-
-
 
 }

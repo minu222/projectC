@@ -2,6 +2,7 @@ package com.lms.adminpages.classrooms.controller;
 
 import com.lms.adminpages.classrooms.entity.MockExam;
 import com.lms.adminpages.classrooms.service.MockExamService;
+import com.lms.adminpages.users.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +22,16 @@ public class ExamQuestionManagement {
 
     // 목록
     @GetMapping("/mock-exams")
-    public String listExams(@RequestParam(required = false) Integer instructorId, Model model) {
+    public String listExams(@RequestParam(required = false) String instructorName, Model model) {
         List<MockExam> exams;
-        if (instructorId != null) {
-            exams = mockExamService.searchExamsByInstructorId(instructorId);
+        if (instructorName != null) {
+            exams = mockExamService.findByInstructorName(instructorName);
         } else {
             exams = mockExamService.getAllExams();
         }
         model.addAttribute("exams", exams);
+        List<User> instructors = mockExamService.findAllInstructors();
+        model.addAttribute("instructors", instructors);
         return "adminpages/exam-questions-management/index";
     }
 
@@ -37,6 +40,8 @@ public class ExamQuestionManagement {
     @GetMapping("/mock-exams/new")
     public String showCreateForm(Model model) {
         model.addAttribute("mockExam", new MockExam());
+        List<User> instructors = mockExamService.findAllInstructors();
+        model.addAttribute("instructors", instructors);
         return "adminpages/exam-questions-management/form";
     }
 
@@ -59,6 +64,10 @@ public class ExamQuestionManagement {
     public String editExamForm(@PathVariable int id, Model model) {
         MockExam mockExam = mockExamService.getExamById(id);
         model.addAttribute("mockExam", mockExam);
+
+        // 모든 강사 목록
+        List<User> instructors = mockExamService.findAllInstructors();
+        model.addAttribute("instructors", instructors);
         return "adminpages/exam-questions-management/form"; // 수정폼 HTML
     }
 

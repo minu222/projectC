@@ -1,6 +1,7 @@
 package com.lms.adminpages.classrooms.dao;
 
 import com.lms.adminpages.classrooms.entity.MockExam;
+import com.lms.adminpages.users.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,21 +19,84 @@ public class MockExamDAO {
 
     // 전체 조회 (JOIN)
     public List<MockExam> findAll() {
-        String sql = "SELECT * FROM mock_exams";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToMockExam(rs));
+        String sql = """
+            SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
+                   u.nickname AS instructorName
+            FROM mock_exams me
+            LEFT JOIN users u ON me.instructor_id = u.user_id
+            ORDER BY me.exam_id DESC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> MockExam.builder()
+                .examId(rs.getInt("exam_id"))
+                .instructorId(rs.getInt("instructor_id"))
+                .studentId(rs.getInt("student_id"))
+                .title(rs.getString("title"))
+                .question(rs.getString("question"))
+                .answer(rs.getString("answer"))
+                .score(rs.getInt("score"))
+                .takenAt(rs.getTimestamp("taken_at"))
+                .instructorName(rs.getString("instructorName")) // 화면용
+                .build()
+        );
     }
 
-    public List<MockExam> findByInstructorId(Integer instructorId) {
-        String sql = "SELECT * FROM mock_exams WHERE instructor_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{instructorId}, (rs, rowNum) -> mapRowToMockExam(rs));
+    public List<User> findAllInstructors() {
+        String sql = "SELECT user_id, nickname FROM users WHERE role='instructor'";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> User.builder()
+                .user_id(rs.getInt("user_id"))
+                .nickname(rs.getString("nickname"))
+                .build()
+        );
+    }
+
+    public List<MockExam> findByInstructorName(String instructorName) {
+        String sql = """
+        SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
+               u.nickname AS instructorName
+        FROM mock_exams me
+        LEFT JOIN users u ON me.instructor_id = u.user_id
+        WHERE u.nickname LIKE ?
+        ORDER BY me.exam_id DESC
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> MockExam.builder()
+                .examId(rs.getInt("exam_id"))
+                .instructorId(rs.getInt("instructor_id"))
+                .studentId(rs.getInt("student_id"))
+                .title(rs.getString("title"))
+                .question(rs.getString("question"))
+                .answer(rs.getString("answer"))
+                .score(rs.getInt("score"))
+                .takenAt(rs.getTimestamp("taken_at"))
+                .instructorName(rs.getString("instructorName"))
+                        .build(),
+                "%" + instructorName + "%");
     }
 
 
     public MockExam findById(int examId) {
-        String sql = "SELECT * FROM mock_exams WHERE exam_id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{examId}, (rs, rowNum) -> mapRowToMockExam(rs));
-    }
+        String sql = """
+            SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
+                   u.nickname AS instructorName
+            FROM mock_exams me
+            LEFT JOIN users u ON me.instructor_id = u.user_id
+            WHERE me.exam_id = ?
+        """;
 
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> MockExam.builder()
+                        .examId(rs.getInt("exam_id"))
+                        .instructorId(rs.getInt("instructor_id"))
+                        .studentId(rs.getInt("student_id"))
+                        .title(rs.getString("title"))
+                        .question(rs.getString("question"))
+                        .answer(rs.getString("answer"))
+                        .score(rs.getInt("score"))
+                        .takenAt(rs.getTimestamp("taken_at"))
+                        .instructorName(rs.getString("instructorName"))
+                        .build()
+                , examId);
+    }
     private MockExam mapRowToMockExam(ResultSet rs) throws SQLException {
         return MockExam.builder()
                 .examId(rs.getInt("exam_id"))

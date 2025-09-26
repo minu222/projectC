@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div class="sidebar" th:fragment="sidebar">
+<!-- 고정 사이드바 -->
+<aside class="sidebar" role="navigation" aria-label="주 메뉴" th:fragment="sidebar">
     <ul class="menu">
         <li>
             <a class="link" th:href="@{/admin/home}">
@@ -79,21 +80,21 @@
                         <i class="fas fa-plus-square"></i> 강의실 등록
                     </a>
                 </li>
-<!--                <li>-->
-<!--                    <a th:href="@{/admin/classroom-edit}">-->
-<!--                        <i class="fas fa-edit"></i> 강의실 수정-->
-<!--                    </a>-->
-<!--                </li>-->
+                <!--                <li>-->
+                <!--                    <a th:href="@{/admin/classroom-edit}">-->
+                <!--                        <i class="fas fa-edit"></i> 강의실 수정-->
+                <!--                    </a>-->
+                <!--                </li>-->
                 <li>
                     <a th:href="@{/admin/classrooms-list}">
                         <i class="fas fa-edit"></i> 강의실 목록
                     </a>
                 </li>
-<!--                <li>-->
-<!--                    <a th:href="@{/admin/lecture-delete}">-->
-<!--                        <i class="fas fa-trash"></i> 강의실 삭제-->
-<!--                    </a>-->
-<!--                </li>-->
+                <!--                <li>-->
+                <!--                    <a th:href="@{/admin/lecture-delete}">-->
+                <!--                        <i class="fas fa-trash"></i> 강의실 삭제-->
+                <!--                    </a>-->
+                <!--                </li>-->
                 <li>
                     <a th:href="@{/admin/classroom-student-info}">
                         <i class="fas fa-users"></i> 강의실 학생 정보
@@ -114,10 +115,14 @@
                         <i class="fas fa-calendar-check"></i> 출석 관리
                     </a>
                 </li>
+                <li>
+                    <a th:href="@{/admin/posts-manage}"
+                    ><i class="fas fa-edit"></i> 게시글 관리</a
+                    >
+                </li>
             </ul>
         </li>
 
-        <!-- 결제 관리 -->
         <li>
             <label class="submenu-toggle" for="toggle-payments">
                 <i class="fas fa-credit-card"></i> 결제 관리
@@ -172,6 +177,6 @@
             </ul>
         </li>
     </ul>
-</div>
+</aside>
 </body>
 </html>

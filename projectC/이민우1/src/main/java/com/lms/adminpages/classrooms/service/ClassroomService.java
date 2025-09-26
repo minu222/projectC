@@ -3,19 +3,24 @@ package com.lms.adminpages.classrooms.service;
 import com.lms.adminpages.classrooms.dao.ClassroomDAO;
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
+import com.lms.adminpages.users.dao.UserDao;
+import com.lms.adminpages.users.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 public class ClassroomService {
 
     private final ClassroomDAO classroomDao;
+    private final UserDao userDao;
 
-    public ClassroomService(ClassroomDAO classroomDao) {
+    public ClassroomService(ClassroomDAO classroomDao, UserDao userDao) {
         this.classroomDao = classroomDao;
+        this.userDao = userDao;
     }
 
     @Transactional
@@ -23,6 +28,10 @@ public class ClassroomService {
         classroomDao.save(classroom);
     }
 
+    public List<User> findAllInstructors()
+    {
+        return classroomDao.findAllInstructors();
+    }
 
     public List<String> findAllCategories() {
         return classroomDao.findAllCategories();
@@ -34,6 +43,10 @@ public class ClassroomService {
 
     public List<Classroom> findAll() {
         return classroomDao.findAll();
+    }
+
+    public User findUserById(Integer userId) {
+        return userDao.findById(userId);
     }
 
 
@@ -50,5 +63,6 @@ public class ClassroomService {
         if (ids == null || ids.isEmpty()) return;
         classroomDao.deleteByIds(ids);
     }
-}
 
+
+}

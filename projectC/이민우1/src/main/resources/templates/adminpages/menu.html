@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DW Admin — Menu (Standalone)</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+
+  <body>
+
+
+    <script>
+      // 모바일 사이드바 토글
+      document
+        .getElementById("btnToggleSidebar")
+        ?.addEventListener("click", () => {
+          document.body.classList.toggle("sidebar-open");
+        });
+
+      // ===== Popup open/close + a11y + scroll lock =====
+      (function () {
+        const overlay = document.getElementById("mailPopup");
+        const body = document.body;
+        let lastFocus = null;
+
+        function lockScroll(lock) {
+          body.style.overflow = lock ? "hidden" : "";
+        }
+        function openPopup(trigger) {
+          lastFocus = trigger || document.activeElement;
+          overlay.classList.add("is-open");
+          overlay.removeAttribute("hidden");
+          lockScroll(true);
+          const first = overlay.querySelector(
+            'button,[href],input,select,textarea,[contenteditable="true"],[tabindex]:not([tabindex="-1"])'
+          );
+          (first || overlay).focus();
+        }
+        function closePopup() {
+          overlay.classList.remove("is-open");
+          overlay.setAttribute("hidden", "");
+          lockScroll(false);
+          if (lastFocus && typeof lastFocus.focus === "function")
+            lastFocus.focus();
+        }
+        window.closePopup = closePopup;
+
+        document.addEventListener("click", (e) => {
+          const opener = e.target.closest("[data-open-mail]");
+          if (opener) {
+            e.preventDefault();
+            openPopup(opener);
+          }
+          if (e.target.closest(".popup-close")) {
+            e.preventDefault();
+            closePopup();
+          }
+        });
+
+        overlay.addEventListener("mousedown", (e) => {
+          if (e.target === overlay) closePopup();
+        });
+
+        overlay.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            closePopup();
+            return;
+          }
+          if (e.key === "Tab") {
+            const focusables = Array.from(
+              overlay.querySelectorAll(
+                'button,[href],input,select,textarea,[contenteditable="true"],[tabindex]:not([tabindex="-1"])'
+              )
+            ).filter(
+              (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+            );
+            if (!focusables.length) return;
+            const first = focusables[0],
+              last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        });
+      })();
+
+      // ===== Receiver tags =====
+      (function () {
+        const list = document.getElementById("receiverList");
+        const input = document.getElementById("receiverInput");
+        if (!list || !input) return;
+        const emails = new Set();
+        const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+        function addTag(raw) {
+          if (!raw) return;
+          const parts = String(raw)
+            .split(/[,\s;]+/)
+            .map((v) => v.trim())
+            .filter(Boolean);
+          for (const part of parts) {
+            const email = part;
+            if (!isEmail(email) || emails.has(email)) continue;
+            emails.add(email);
+            const tag = document.createElement("span");
+            tag.className = "receiver-tag";
+            tag.dataset.email = email;
+            const text = document.createElement("span");
+            text.textContent = email;
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.setAttribute("aria-label", "제거");
+            btn.innerHTML = "&times;";
+            btn.addEventListener("click", () => {
+              emails.delete(email);
+              tag.remove();
+            });
+            tag.append(text, btn);
+            list.appendChild(tag);
+          }
+        }
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const v = input.value.trim();
+            if (v) addTag(v);
+            input.value = "";
+          }
+        });
+        input.addEventListener("paste", (e) => {
+          const v = (e.clipboardData || window.clipboardData).getData("text");
+          if (v) {
+            e.preventDefault();
+            addTag(v);
+          }
+        });
+        window.__getReceiverEmails = () => Array.from(emails);
+      })();
+
+      // ===== File drop =====
+      (function () {
+        const drop = document.getElementById("fileDrop");
+        if (!drop) return;
+        const prevent = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        };
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((ev) =>
+          drop.addEventListener(ev, prevent)
+        );
+        ["dragenter", "dragover"].forEach((ev) =>
+          drop.addEventListener(ev, (e) => {
+            drop.classList.add("is-dragover");
+            if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+          })
+        );
+        ["dragleave", "drop"].forEach((ev) =>
+          drop.addEventListener(ev, () => drop.classList.remove("is-dragover"))
+        );
+        drop.addEventListener("click", () => {
+          const f = document.createElement("input");
+          f.type = "file";
+          f.multiple = true;
+          f.addEventListener("change", () => console.log("FILES:", f.files));
+          f.click();
+        });
+        drop.addEventListener("drop", (e) => {
+          const files = e.dataTransfer?.files;
+          if (files?.length) console.log("DROP FILES:", files);
+        });
+      })();
+
+      // ===== Rich text toolbar =====
+      (function () {
+        const editor = document.getElementById("mailEditor");
+        const sizeSel = document.getElementById("fontSizeSel");
+        if (!editor) return;
+        document
+          .querySelectorAll(".editor-toolbar button")
+          .forEach((b) => (b.type = "button"));
+        document
+          .querySelectorAll(".editor-toolbar [data-cmd]")
+          .forEach((btn) => {
+            btn.addEventListener("click", () => {
+              editor.focus();
+              document.execCommand(btn.dataset.cmd, false, "");
+            });
+          });
+        sizeSel?.addEventListener("change", function () {
+          editor.focus();
+          document.execCommand("fontSize", false, this.value);
+        });
+        document.getElementById("linkBtn")?.addEventListener("click", () => {
+          const url = prompt("링크 URL");
+          if (url) {
+            editor.focus();
+            document.execCommand("createLink", false, url);
+          }
+        });
+        document.getElementById("imgBtn")?.addEventListener("click", () => {
+          const url = prompt("이미지 URL");
+          if (url) {
+            editor.focus();
+            document.execCommand("insertImage", false, url);
+          }
+        });
+        document.getElementById("sendBtn")?.addEventListener("click", () => {
+          const receivers = (window.__getReceiverEmails?.() || []).join(", ");
+          const title = (
+            document.getElementById("mailTitle")?.value || ""
+          ).trim();
+          const html = editor.innerHTML;
+          console.log("SEND MAIL", { receivers, title, html });
+          alert("메일 전송 로직에 연결하세요!\n(콘솔에 데이터 출력 중)");
+        });
+      })();
+    </script>
+  </body>
+</html>

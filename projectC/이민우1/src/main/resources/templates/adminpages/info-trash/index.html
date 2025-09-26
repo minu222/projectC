@@ -2,207 +2,66 @@
 <html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
-    <title>DW Academy</title>
+    <title>DW Academy - 정보 휴지통</title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/common.css" />
-    <style>
-      /* 필터 영역 */
-      .filter-box {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: end;
-        margin-bottom: 12px;
-      }
-      .filter-box label {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: auto minmax(130px, 160px) minmax(180px, 260px);
-        align-items: center;
-      }
-      .filter-box label > select,
-      .filter-box label > input {
-        height: 40px;
-        font-size: 14px;
-        border-radius: 10px;
-        padding: 8px 10px;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-      }
-      .filter-box label > input:focus,
-      .filter-box label > select:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-      }
-
-      /* 버튼 */
-      .filter-box > button,
-      .btn-restore {
-        height: 40px;
-        padding: 0 14px;
-        border-radius: 10px;
-        font-weight: 800;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .filter-box > button {
-        border: none;
-        background: var(--primary);
-        color: #fff;
-      }
-      .filter-box > button:hover {
-        filter: brightness(0.98);
-      }
-      .btn-restore {
-        border: 1px solid color-mix(in srgb, var(--primary) 40%, #e5e7eb);
-        background: #fff;
-        color: var(--primary);
-      }
-      .btn-restore:hover {
-        background: color-mix(in srgb, var(--primary) 6%, #fff);
-      }
-
-      /* 체크박스 톤 통일 */
-      input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        accent-color: var(--primary);
-        cursor: pointer;
-      }
-
-      /* 테이블 */
-      .content-box > table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        border-radius: 14px;
-        overflow: hidden;
-      }
-      .content-box > table thead th {
-        background: #f9fafb;
-        font-weight: 700;
-        font-size: 14px;
-        text-align: left;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 12px 14px;
-      }
-      .content-box > table td {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 12px 14px;
-        font-size: 14px;
-      }
-      .content-box > table tbody tr:last-child td {
-        border-bottom: none;
-      }
-      .content-box > table tbody tr:hover {
-        background: #fcfcfd;
-      }
-
-      /* 열 디테일 */
-      .content-box > table td:nth-child(2) {
-        width: 72px;
-        text-align: center;
-        color: #374151;
-      } /* No */
-      .content-box > table td:nth-child(6), /* 이메일 */
-.content-box > table td:nth-child(7), /* 전화번호 */
-.content-box > table td:nth-child(8), /* 삭제일 */
-.content-box > table td:nth-child(9) {
-        /* 삭제 예정일 */
-        font-variant-numeric: tabular-nums;
-      }
-      .content-box > table td:nth-child(8),
-      .content-box > table td:nth-child(9) {
-        color: #374151;
-      }
-
-      /* 뱃지 */
-      .badge-red {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 800;
-        background: rgba(220, 38, 38, 0.12);
-        color: #7f1d1d;
-      }
-
-      /* 작은 화면: HTML 수정 없이 가로 스크롤 */
-      @media (max-width: 900px) {
-        .filter-box {
-          gap: 10px;
-        }
-      }
-      @media (max-width: 720px) {
-        .content-box > table {
-          display: block;
-          width: 100%;
-          overflow-x: auto;
-          white-space: nowrap;
-          border-radius: 12px;
-        }
-        .filter-box {
-          align-items: stretch;
-        }
-        .filter-box > button,
-        .btn-restore {
-          flex: 1 1 auto;
-        }
-      }
-
-      /* 접근성 */
-      :focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 4px var(--ring);
-        border-radius: 8px;
-      }
-
-      /* 프린트 최적화(선택) */
-      @media print {
-        .topbar {
-          position: static;
-          border: none;
-        }
-        .container {
-          min-height: auto;
-        }
-        .content-box {
-          box-shadow: none;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/style.css" />
   </head>
+
   <body>
-    <header class="topbar">
-      <div>DW Academy</div>
-    </header>
     <div class="container">
       <main class="main">
         <div class="content-box">
           <h2>정보 휴지통</h2>
+
+          <!-- 필터 -->
           <div class="filter-box">
-            <label
-              >검색:
-              <select>
+            <label>
+              검색:
+              <select aria-label="검색 조건">
                 <option>- 전체 -</option>
                 <option>이름</option>
                 <option>아이디</option>
                 <option>구분</option>
               </select>
-              <input placeholder="검색어 입력" type="text" />
+              <input
+                type="text"
+                placeholder="검색어 입력"
+                aria-label="검색어 입력"
+              />
             </label>
             <button>검색</button>
+
             <div style="margin-left: auto">
               <button class="btn-restore">♻ 선택 복원</button>
             </div>
           </div>
-          <table>
+
+          <!-- 표 -->
+          <table class="trash-table" aria-label="삭제된 정보 목록">
+            <colgroup>
+              <col class="col-chk" />
+              <col class="col-no" />
+              <col class="col-type" />
+              <col class="col-id" />
+              <col class="col-name" />
+              <col class="col-email" />
+              <col class="col-phone" />
+              <col class="col-del" />
+              <col class="col-exp" />
+              <col class="col-status" />
+            </colgroup>
             <thead>
               <tr>
-                <th><input id="checkAll" type="checkbox" /></th>
+                <th>
+                  <input
+                    id="checkAll"
+                    type="checkbox"
+                    aria-label="전체 선택(시각적)"
+                  />
+                </th>
                 <th>No</th>
                 <th>구분</th>
                 <th>아이디</th>
@@ -215,6 +74,7 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 서버 데이터 -->
               <tr th:each="item, stat : ${trashList}">
                 <td>
                   <input
@@ -223,18 +83,38 @@
                     type="checkbox"
                   />
                 </td>
-                <td th:text="${stat.count}"></td>
-                <td th:text="${item.userType}"></td>
-                <td th:text="${item.refId}"></td>
-                <td th:text="${item.name}"></td>
-                <td th:text="${item.email}"></td>
-                <td th:text="${item.phone}"></td>
+                <td th:text="${stat.count}">1</td>
+                <td th:text="${item.userType}">강사</td>
+                <td th:text="${item.refId}">teacher01</td>
+                <td th:text="${item.name}">김민수</td>
+                <td th:text="${item.email}">user@dw.com</td>
+                <td th:text="${item.phone}">010-1234-5678</td>
                 <td
+                  class="num muted"
                   th:text="${#temporals.format(item.deletedAt, 'yyyy-MM-dd')}"
-                ></td>
+                >
+                  2025-09-01
+                </td>
                 <td
+                  class="num muted"
                   th:text="${#temporals.format(item.expiresAt, 'yyyy-MM-dd')}"
-                ></td>
+                >
+                  2025-09-30
+                </td>
+                <td><span class="badge-red">탈퇴</span></td>
+              </tr>
+
+              <!-- 예시 행 -->
+              <tr>
+                <td><input class="row-check" type="checkbox" /></td>
+                <td>2</td>
+                <td>학생</td>
+                <td>user02</td>
+                <td>이영희</td>
+                <td>lee@example.com</td>
+                <td>010-2222-3333</td>
+                <td class="num muted">2025-09-05</td>
+                <td class="num muted">2025-10-04</td>
                 <td><span class="badge-red">탈퇴</span></td>
               </tr>
             </tbody>

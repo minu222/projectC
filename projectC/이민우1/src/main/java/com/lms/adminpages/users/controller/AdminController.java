@@ -43,6 +43,7 @@ public class AdminController {
         return "adminpages/instructor-info/index";
     }
 
+
     @PostMapping("/instructors/delete")
     public String deleteInstructors(@RequestParam("ids") int[] ids) {
         userService.deleteUsers(ids);
