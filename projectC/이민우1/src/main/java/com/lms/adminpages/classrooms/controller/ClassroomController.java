@@ -51,14 +51,23 @@ public class ClassroomController {
             RedirectAttributes ra) {
 
         // 강사 ID 숫자 체크
-        try {
-            Integer instructorId = classroom.getInstructorId();
-            if (instructorId == null) {
-                ra.addFlashAttribute("errorMessage", "강사 ID를 입력해주세요.");
-                return "redirect:/admin/classrooms-registration";
-            }
-        } catch (NumberFormatException e) {
-            ra.addFlashAttribute("errorMessage", "강사 ID는 숫자만 입력 가능합니다.");
+
+        Integer instructorId = classroom.getInstructorId();
+        if (instructorId == null) {
+            ra.addFlashAttribute("errorMessage", "강사 ID를 입력해주세요.");
+            return "redirect:/admin/classrooms-registration";
+        }
+
+        // 강사 존재 여부 및 상태 확인
+        User instructor = classroomService.findUserById(instructorId);
+        if (instructor == null) {
+            ra.addFlashAttribute("errorMessage", "존재하지 않는 강사 ID입니다.");
+            return "redirect:/admin/classrooms-registration";
+        }
+
+        if ("deleted".equalsIgnoreCase(instructor.getStatus().name())) {
+            // status가 enum 이라면 .name()으로 비교
+            ra.addFlashAttribute("errorMessage", "해당 강사는 탈퇴된 상태입니다.");
             return "redirect:/admin/classrooms-registration";
         }
 
@@ -139,5 +148,11 @@ public class ClassroomController {
     }
 
 //    -----------------------------------------
+
+
+    @GetMapping("/attendance-management")
+    public String attendanceClassroom() {
+        return "adminpages/attendance-management/index";
+    }
 
 }

@@ -22,10 +22,10 @@ public class ExamQuestionManagement {
 
     // 목록
     @GetMapping("/mock-exams")
-    public String listExams(@RequestParam(required = false) Integer instructorId, Model model) {
+    public String listExams(@RequestParam(required = false) String instructorName, Model model) {
         List<MockExam> exams;
-        if (instructorId != null) {
-            exams = mockExamService.findByInstructorId(instructorId);
+        if (instructorName != null) {
+            exams = mockExamService.findByInstructorName(instructorName);
         } else {
             exams = mockExamService.getAllExams();
         }

@@ -22,7 +22,7 @@
             <!-- 검색/문항 추가 -->
             <div class="search-box exam-search">
                 <form th:action="@{/admin/mock-exams}" method="get" style="display:inline;">
-                    <input type="text" name="instructorId" placeholder="강사명" th:value="${param.instructorId}" />
+                    <input type="text" name="instructorName" placeholder="강사ID" th:value="${param.instructorName}" />
                     <button class="btn-search" type="submit">검색</button>
                 </form>
                 <a th:href="@{/admin/mock-exams/new}" class="btn-submit">문항 추가</a>
@@ -39,7 +39,7 @@
                 <tr>
                     <th>NO</th>
                     <th>제목</th>
-                    <th>강사명</th>
+                    <th>강사ID</th>
                     <th>관리</th>
                 </tr>
                 </thead>

@@ -1,6 +1,7 @@
 package com.lms.adminpages.users.dao;
 
 import com.lms.adminpages.users.entity.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -47,6 +48,14 @@ public class UserDao {
         }
 
         return jdbcTemplate.query(sql.toString(), params.toArray(), new UserRowMapper());
+    }
+
+    public User findById(Integer userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        List<User> users = jdbcTemplate.query(sql, new Object[]{userId}, new BeanPropertyRowMapper<>(User.class));
+        return users.isEmpty() ? null : users.get(0);
+
+
     }
 
     // =============================

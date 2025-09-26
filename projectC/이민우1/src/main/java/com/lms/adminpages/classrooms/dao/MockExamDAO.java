@@ -50,13 +50,13 @@ public class MockExamDAO {
         );
     }
 
-    public List<MockExam> findByInstructorId(int instructorId) {
+    public List<MockExam> findByInstructorName(String instructorName) {
         String sql = """
         SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
                u.nickname AS instructorName
         FROM mock_exams me
         LEFT JOIN users u ON me.instructor_id = u.user_id
-        WHERE me.instructor_id = ?
+        WHERE u.nickname LIKE ?
         ORDER BY me.exam_id DESC
     """;
 
@@ -70,7 +70,8 @@ public class MockExamDAO {
                 .score(rs.getInt("score"))
                 .takenAt(rs.getTimestamp("taken_at"))
                 .instructorName(rs.getString("instructorName"))
-                .build(), instructorId);
+                        .build(),
+                "%" + instructorName + "%");
     }
 
 

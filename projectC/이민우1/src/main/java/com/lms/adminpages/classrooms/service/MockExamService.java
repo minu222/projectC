@@ -26,8 +26,8 @@ public class MockExamService {
     }
 
     // instructorId로 시험 문제 검색
-    public List<MockExam> findByInstructorId(int instructorId) {
-        return mockExamDao.findByInstructorId(instructorId);
+    public List<MockExam> findByInstructorName(String instructorName) {
+        return mockExamDao.findByInstructorName(instructorName);
     }
 
     public MockExam getExamById(int examId) {
