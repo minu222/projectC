@@ -3,6 +3,11 @@
   margin: 0;
   padding: 0;
 }
+.boxx {
+  gap: 10px;
+  flex-direction: column;
+  display: flex;
+}
 .submenu-toggle {
   font-weight: 200;
 }

@@ -18,18 +18,7 @@
 /* ===========================
          Base / Scroll 안전장치
          =========================== */
-* {
-  box-sizing: border-box;
-}
-html,
-body {
-  height: 200vh;
-  min-height: 100%;
-}
-html,
-body {
-  overflow-y: auto;
-}
+
 body {
   margin: 0;
   letter-spacing: 0.2px;
