@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DW Academy · 이메일 발송 내역</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <link rel="stylesheet" href="/style.css" />
+
+  <body>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <div class="header"><h2>이메일 발송 내역</h2></div>
+
+          <!-- 검색 + 버튼 영역 -->
+          <form
+            class="search-area"
+            method="get"
+            th:action="@{/messages/search}"
+          >
+            <div class="search-left">
+              <label for="group">소속:</label>
+              <select id="group" name="group">
+                <option value="">전체</option>
+                <option value="teacher">강사</option>
+              </select>
+
+              <label for="type" class="rjator">검색:</label>
+              <select id="type" name="type">
+                <option value="">전체</option>
+                <option value="userid">회원아이디</option>
+                <option value="title">제목</option>
+                <option value="sender">발송자</option>
+              </select>
+
+              <input
+                name="keyword"
+                placeholder="검색어 입력"
+                type="text"
+                aria-label="검색어"
+              />
+              <button type="submit" aria-label="검색" class="rjator">
+                <i class="fa-solid fa-magnifying-glass"></i> 검색
+              </button>
+            </div>
+
+            <div class="search-actions">
+              <button class="btn-delete" type="button">
+                <i class="fa-solid fa-trash"></i> 선택 삭제
+              </button>
+              <a class="btn-write" th:href="@{/messages/write}">
+                <i class="fa-solid fa-envelope"></i> 메일 쓰기
+              </a>
+            </div>
+          </form>
+
+          <!-- 발송 내역 테이블 -->
+          <table aria-label="이메일 발송 내역">
+            <colgroup>
+              <col class="col-check" />
+              <col class="col-no" />
+              <col class="col-group" />
+              <col class="col-user" />
+              <col class="col-title" />
+              <col class="col-sender" />
+              <col class="col-date" />
+              <col class="col-count" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    id="checkAll"
+                    type="checkbox"
+                    aria-label="전체 선택(시각적)"
+                  />
+                </th>
+                <th>번호</th>
+                <th>소속</th>
+                <th>회원아이디</th>
+                <th>제목</th>
+                <th>발송자</th>
+                <th>발송일</th>
+                <th>발송건수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input class="row-check" type="checkbox" /></td>
+                <td class="col-no">1</td>
+                <td>강사</td>
+                <td>user01</td>
+                <td title="공지사항 안내">공지사항 안내</td>
+                <td>관리자</td>
+                <td>2025-09-08</td>
+                <td class="col-count">50</td>
+              </tr>
+              <tr>
+                <td><input class="row-check" type="checkbox" /></td>
+                <td class="col-no">2</td>
+                <td>강사</td>
+                <td>user02</td>
+                <td title="업데이트 안내">업데이트 안내</td>
+                <td>관리자</td>
+                <td>2025-09-07</td>
+                <td class="col-count">30</td>
+              </tr>
+              <!-- 서버 렌더링 예시
+              <tr th:each="msg, i : ${messages}">
+                <td><input class="row-check" type="checkbox" th:value="${msg.id}"/></td>
+                <td class="col-no" th:text="${i.count}"></td>
+                <td th:text="${msg.groupName}"></td>
+                <td th:text="${msg.userId}"></td>
+                <td th:text="${msg.title}" th:title="${msg.title}"></td>
+                <td th:text="${msg.sender}"></td>
+                <td th:text="${#temporals.format(msg.sentAt, 'yyyy-MM-dd')}"></td>
+                <td class="col-count" th:text="${msg.sendCount}"></td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
