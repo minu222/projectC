@@ -23,32 +23,25 @@
           <div class="dashboard-wrap">
             <!-- 📊 통계 카드 (6고정) -->
             <section class="stats" aria-label="통계 카드">
-              <div class="card" th:text="${studentCount} + '명'">
-                120명<span>총 회원(학생)</span>
+              <div class="card" th:text="'총 학생 : ' + ${studentCount} + '명'">
               </div>
-              <div class="card" th:text="${teacherCount} + '명'">
-                35명<span>총 강사</span>
+              <div class="card" th:text="'총 강사 : ' + ${teacherCount} + '명'">
               </div>
-              <div class="card" th:text="${courseCount} + '개'">
-                25개<span>개설 과정</span>
+              <div class="card" th:text="'과정 수 : ' + ${courseCount} + '개'">
               </div>
-              <div class="card" th:text="${avgCompletion} + '%'">
-                85%<span>평균 수료율</span>
+              <div class="card" th:text="'평균 수료율 : ' + ${avgCompletion} + '%'">
               </div>
-              <div class="card" th:text="${cancelRate} + '%'">
-                12%<span>수강 취소율</span>
+              <div class="card" th:text="'취소율 : ' + ${cancelRate} + '%'">
               </div>
-              <div class="card" th:text="'₩' + ${monthRevenue}">
-                ₩12,530,000<span>이번 달 매출</span>
+              <div class="card" th:text="'이번 달 매출 : ₩ ' + ${monthRevenue}">
               </div>
             </section>
 
             <!-- 📢 알림 -->
             <section class="alerts" aria-label="최근 알림">
-              <h3>최근 알림 / 처리 필요</h3>
+              <h3>최근 알림</h3>
               <ul>
                 <li th:each="notice : ${notices}" th:text="${notice}">
-                  강사 김민수 강의자료 업로드 요청
                 </li>
               </ul>
             </section>
