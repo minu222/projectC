@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+.rjator {
+  flex-direction: column;
+  display: flex;
+}
+
 button,
 .btn,
 .btn-line {
@@ -528,8 +533,8 @@ thead th:first-child {
   text-align: center;
 }
 td {
+  align-items: center;
   padding: 12px 14px;
-
   color: #e4efff;
   border-bottom: 1px dashed rgba(84, 129, 255, 0.26);
   overflow: hidden;
