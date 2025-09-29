@@ -113,7 +113,7 @@ body {
   width: var(--fixed-min-width) !important;
   min-width: var(--fixed-min-width) !important;
   max-width: var(--fixed-min-width) !important;
-  overflow-x: hidden !important; /* 창이 더 작아지면 오른쪽이 잘림 */
+
   margin: 0;
 }
 :root {
