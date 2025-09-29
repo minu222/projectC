@@ -145,7 +145,7 @@ body::before {
     min-height: 100vh;
 }
 .main {
-    padding: 100px 100px 100px 300px;
+    padding: 100px 100px 100px 50px;
     white-space: nowrap;
 }
 .content-box h2 {
