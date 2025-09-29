@@ -20,19 +20,22 @@ public class MockExamDAO {
     // 전체 조회 (JOIN)
     public List<MockExam> findAll() {
         String sql = """
-            SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
+            SELECT eq.exam_id, eq.instructor_id, eq.course_title, eq.question, eq.option1, eq.option2, eq.option3, eq.option4, eq.answer, eq.score, eq.taken_at,
                    u.nickname AS instructorName
-            FROM mock_exams me
-            LEFT JOIN users u ON me.instructor_id = u.user_id
-            ORDER BY me.exam_id DESC
+            FROM exam_questions eq
+            LEFT JOIN users u ON eq.instructor_id = u.user_id
+            ORDER BY eq.exam_id DESC
         """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> MockExam.builder()
                 .examId(rs.getInt("exam_id"))
                 .instructorId(rs.getInt("instructor_id"))
-                .studentId(rs.getInt("student_id"))
-                .title(rs.getString("title"))
+                .courseTitle(rs.getString("course_title"))
                 .question(rs.getString("question"))
+                .option1(rs.getString("option1"))
+                .option2(rs.getString("option2"))
+                .option3(rs.getString("option3"))
+                .option4(rs.getString("option4"))
                 .answer(rs.getString("answer"))
                 .score(rs.getInt("score"))
                 .takenAt(rs.getTimestamp("taken_at"))
@@ -52,20 +55,23 @@ public class MockExamDAO {
 
     public List<MockExam> findByInstructorName(String instructorName) {
         String sql = """
-        SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
+        SELECT eq.exam_id, eq.instructor_id, eq.course_title, eq.question, eq.option1, eq.option2, eq.option3, eq.option4, eq.answer, eq.score, eq.taken_at,
                u.nickname AS instructorName
-        FROM mock_exams me
-        LEFT JOIN users u ON me.instructor_id = u.user_id
+        FROM exam_questions eq
+        LEFT JOIN users u ON eq.instructor_id = u.user_id
         WHERE u.nickname LIKE ?
-        ORDER BY me.exam_id DESC
+        ORDER BY eq.exam_id DESC
     """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> MockExam.builder()
                 .examId(rs.getInt("exam_id"))
                 .instructorId(rs.getInt("instructor_id"))
-                .studentId(rs.getInt("student_id"))
-                .title(rs.getString("title"))
+                .courseTitle(rs.getString("course_title"))
                 .question(rs.getString("question"))
+                .option1(rs.getString("option1"))
+                .option2(rs.getString("option2"))
+                .option3(rs.getString("option3"))
+                .option4(rs.getString("option4"))
                 .answer(rs.getString("answer"))
                 .score(rs.getInt("score"))
                 .takenAt(rs.getTimestamp("taken_at"))
@@ -77,19 +83,22 @@ public class MockExamDAO {
 
     public MockExam findById(int examId) {
         String sql = """
-            SELECT me.exam_id, me.instructor_id, me.student_id, me.title, me.question, me.answer, me.score, me.taken_at,
-                   u.nickname AS instructorName
-            FROM mock_exams me
-            LEFT JOIN users u ON me.instructor_id = u.user_id
-            WHERE me.exam_id = ?
+            SELECT eq.exam_id, eq.instructor_id, eq.course_title, eq.question, eq.option1, eq.option2, eq.option3, eq.option4, eq.answer, eq.score, eq.taken_at,
+               u.nickname AS instructorName
+            FROM exam_questions eq
+            LEFT JOIN users u ON eq.instructor_id = u.user_id
+            WHERE eq.exam_id = ?
         """;
 
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> MockExam.builder()
                         .examId(rs.getInt("exam_id"))
                         .instructorId(rs.getInt("instructor_id"))
-                        .studentId(rs.getInt("student_id"))
-                        .title(rs.getString("title"))
+                        .courseTitle(rs.getString("course_title"))
                         .question(rs.getString("question"))
+                        .option1(rs.getString("option1"))
+                        .option2(rs.getString("option2"))
+                        .option3(rs.getString("option3"))
+                        .option4(rs.getString("option4"))
                         .answer(rs.getString("answer"))
                         .score(rs.getInt("score"))
                         .takenAt(rs.getTimestamp("taken_at"))
@@ -101,9 +110,12 @@ public class MockExamDAO {
         return MockExam.builder()
                 .examId(rs.getInt("exam_id"))
                 .instructorId(rs.getInt("instructor_id"))
-                .studentId(rs.getInt("student_id"))
-                .title(rs.getString("title"))
+                .courseTitle(rs.getString("course_title"))
                 .question(rs.getString("question"))
+                .option1(rs.getString("option1"))
+                .option2(rs.getString("option2"))
+                .option3(rs.getString("option3"))
+                .option4(rs.getString("option4"))
                 .answer(rs.getString("answer"))
                 .score(rs.getInt("score"))
                 .takenAt(rs.getTimestamp("taken_at"))
@@ -113,14 +125,17 @@ public class MockExamDAO {
     // 등록
     public void save(MockExam exam) {
         String sql = """
-            INSERT INTO mock_exams (instructor_id, student_id, title, question, answer, score)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO exam_questions (instructor_id, course_title, question, option1, option2, option3, option4, answer, score)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
         jdbcTemplate.update(sql,
                 exam.getInstructorId(),
-                exam.getStudentId(),
-                exam.getTitle(),
+                exam.getCourseTitle(),
                 exam.getQuestion(),
+                exam.getOption1(),
+                exam.getOption2(),
+                exam.getOption3(),
+                exam.getOption4(),
                 exam.getAnswer(),
                 exam.getScore()
         );
@@ -129,15 +144,18 @@ public class MockExamDAO {
     // 수정
     public void update(MockExam exam) {
         String sql = """
-            UPDATE mock_exams
-            SET instructor_id=?, student_id=?, title=?, question=?, answer=?, score=?
+            UPDATE exam_questions
+            SET instructor_id=?, course_title=?, question=?, option1=?, option2=?, option3=?, option4=?, answer=?, score=?
             WHERE exam_id=?
         """;
         jdbcTemplate.update(sql,
                 exam.getInstructorId(),
-                exam.getStudentId(),
-                exam.getTitle(),
+                exam.getCourseTitle(),
                 exam.getQuestion(),
+                exam.getOption1(),
+                exam.getOption2(),
+                exam.getOption3(),
+                exam.getOption4(),
                 exam.getAnswer(),
                 exam.getScore(),
                 exam.getExamId()
@@ -146,7 +164,7 @@ public class MockExamDAO {
 
     // 삭제
     public void delete(int examId) {
-        String sql = "DELETE FROM mock_exams WHERE exam_id=?";
+        String sql = "DELETE FROM exam_questions WHERE exam_id=?";
         jdbcTemplate.update(sql, examId);
     }
 }

@@ -48,58 +48,66 @@ public class CourseMaterialController {
     }
 
 
-    /** 업로드 폼 이동 */
-    @GetMapping("/course-materials/upload")
-    public String uploadForm(Model model) {
-        // 과정 리스트를 내려주어 select 옵션에 사용
-        List<Classroom> classrooms = classroomDAO.findAll();
-        model.addAttribute("courses", classrooms);
-        return "adminpages/course-materials-management/upload";
+    @GetMapping("/course-materials/{id}/view")
+    public String viewCourseMaterial(@PathVariable("id") int materialId, Model model) {
+        CourseMaterial material = courseMaterialService.getMaterialById(materialId);
+        model.addAttribute("material", material);
+        return "adminpages/course-materials-management/view";  // 상세보기 페이지
     }
 
-    /** 자료 업로드 처리 */
-    @PostMapping("/course-materials/upload")
-    public String upload(@RequestParam("classroomName") String title,
-                         @RequestParam("file") MultipartFile file,
-                         @RequestParam(value = "hasExam", required = false) Boolean hasExam,
-                         @RequestParam(value = "hasReplay", required = false) Boolean hasReplay,
-                         RedirectAttributes ra) throws IOException {
 
-        boolean exam = hasExam != null && hasExam;
-        boolean replay = hasReplay == null || hasReplay;
-
-        Classroom classroom = classroomDAO.findByName(title);
-        if (classroom == null) {
-            ra.addFlashAttribute("error", "해당 강의실을 찾을 수 없습니다.");
-            return "redirect:/admin/course-materials/upload";
-        }
-        Integer classroomId = classroom.getClassroomId();
-
-        // 1. 디렉토리 생성
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
-
-        // 2. 파일 저장
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename(); // 충돌 방지
-        File savedFile = new File(uploadDir, fileName);
-        file.transferTo(savedFile);
-
-        // 3. DB 저장
-        CourseMaterial material = CourseMaterial.builder()
-                .courseId(classroomId)
-                .name(file.getOriginalFilename()) // 원래 파일명 표시
-                .filePath(savedFile.getAbsolutePath())
-                .fileType(file.getContentType())
-                .hasExam(exam)
-                .hasReplay(replay)
-                .build();
-
-
-        courseMaterialService.saveMaterial(material);
-        ra.addFlashAttribute("message", "자료가 업로드되었습니다.");
-
-        return "redirect:/admin/course-materials/upload";
-    }
+//    /** 업로드 폼 이동 */
+//    @GetMapping("/course-materials/upload")
+//    public String uploadForm(Model model) {
+//        // 과정 리스트를 내려주어 select 옵션에 사용
+//        List<Classroom> classrooms = classroomDAO.findAll();
+//        model.addAttribute("courses", classrooms);
+//        return "adminpages/course-materials-management/upload";
+//    }
+//
+//    /** 자료 업로드 처리 */
+//    @PostMapping("/course-materials/upload")
+//    public String upload(@RequestParam("classroomName") String title,
+//                         @RequestParam("file") MultipartFile file,
+//                         @RequestParam(value = "hasExam", required = false) Boolean hasExam,
+//                         @RequestParam(value = "hasReplay", required = false) Boolean hasReplay,
+//                         RedirectAttributes ra) throws IOException {
+//
+//        boolean exam = hasExam != null && hasExam;
+//        boolean replay = hasReplay == null || hasReplay;
+//
+//        Classroom classroom = classroomDAO.findByName(title);
+//        if (classroom == null) {
+//            ra.addFlashAttribute("error", "해당 강의실을 찾을 수 없습니다.");
+//            return "redirect:/admin/course-materials/upload";
+//        }
+//        Integer classroomId = classroom.getClassroomId();
+//
+//        // 1. 디렉토리 생성
+//        File dir = new File(uploadDir);
+//        if (!dir.exists()) dir.mkdirs();
+//
+//        // 2. 파일 저장
+//        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename(); // 충돌 방지
+//        File savedFile = new File(uploadDir, fileName);
+//        file.transferTo(savedFile);
+//
+//        // 3. DB 저장
+//        CourseMaterial material = CourseMaterial.builder()
+//                .courseId(classroomId)
+//                .name(file.getOriginalFilename()) // 원래 파일명 표시
+//                .filePath(savedFile.getAbsolutePath())
+//                .fileType(file.getContentType())
+//                .hasExam(exam)
+//                .hasReplay(replay)
+//                .build();
+//
+//
+//        courseMaterialService.saveMaterial(material);
+//        ra.addFlashAttribute("message", "자료가 업로드되었습니다.");
+//
+//        return "redirect:/admin/course-materials/upload";
+//    }
     /** 자료 다운로드 */
     @GetMapping("/course-materials/{id}/download")
     public ResponseEntity<Resource> download(@PathVariable Integer id) throws IOException {

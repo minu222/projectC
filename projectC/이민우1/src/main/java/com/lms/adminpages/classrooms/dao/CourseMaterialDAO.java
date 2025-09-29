@@ -1,6 +1,7 @@
 package com.lms.adminpages.classrooms.dao;
 
 import com.lms.adminpages.classrooms.entity.CourseMaterial;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -59,10 +60,22 @@ public class CourseMaterialDAO {
     }
     // 단건 조회
     public CourseMaterial findById(Integer id) {
-        String sql = "SELECT * FROM course_materials WHERE material_id = ?";
+        String sql = """
+        SELECT m.material_id,
+               m.course_id,
+               m.name,
+               m.file_path,
+               m.file_type,
+               m.has_exam,
+               m.has_replay,
+               c.title AS course_title
+        FROM course_materials m
+        LEFT JOIN courses c ON m.course_id = c.course_id
+        WHERE m.material_id = ?
+    """;
+
         return jdbcTemplate.queryForObject(sql, materialMapper, id);
     }
-
     // 저장
     public int save(CourseMaterial material) {
         String sql = "INSERT INTO course_materials (course_id, name, file_path, file_type, has_exam, has_replay) " +
@@ -97,4 +110,6 @@ public class CourseMaterialDAO {
         String sql = "DELETE FROM course_materials WHERE material_id=?";
         return jdbcTemplate.update(sql, id);
     }
+
+
 }

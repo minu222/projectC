@@ -12,9 +12,12 @@ import java.sql.Timestamp;
 public class MockExam {
     private Integer examId;
     private Integer instructorId;
-    private Integer studentId;
-    private String title;
+    private String courseTitle;
     private String question;
+    private String option1;
+    private String option2;
+    private String option3;
+    private String option4;
     private String answer;
     private Integer score;
     private Timestamp takenAt;

@@ -12,9 +12,7 @@
 </head>
 
 <body>
-<div th:replace="adminpages/fragments/topbar :: topbar"></div>
-<div class="container">
-    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
+<div th:replace="adminpages/menu :: menu"></div>
       <main class="main">
         <div class="content-box">
           <h2>강의실 등록</h2>
@@ -25,9 +23,17 @@
             <!-- form: POST & bound to ${classroom} -->
             <form th:action="@{/admin/classrooms-registration}" th:object="${classroom}" method="post" class="classroom-form">
 
-                <div>
+                <div>기본 정보
                     <label>
-                        강의실명
+                        과정구분
+                        <select th:field="*{category}" class="form-input">
+                            <option value="" disabled selected>카테고리 선택</option>
+                            <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                        </select>
+                    </label>
+
+                    <label>
+                        과정명
                         <input type="text" th:field="*{title}" placeholder="예: A-101" class="form-input" />
                     </label>
                     <label>강사 선택
@@ -41,26 +47,32 @@
                     </label>
 
                 </div>
+                <div>수업정보
+                    <label>
+                        교육비
+                        <input type="text" th:field="*{price}" class="form-input">
+                    </label>
+                    <label>
+                        교육기간
+                        <input type="date" th:field="*{expiryDate}" class="form-input">
+                    </label>
+                    <label>
+                        1일 교육시간
+                        <input type="number" th:field="*{liveLimit}" class="form-input">
+                    </label>
+                </div>
+                <div>상세정보
                 <label class="full-row">
-                    비고
+                    과정설명
                     <textarea rows="6" th:field="*{description}" placeholder="프로젝터, 화이트보드 등" class="form-textarea"></textarea>
                 </label>
-                <label>
-                    무료 여부
-                    <input type="checkbox" th:field="*{isFree}" /> 무료
-                </label>
-                <label>
-                    카테고리
-                    <select th:field="*{category}" class="form-input">
-                        <option value="" disabled selected>카테고리 선택</option>
-                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
-                    </select>
-                </label>
 
-                <label>
-                    수용 인원
-                    <input type="number" th:field="*{studentCount}" placeholder="예: 30" class="form-input" />
-                </label>
+
+<!--                <label>-->
+<!--                    수용 인원-->
+<!--                    <input type="number" th:field="*{studentCount}" placeholder="예: 30" class="form-input" />-->
+<!--                </label>-->
+                </div>
                 <div class="form-actions">
                     <button type="submit" class="btn-submit">등록</button>
                 </div>

@@ -12,9 +12,7 @@
 </head>
 
 <body>
-<div th:replace="adminpages/fragments/topbar :: topbar"></div>
-<div class="container">
-    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>
+<div th:replace="adminpages/menu :: menu"></div>
       <main class="main">
         <div class="content-box">
           <h2>시험 문제 관리</h2>
@@ -46,7 +44,7 @@
                 <tbody>
                 <tr th:each="exam, i : ${exams}">
                     <td th:text="${i.index + 1}">1</td>
-                    <td th:text="${exam.title}">1</td>
+                    <td th:text="${exam.courseTitle}">1</td>
                     <td th:text="${exam.instructorName}"></td>
                     <td>
                         <a th:href="@{/admin/mock-exams/{id}/edit(id=${exam.examId})}">수정</a> |

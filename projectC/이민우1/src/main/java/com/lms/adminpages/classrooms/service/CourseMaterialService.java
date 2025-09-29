@@ -22,6 +22,10 @@ public class CourseMaterialService {
         return courseMaterialDao.searchByCourseTitle(keyword); // 검색어 있으면 검색
     }
 
+    public CourseMaterial getMaterialById(int materialId) {
+        return courseMaterialDao.findById(materialId);
+    }
+
     public CourseMaterial getMaterial(Integer id) {
         return courseMaterialDao.findById(id);
     }
