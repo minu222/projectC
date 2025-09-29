@@ -23,7 +23,7 @@
 }
 html,
 body {
-  height: auto;
+  height: 200vh;
   min-height: 100%;
 }
 html,
@@ -36,6 +36,9 @@ body {
 }
 
 .topbar {
+  width: 100%;
+  top: 0;
+  position: fixed;
   height: var(--topbar-h);
   display: flex;
   align-items: center;
@@ -47,8 +50,6 @@ body {
     rgba(10, 17, 32, 0.92)
   );
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
   z-index: 50;
   color: #eaf2ff;
   font-weight: 800;
@@ -178,7 +179,9 @@ body {
 .submenu li a,
 .submenu li ul li a {
   font-weight: 500;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   margin: 4px 14px 4px 30px;
   padding: 8px 12px;

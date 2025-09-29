@@ -10,7 +10,9 @@
   flex-direction: column;
   display: flex;
 }
-
+.rjator2 {
+  color: black;
+}
 button,
 .btn,
 .btn-line {
