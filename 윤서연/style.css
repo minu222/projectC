@@ -4,21 +4,6 @@
   padding: 0;
 }
 
-.boxx {
-  gap: 10px;
-  flex-direction: column;
-  display: flex;
-}
-.submenu-toggle {
-  font-weight: 200;
-}
-.rjator {
-  flex-direction: column;
-  display: flex;
-}
-.rjator2 {
-  color: black;
-}
 button,
 .btn,
 .btn-line {
@@ -121,7 +106,7 @@ body {
   width: var(--fixed-min-width) !important;
   min-width: var(--fixed-min-width) !important;
   max-width: var(--fixed-min-width) !important;
-
+  overflow-x: hidden !important; /* 창이 더 작아지면 오른쪽이 잘림 */
   margin: 0;
 }
 :root {
@@ -160,7 +145,7 @@ body::before {
   min-height: 100vh;
 }
 .main {
-  padding: 100px 100px 100px 300px;
+  padding: 100px 100px 100px 50px;
   white-space: nowrap;
 }
 .content-box h2 {
@@ -543,8 +528,8 @@ thead th:first-child {
   text-align: center;
 }
 td {
-  align-items: center;
   padding: 12px 14px;
+
   color: #e4efff;
   border-bottom: 1px dashed rgba(84, 129, 255, 0.26);
   overflow: hidden;
@@ -871,6 +856,7 @@ td.actions a.del {
 .classroom-form > div:first-child,
 .classroom-edit-form > div:first-child {
   display: flex;
+
   gap: 14px;
   margin-bottom: 14px;
 }
