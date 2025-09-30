@@ -2,7 +2,7 @@
 .classroom-form {
     display: flex;
     gap: 14px 16px; /* row col */
-    flex-direction: column;
+
 }
 .classroom-form > div {
     gap: 14px 16px;
