@@ -862,6 +862,10 @@ td.actions a.del {
   display: flex;
   gap: 10px;
 }
+.lastbox {
+  gap: 40px;
+  display: flex;
+}
 .classroom-form > div > div {
   display: flex;
   gap: 10px;
