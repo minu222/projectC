@@ -3,6 +3,7 @@ package com.lms.adminpages.classrooms.service;
 import com.lms.adminpages.classrooms.dao.ClassroomDAO;
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
+import com.lms.adminpages.classrooms.entity.StudentDto;
 import com.lms.adminpages.users.dao.UserDao;
 import com.lms.adminpages.users.entity.User;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class ClassroomService {
 
     private final ClassroomDAO classroomDao;
     private final UserDao userDao;
+
 
     public ClassroomService(ClassroomDAO classroomDao, UserDao userDao) {
         this.classroomDao = classroomDao;
@@ -47,6 +49,14 @@ public class ClassroomService {
 
     public User findUserById(Integer userId) {
         return userDao.findById(userId);
+    }
+
+    public List<Classroom> searchClassrooms(String keyword) {
+        return classroomDao.findClassrooms(keyword);
+    }
+
+    public List<StudentDto> getStudentsByCourseId(int courseId) {
+        return classroomDao.findStudentsByCourseId(courseId);
     }
 
 

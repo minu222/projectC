@@ -18,7 +18,7 @@
             <h2>주문 목록</h2>
 
             <div class="search-box orders-search">
-                <form th:action="@{/admin/orders}" method="get">
+                <form th:action="@{/order/order-list}" method="get">
                     <input type="text" name="keyword" placeholder="주문번호/이름" th:value="${keyword}">
                     <select name="status">
                         <option value="">전체</option>

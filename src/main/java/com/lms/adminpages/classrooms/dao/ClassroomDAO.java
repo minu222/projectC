@@ -2,6 +2,7 @@ package com.lms.adminpages.classrooms.dao;
 
 import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseFilter;
+import com.lms.adminpages.classrooms.entity.StudentDto;
 import com.lms.adminpages.users.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -120,6 +121,61 @@ public class ClassroomDAO {
                         .build()
         );
         return result.isEmpty() ? null : result.get(0);
+    }
+
+    // 🔎 강의실 검색 (제목 키워드로)
+    public List<Classroom> findClassrooms(String keyword) {
+        String sql = """
+            SELECT course_id, instructor_id, title, category, status, student_count
+            FROM courses
+            WHERE deleted_at IS NULL
+              AND title LIKE ?
+            ORDER BY course_id DESC
+        """;
+        return jdbcTemplate.query(sql, new Object[]{"%" + keyword + "%"}, (rs, rowNum) -> Classroom.builder()
+                .classroomId(rs.getInt("course_id"))
+                .instructorId(rs.getInt("instructor_id"))
+                .title(rs.getString("title"))
+                .category(rs.getString("category"))
+                .status(rs.getString("status"))
+                .studentCount(rs.getInt("student_count"))
+                .build()
+        );
+    }
+
+
+    // 📋 특정 강의실의 수강생 조회
+    public List<StudentDto> findStudentsByCourseId(int courseId) {
+        String sql = """
+         SELECT u.user_id,
+               u.name,
+               u.nickname,
+               u.email,
+               u.phone,
+               u.address,
+               u.birth_day,
+               u.gender,
+               u.status,
+               u.created_at,
+               e.enrolled_at
+        FROM enrollments e
+        JOIN users u ON e.student_id = u.user_id
+        WHERE e.course_id = ?
+        """;
+        return jdbcTemplate.query(sql, new Object[]{courseId}, (rs, rowNum) -> StudentDto.builder()
+                .userId(rs.getInt("user_id"))
+                .name(rs.getString("name"))
+                .nickname(rs.getString("nickname"))
+                .email(rs.getString("email"))
+                .phone(rs.getString("phone"))
+                .address(rs.getString("address"))
+                .birthDay(rs.getDate("birth_day") != null ? rs.getDate("birth_day").toLocalDate() : null)
+                .gender(rs.getString("gender"))
+                .status(rs.getString("status"))
+                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                .enrolledAt(rs.getTimestamp("enrolled_at").toLocalDateTime())
+                .build()
+        );
     }
 
 
