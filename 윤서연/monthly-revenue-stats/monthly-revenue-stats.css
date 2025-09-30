@@ -1,0 +1,101 @@
+/* 검색 박스 */
+.search-box.sales-monthly-search {
+    display: grid;
+    gap: 12px;
+    margin: 8px 0 16px;
+    grid-template-columns: 1fr auto;
+}
+.search-box.sales-monthly-search input[type="number"],
+.search-box.sales-monthly-search .btn-primary {
+    height: 42px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+.search-box.sales-monthly-search input[type="number"] {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+}
+.search-box.sales-monthly-search input[type="number"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* number 스핀 제거(선택) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 차트 컨테이너: 반응형 비율 + 그리드 배경 */
+.chart-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.chart-container {
+    background: repeating-linear-gradient(
+            to right,
+            #f3f4f6 0,
+            #f3f4f6 1px,
+            transparent 1px,
+            transparent 40px
+    ),
+    repeating-linear-gradient(
+            to bottom,
+            #f3f4f6 0,
+            #f3f4f6 1px,
+            transparent 1px,
+            transparent 40px
+    );
+    border: 1px dashed #e5e7eb;
+}
+.chart-container > canvas {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* 작은 화면 최적화 */
+@media (max-width: 640px) {
+    .search-box.sales-monthly-search {
+        grid-template-columns: 1fr;
+    }
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+/* 접근성 */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 8px;
+}
+
+/* 프린트 최적화(선택) */
+@media print {
+    .topbar {
+        position: static;
+        border: none;
+    }
+    .container {
+        min-height: auto;
+    }
+    .content-box {
+        box-shadow: none;
+    }
+}

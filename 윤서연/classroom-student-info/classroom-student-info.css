@@ -1,0 +1,119 @@
+/* 검색 박스 */
+.search-box.classroom-students-search {
+    display: grid;
+    gap: 12px;
+    margin: 8px 0 16px;
+    grid-template-columns: 1fr auto;
+}
+.search-box.classroom-students-search input[type="text"],
+.search-box.classroom-students-search .btn-search {
+    height: 42px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+.search-box.classroom-students-search input[type="text"] {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+}
+.search-box.classroom-students-search input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+}
+.btn-search {
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #111827;
+    font-weight: 700;
+    cursor: pointer;
+}
+.btn-search:hover {
+    background: #f9fafb;
+}
+
+/* 표 */
+.data-table.classroom-students-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+}
+.data-table.classroom-students-table thead th {
+    background: #f9fafb;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 14px;
+}
+.data-table.classroom-students-table td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 14px;
+    font-size: 14px;
+}
+.data-table.classroom-students-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.data-table.classroom-students-table tbody tr:hover {
+    background: #fcfcfd;
+}
+
+/* 연락처 열 숫자 가독성 개선 */
+.classroom-students-table td:nth-child(3) {
+    font-variant-numeric: tabular-nums;
+}
+
+/* 배지 (상태) */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.badge.normal {
+    background: rgba(16, 185, 129, 0.12);
+    color: #065f46;
+} /* 재학 */
+.badge.done {
+    background: rgba(99, 102, 241, 0.12);
+    color: #1e1b4b;
+} /* 수료 */
+.badge.cancel {
+    background: rgba(239, 68, 68, 0.12);
+    color: #7f1d1d;
+} /* 제적/휴학 등 필요시 */
+
+/* 작은 화면 가로 스크롤 허용 (HTML 변경 없이) */
+@media (max-width: 720px) {
+    .data-table.classroom-students-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-radius: 12px;
+    }
+}
+
+/* 접근성 보강 */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 8px;
+}
+
+/* 프린트 최적화(선택) */
+@media print {
+    .topbar {
+        position: static;
+        border: none;
+    }
+    .container {
+        min-height: auto;
+    }
+    .content-box {
+        box-shadow: none;
+    }
+}
