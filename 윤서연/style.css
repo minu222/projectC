@@ -861,7 +861,6 @@ td.actions a.del {
 .classroom-form > div {
   display: flex;
   gap: 10px;
-  flex-direction: column;
 }
 .classroom-form > div > div {
   display: flex;
