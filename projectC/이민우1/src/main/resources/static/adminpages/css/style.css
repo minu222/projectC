@@ -878,6 +878,7 @@ td.actions a.del {
     gap: 10px;
 }
 .classroom-form > div > div > div {
+    flex-direction: column;
     height: 100%;
     gap: 10px;
     display: flex;

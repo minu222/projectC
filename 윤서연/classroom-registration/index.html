@@ -122,35 +122,38 @@
             </div>
 
             <div>
-              시험자료
               <div>
-                <label>
-                  시험문제 입력
-                  <textarea
-                    th:field="*{exams[0].question}"
-                    placeholder="문제"
-                  ></textarea>
-                </label>
-                <label>
-                  선택1
-                  <input type="text" th:field="*{exams[0].option1}" />
-                </label>
-                <label>
-                  선택2
-                  <input type="text" th:field="*{exams[0].option2}" />
-                </label>
-                <label>
-                  선택3
-                  <input type="text" th:field="*{exams[0].option3}" />
-                </label>
-                <label>
-                  선택4
-                  <input type="text" th:field="*{exams[0].option4}" />
-                </label>
-                <label>
-                  정답
-                  <input type="text" th:field="*{exams[0].answer}" />
-                </label>
+                시험자료
+
+                <div style="display: flex; gap: 15px">
+                  <label>
+                    시험문제 입력
+                    <textarea
+                      th:field="*{exams[0].question}"
+                      placeholder="문제"
+                    ></textarea>
+                  </label>
+                  <label>
+                    선택1
+                    <input type="text" th:field="*{exams[0].option1}" />
+                  </label>
+                  <label>
+                    선택2
+                    <input type="text" th:field="*{exams[0].option2}" />
+                  </label>
+                  <label>
+                    선택3
+                    <input type="text" th:field="*{exams[0].option3}" />
+                  </label>
+                  <label>
+                    선택4
+                    <input type="text" th:field="*{exams[0].option4}" />
+                  </label>
+                  <label>
+                    정답
+                    <input type="text" th:field="*{exams[0].answer}" />
+                  </label>
+                </div>
               </div>
             </div>
 
