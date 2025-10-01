@@ -865,6 +865,7 @@ td.actions a.del {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 36px rgba(61, 122, 255, 0.08);
 }
 .classroom-form > div {
+  flex-direction: column;
   display: flex;
   gap: 10px;
 }
@@ -873,12 +874,17 @@ td.actions a.del {
   display: flex;
 }
 .classroom-form > div > div {
+  flex-direction: column;
   display: flex;
   gap: 10px;
 }
+.classroom-form > div > div > div {
+  height: 100%;
+  gap: 10px;
+  display: flex;
+}
 .classroom-form > div,
 .classroom-edit-form > div:first-child {
-  flex-direction: column;
   display: flex;
   gap: 14px;
   margin-bottom: 14px;
