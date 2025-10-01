@@ -37,53 +37,65 @@
         >
             <div>
                 기본 정보
-                <label>
-                    과정구분
-                    <select th:field="*{category}" class="form-input">
-                        <option value="" disabled selected>카테고리 선택</option>
-                        <option
-                                th:each="cat : ${categories}"
-                                th:value="${cat}"
-                                th:text="${cat}"
-                        ></option>
-                    </select>
-                </label>
+                <div>
+                    <label>
+                        과정구분
+                        <select th:field="*{category}" class="form-input">
+                            <option value="" disabled selected>카테고리 선택</option>
+                            <option
+                                    th:each="cat : ${categories}"
+                                    th:value="${cat}"
+                                    th:text="${cat}"
+                            ></option>
+                        </select>
+                    </label>
 
-                <label>
-                    과정명
-                    <input
-                            type="text"
-                            th:field="*{title}"
-                            placeholder="예: A-101"
-                            class="form-input"
-                    />
-                </label>
-                <label
-                >강사 선택
-                    <select name="instructorId" required>
-                        <option value="">강사를 선택하세요</option>
-                        <option
-                                th:each="inst : ${instructors}"
-                                th:value="${inst.user_id}"
-                                th:text="${inst.nickname}"
-                        ></option>
-                    </select>
-                </label>
+                    <label>
+                        과정명
+                        <input
+                                type="text"
+                                th:field="*{title}"
+                                placeholder="예: A-101"
+                                class="form-input"
+                        />
+                    </label>
+                    <label
+                    >강사 선택
+                        <select name="instructorId" required>
+                            <option value="">강사를 선택하세요</option>
+                            <option
+                                    th:each="inst : ${instructors}"
+                                    th:value="${inst.user_id}"
+                                    th:text="${inst.nickname}"
+                            ></option>
+                        </select>
+                    </label>
+                </div>
             </div>
             <div>
                 수업정보
-                <label>
-                    교육비
-                    <input type="text" th:field="*{price}" class="form-input" />
-                </label>
-                <label>
-                    교육기간
-                    <input type="date" th:field="*{expiryDate}" class="form-input" />
-                </label>
-                <label>
-                    1일 교육시간
-                    <input type="number" th:field="*{liveLimit}" class="form-input" />
-                </label>
+                <div>
+                    <label>
+                        교육비
+                        <input type="text" th:field="*{price}" class="form-input" />
+                    </label>
+                    <label>
+                        교육기간
+                        <input
+                                type="date"
+                                th:field="*{expiryDate}"
+                                class="form-input"
+                        />
+                    </label>
+                    <label>
+                        1일 교육시간
+                        <input
+                                type="number"
+                                th:field="*{liveLimit}"
+                                class="form-input"
+                        />
+                    </label>
+                </div>
             </div>
             <div>
                 상세정보
