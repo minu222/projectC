@@ -1,10 +1,13 @@
 package com.lms.adminpages.classrooms.entity;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +48,15 @@ public class Classroom {
 
     private String instructorNickname;
 
+
+
+    // 수업자료 업로드용
+    private List<MultipartFile> materialFiles = new ArrayList<>();
+    private List<String> materialNames = new ArrayList<>();
+
+    // 시험 포함 여부 체크
+    private List<Boolean> hasExam = new ArrayList<>();
+
+    // 시험자료
+    private List<MockExam> exams = new ArrayList<>();
 }

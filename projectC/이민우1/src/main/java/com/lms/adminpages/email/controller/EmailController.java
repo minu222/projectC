@@ -28,51 +28,62 @@ public class EmailController {
     }
 
 
-    @GetMapping("/compose-instructor-email")
-    public String showComposeEmailForm(Model model) {
-        model.addAttribute("emailForm", new EmailForm());
-        return "adminpages/compose-instructor-email/index";
+//    @GetMapping("/compose-instructor-email")
+//    public String showComposeEmailForm(Model model) {
+//        model.addAttribute("emailForm", new EmailForm());
+//        return "adminpages/compose-instructor-email/index";
+//    }
+//
+//
+//    @PostMapping("/compose-instructor-email")
+//    public String sendEmail(@ModelAttribute("emailForm") EmailForm form,
+//                            RedirectAttributes ra) {
+//        try {
+//            // ✅ 메일 발송
+//            emailService.sendEmail(form);
+//
+//            // ✅ 성공 로그 저장
+//            emailLogService.saveLog(
+//                    String.join(",", form.getRecipients()),
+//                    form.getSubject(),
+//                    form.getContent(),
+//                    form.getAttachments() != null ? form.getAttachments().toString() : null,
+//                    "sent"
+//            );
+//
+//            ra.addFlashAttribute("successMessage", "메일이 성공적으로 발송되었습니다!");
+//        } catch (Exception e) {
+//            // ❌ 실패 로그 저장
+//            emailLogService.saveLog(
+//                    String.join(",", form.getRecipients()),
+//                    form.getSubject(),
+//                    form.getContent(),
+//                    null,
+//                    "failed"
+//            );
+//
+//            ra.addFlashAttribute("errorMessage", "메일 발송 실패: " + e.getMessage());
+//        }
+//        return "redirect:/email/compose-instructor-email";
+//    }
+//
+//
+//    @GetMapping("/email-send-history")
+//    public String listEmailLogs(Model model) {
+//        List<EmailLog> logs = emailLogService.getAllLogs(); // 전체 조회
+//        model.addAttribute("logs", logs);
+//        return "adminpages/email-send-history/index";
+//    }
+
+
+    @GetMapping("/message-send")
+    public String sendMessage() {
+        return "adminpages/message-send/index";
     }
 
-
-    @PostMapping("/compose-instructor-email")
-    public String sendEmail(@ModelAttribute("emailForm") EmailForm form,
-                            RedirectAttributes ra) {
-        try {
-            // ✅ 메일 발송
-            emailService.sendEmail(form);
-
-            // ✅ 성공 로그 저장
-            emailLogService.saveLog(
-                    String.join(",", form.getRecipients()),
-                    form.getSubject(),
-                    form.getContent(),
-                    form.getAttachments() != null ? form.getAttachments().toString() : null,
-                    "sent"
-            );
-
-            ra.addFlashAttribute("successMessage", "메일이 성공적으로 발송되었습니다!");
-        } catch (Exception e) {
-            // ❌ 실패 로그 저장
-            emailLogService.saveLog(
-                    String.join(",", form.getRecipients()),
-                    form.getSubject(),
-                    form.getContent(),
-                    null,
-                    "failed"
-            );
-
-            ra.addFlashAttribute("errorMessage", "메일 발송 실패: " + e.getMessage());
-        }
-        return "redirect:/email/compose-instructor-email";
-    }
-
-
-    @GetMapping("/email-send-history")
-    public String listEmailLogs(Model model) {
-        List<EmailLog> logs = emailLogService.getAllLogs(); // 전체 조회
-        model.addAttribute("logs", logs);
-        return "adminpages/email-send-history/index";
+    @GetMapping("/message-log")
+    public String logMessage() {
+        return "adminpages/message-log/index";
     }
 }
 

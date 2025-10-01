@@ -1,13 +1,11 @@
 package com.lms.adminpages.users.controller;
 
+import com.lms.adminpages.users.dao.UserDao;
 import com.lms.adminpages.users.entity.User;
 import com.lms.adminpages.users.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,9 +14,11 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final UserDao userDao;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, UserDao userDao) {
         this.userService = userService;
+        this.userDao = userDao;
     }
 
     @GetMapping("/instructors")
@@ -43,12 +43,14 @@ public class AdminController {
         return "adminpages/instructor-info/index";
     }
 
+/*
 
     @PostMapping("/instructors/delete")
     public String deleteInstructors(@RequestParam("ids") int[] ids) {
         userService.deleteUsers(ids);
         return "redirect:/admin/instructors";
     }
+*/
 
 
     @GetMapping("/students")
@@ -69,9 +71,66 @@ public class AdminController {
         return "adminpages/student-info/index"; // templates 폴더 내 강사 정보 페이지
     }
 
-    @PostMapping("/students/delete")
-    public String deleteStudents(@RequestParam("ids") int[] ids) {
-        userService.deleteUsers(ids);
-        return "redirect:/admin/students";
+//    @PostMapping("/students/delete")
+//    public String deleteStudents(@RequestParam("ids") int[] ids) {
+//        userService.deleteUsers(ids);
+//        return "redirect:/admin/students";
+//    }
+
+
+    // 멤버 상세페이지
+
+    @GetMapping("/member-details")
+    public String listMembers(Model model) {
+        List<User> members = userDao.findAll();
+        model.addAttribute("members", members);
+        return "adminpages/member-details/index"; // ← 위에 주신 HTML 파일
+    }
+
+    @GetMapping("/members")
+    public String listMembers(
+            @RequestParam(value = "group", required = false) String group,
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            Model model
+    ) {
+        model.addAttribute("members", userService.getMemberList(group, type, keyword));
+        model.addAttribute("group", group);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
+        return "adminpages/member-details/index";  // Thymeleaf 목록 페이지
+    }
+
+    @GetMapping("/members/{userId}")
+    public String detailMember(@PathVariable("userId") Integer userId, Model model) {
+        User selectedMember = userDao.findById(userId);
+        model.addAttribute("member", selectedMember);
+        return "adminpages/member-details/detail"; // 위에 만든 HTML
+    }
+
+
+    @PostMapping("/member-details/delete")
+    public String deleteSelected(@RequestParam(value = "selectedIds", required = false) int[] selectedIds) {
+        if (selectedIds != null && selectedIds.length > 0) {
+            userService.deleteMembers(selectedIds);
+        }
+        return "redirect:/admin/member-details";
+    }
+
+    //정보 휴지통
+
+    @GetMapping("/info-trash")
+    public String viewTrash(Model model) {
+        model.addAttribute("trashList", userService.getTrashList());
+        return "adminpages/info-trash/index";
+    }
+
+
+    @PostMapping("/member-details/restore")
+    public String restoreUsers(@RequestParam("ids") List<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            userService.restoreUsers(ids);
+        }
+        return "redirect:/admin/info-trash";
     }
 }

@@ -5,6 +5,7 @@ import com.lms.adminpages.classrooms.entity.Classroom;
 import com.lms.adminpages.classrooms.entity.CourseMaterial;
 import com.lms.adminpages.classrooms.service.ClassroomService;
 import com.lms.adminpages.classrooms.service.CourseMaterialService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,9 @@ public class CourseMaterialController {
     private final CourseMaterialService courseMaterialService;
 
     // 파일 업로드 기본 경로 (실제 경로는 환경에 맞게 수정)
-    private final String uploadDir = "C:/minwoo/java/Workspace/projectC/src/main/resources/upload/";
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     private final ClassroomDAO classroomDAO;
 
     public CourseMaterialController(CourseMaterialService courseMaterialService, ClassroomDAO classroomDAO) {
@@ -112,23 +115,22 @@ public class CourseMaterialController {
     @GetMapping("/course-materials/{id}/download")
     public ResponseEntity<Resource> download(@PathVariable Integer id) throws IOException {
         CourseMaterial material = courseMaterialService.getMaterial(id);
-        if (material == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (material == null) return ResponseEntity.notFound().build();
 
-        File file = new File(material.getFilePath());
-        if (!file.exists()) {
-            return ResponseEntity.notFound().build();
-        }
+        File file = new File(uploadDir, material.getFilePath()); // DB에 전체 경로 저장
+        if (!file.exists()) return ResponseEntity.notFound().build();
 
         Resource resource = new FileSystemResource(file);
-        String encodedFileName = URLEncoder.encode(material.getName(), StandardCharsets.UTF_8);
+        String encodedFileName = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
                 .contentType(MediaType.parseMediaType(material.getFileType()))
                 .body(resource);
     }
+
+
+
 
     /** 자료 삭제 */
     @PostMapping("/course-materials/{id}/delete")

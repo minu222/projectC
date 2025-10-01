@@ -1,8 +1,9 @@
 package com.lms.adminpages.classrooms.controller;
 
-import com.lms.adminpages.classrooms.entity.Classroom;
-import com.lms.adminpages.classrooms.entity.CourseFilter;
+import com.lms.adminpages.classrooms.entity.*;
 import com.lms.adminpages.classrooms.service.ClassroomService;
+import com.lms.adminpages.classrooms.service.CourseMaterialService;
+import com.lms.adminpages.classrooms.service.MockExamService;
 import com.lms.adminpages.users.dao.UserDao;
 import com.lms.adminpages.users.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,9 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.management.relation.Role;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +31,17 @@ public class ClassroomController {
     private final ClassroomService classroomService;
     private final UserDao userDao;
     private final JdbcTemplate jdbcTemplate;
+    private final CourseMaterialService courseMaterialService;
+    private final MockExamService mockExamService;
 
-    public ClassroomController(ClassroomService classroomService, UserDao userDao, JdbcTemplate jdbcTemplate) {
+
+    public ClassroomController(ClassroomService classroomService, UserDao userDao, JdbcTemplate jdbcTemplate, CourseMaterialService courseMaterialService
+    , MockExamService mockExamService) {
         this.classroomService = classroomService;
         this.userDao = userDao;
         this.jdbcTemplate = jdbcTemplate;
+        this.courseMaterialService = courseMaterialService;
+        this.mockExamService = mockExamService;
     }
 
     //-----------------------------------강의실 등록
@@ -48,31 +60,77 @@ public class ClassroomController {
     @PostMapping("/classrooms-registration")
     public String registerClassroom(
             @ModelAttribute Classroom classroom,
-            RedirectAttributes ra) {
+            RedirectAttributes ra)  throws IOException {
 
-        // 강사 ID 숫자 체크
-
+        // 강사 체크
         Integer instructorId = classroom.getInstructorId();
         if (instructorId == null) {
             ra.addFlashAttribute("errorMessage", "강사 ID를 입력해주세요.");
             return "redirect:/admin/classrooms-registration";
         }
 
-        // 강사 존재 여부 및 상태 확인
         User instructor = classroomService.findUserById(instructorId);
-        if (instructor == null) {
-            ra.addFlashAttribute("errorMessage", "존재하지 않는 강사 ID입니다.");
+        if (instructor == null || "deleted".equalsIgnoreCase(instructor.getStatus().name())) {
+            ra.addFlashAttribute("errorMessage", "유효하지 않은 강사입니다.");
             return "redirect:/admin/classrooms-registration";
         }
 
-        if ("deleted".equalsIgnoreCase(instructor.getStatus().name())) {
-            // status가 enum 이라면 .name()으로 비교
-            ra.addFlashAttribute("errorMessage", "해당 강사는 탈퇴된 상태입니다.");
+        try {
+            // 1️⃣ 강의실 저장
+            classroomService.save(classroom);
+
+            // 2️⃣ 수업자료 저장
+            if (classroom.getMaterialFiles() != null) {
+                for (int i = 0; i < classroom.getMaterialFiles().size(); i++) {
+                    MultipartFile file = classroom.getMaterialFiles().get(i);
+                    if (!file.isEmpty()) {
+                        String fileName = file.getOriginalFilename().replaceAll("\\s+", "_");
+                        String uploadDir = "C:/lms_uploads/course_materials/" + classroom.getTitle();
+                        File folder = new File(uploadDir);
+                        if (!folder.exists()) folder.mkdirs();
+                        File dest = new File(folder, fileName);
+                        file.transferTo(dest);
+
+                        CourseMaterial material = new CourseMaterial();
+                        material.setCourseId(classroom.getClassroomId());
+                        material.setCourseTitle(classroom.getTitle());
+                        material.setName(fileName);
+                        material.setFilePath(dest.getAbsolutePath());
+                        material.setFileType(Files.probeContentType(dest.toPath()));
+
+                        // hasExam 안전 처리
+                        boolean hasExam = false;
+                        if (classroom.getHasExam() != null && !classroom.getHasExam().isEmpty()) {
+                            hasExam = classroom.getHasExam().get(i); // i번째 자료의 hasExam
+                        }
+                        material.setHasExam(hasExam);
+                        material.setHasReplay(true);
+
+                        courseMaterialService.saveMaterial(material);
+                    }
+                }
+            }
+
+            // 3️⃣ 시험자료 저장
+            if (classroom.getExams() != null) {
+                for (MockExam exam : classroom.getExams()) {
+                    exam.setInstructorId(classroom.getInstructorId());
+                    exam.setCourseTitle(classroom.getTitle());
+                    mockExamService.saveExam(exam);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ra.addFlashAttribute("errorMessage", "파일 업로드 중 오류가 발생했습니다.");
+            return "redirect:/admin/classrooms-registration";
+        } catch (Exception e) {
+            e.printStackTrace();
+            ra.addFlashAttribute("errorMessage", "강의실 등록 중 오류가 발생했습니다.");
             return "redirect:/admin/classrooms-registration";
         }
 
-        classroomService.save(classroom);
-        ra.addFlashAttribute("message", "강의실이 등록되었습니다.");
+        ra.addFlashAttribute("message", "강의실, 수업자료, 시험자료가 등록되었습니다.");
         return "redirect:/admin/classrooms-registration";
     }
 //    --------------
@@ -150,6 +208,7 @@ public class ClassroomController {
 //    -----------------------------------------
 
 
+    //출석관리
     @GetMapping("/attendance-management")
     public String attendanceClassroom() {
         return "adminpages/attendance-management/index";

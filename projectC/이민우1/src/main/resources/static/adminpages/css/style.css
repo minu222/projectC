@@ -3,16 +3,8 @@
     margin: 0;
     padding: 0;
 }
-.thisbox {
-    gap: 20px;
-    align-items: center;
-    display: flex;
-}
-.rjator {
-    border-radius: 5px;
-    padding: 5px 10px;
-    color: black;
-}
+
+.rjator{color: black;}
 
 button,
 .btn,
@@ -116,7 +108,7 @@ body {
     width: var(--fixed-min-width) !important;
     min-width: var(--fixed-min-width) !important;
     max-width: var(--fixed-min-width) !important;
-
+    overflow-x: hidden !important; /* 창이 더 작아지면 오른쪽이 잘림 */
     margin: 0;
 }
 :root {
@@ -211,7 +203,6 @@ input[type="checkbox"] {
 .btn-sm,
 .btn-close,
 .btn-save {
-    width: fit-content;
     align-items: center;
     display: flex;
     gap: 10px;
@@ -490,6 +481,10 @@ input[type="checkbox"] {
     linear-gradient(180deg, #1b2f72, #142963);
 }
 
+.info-search-option {
+    color: black;
+}
+
 /* ================================
    Tables (base + wrappers)
 =================================== */
@@ -517,6 +512,7 @@ table,
 .data-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     white-space: nowrap;
 }
 thead th {
@@ -856,7 +852,7 @@ td.actions a.del {
 =================================== */
 .classroom-form,
 .classroom-edit-form {
-    display: flex;
+    display:flex;
     flex-direction: column;
     padding: 18px;
     border-radius: 14px;
@@ -864,21 +860,20 @@ td.actions a.del {
     border: 1px solid rgba(84, 129, 255, 0.26);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 36px rgba(61, 122, 255, 0.08);
 }
-.classroom-form > div {
+.classroom-form > div{
     display: flex;
     gap: 10px;
+
+
 }
 .lastbox {
     gap: 40px;
     display: flex;
 }
-.classroom-form > div > div {
-    display: flex;
-    gap: 10px;
-}
-.classroom-form > div,
+.classroom-form > div > div{display: flex;
+    gap: 10px;}
+.classroom-form > div:first-child,
 .classroom-edit-form > div:first-child {
-    flex-direction: column;
     display: flex;
     gap: 14px;
     margin-bottom: 14px;
@@ -888,6 +883,7 @@ td.actions a.del {
     display: flex;
     flex-direction: column;
     gap: 8px;
+
     color: #bcd1ff;
 }
 .form-input,
@@ -917,18 +913,14 @@ td.actions a.del {
 .classroom-form textarea,
 .classroom-edit-form textarea,
 .textarea {
+
     resize: none;
     line-height: 1.5;
 }
-#boxxx2 {
-    width: 70vw;
-}
+#boxxx2{width: 70vw;}
 .full-row {
     grid-column: 1 / -1;
-}
-#boxxx {
-    display: block;
-}
+}#boxxx{display: block;}
 .form-actions,
 .actions-row {
     display: flex;
@@ -1273,3 +1265,143 @@ i[class^="fa-"],
 i[class*=" fa-"] {
     filter: drop-shadow(0 0 6px rgba(61, 122, 255, 0.25));
 }
+
+
+/* ----강의실 등록 폼-----*/
+
+/* 폼 레이아웃 */
+.classroom-form {
+    display: flex;
+    gap: 14px 16px; /* row col */
+}
+.classroom-form > div {
+    gap: 14px 16px;
+    display: flex;
+}
+.classroom-form > div:nth-child(3) {
+    width: 100%;
+}
+.classroom-form label {
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+.classroom-form .full-row {
+    grid-column: 1 / -1;
+}
+
+/* 입력 요소 공통 */
+.form-input,
+.form-textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.form-input {
+    height: 42px;
+    padding: 10px 12px;
+}
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    resize: vertical;
+}
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #9ca3af;
+}
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-color: #cbd5e1;
+}
+
+/* number 스핀 버튼 정리 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 폼 액션 */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+.btn-submit,
+.btn-reset {
+    height: 42px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-submit {
+    border: none;
+    background: var(--primary);
+    color: #fff;
+}
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.btn-reset {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+}
+.btn-reset:hover {
+    background: #f9fafb;
+}
+
+/* 작은 화면 최적화 */
+@media (max-width: 680px) {
+    .classroom-form {
+        grid-template-columns: 1fr;
+    }
+    .form-actions {
+        justify-content: stretch;
+    }
+    .form-actions > * {
+        flex: 1 1 auto;
+    }
+}
+
+/* 접근성 보강 */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 8px;
+}
+
+/* 프린트 최적화(선택) */
+@media print {
+    .topbar {
+        position: static;
+        border: none;
+    }
+    .container {
+        min-height: auto;
+    }
+    .content-box {
+        box-shadow: none;
+    }
+    .form-actions {
+        display: none;
+    }
+}
+/*-----------------*/

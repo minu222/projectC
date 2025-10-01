@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
-  <head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8" />
-    <title>쿠폰 관리</title>
-  </head>
-  <link rel="stylesheet" href="/style.css" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
 
-  <body>
-    <div class="container">
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
       <main class="main">
         <div class="content-box">
           <h2>쿠폰 관리</h2>
