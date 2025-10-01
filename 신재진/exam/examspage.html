@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시험 페이지</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; }
+        .question { margin-bottom: 20px; }
+        .question p { font-weight: bold; }
+        .options label { display: block; margin-bottom: 5px; }
+        button { display: block; margin: auto; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>시험 페이지</h1>
+    <form action="/submit" method="post">
+
+        <!-- Hidden inputs for server-side -->
+        <input type="hidden" name="examId" th:value="${examId}">
+        <input type="hidden" name="courseTitle" th:value="${courseTitle}">
+        <input type="hidden" name="questionCount" th:value="${#lists.size(questions)}">
+
+        <h2 th:text="${courseTitle}">강의 제목</h2>
+<!--        <p th:text="${user.name}">학생 이름</p>-->
+        <div th:each="q, iterStat : ${questions}" class="question">
+            <p th:text="${iterStat.index + 1} + '. ' + ${q.question}">문제 텍스트</p>
+            <div class="options">
+                <label th:if="${q.option1 != null}">
+                    <input type="radio" th:name="${'q' + iterStat.index}" th:value="'a'"> <span th:text="${q.option1}">옵션1</span>
+                </label>
+                <label th:if="${q.option2 != null}">
+                    <input type="radio" th:name="${'q' + iterStat.index}" th:value="'b'"> <span th:text="${q.option2}">옵션2</span>
+                </label>
+                <label th:if="${q.option3 != null}">
+                    <input type="radio" th:name="${'q' + iterStat.index}" th:value="'c'"> <span th:text="${q.option3}">옵션3</span>
+                </label>
+                <label th:if="${q.option4 != null}">
+                    <input type="radio" th:name="${'q' + iterStat.index}" th:value="'d'"> <span th:text="${q.option4}">옵션4</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit">제출</button>
+    </form>
+</div>
+</body>
+</html>
