@@ -211,6 +211,7 @@ input[type="checkbox"] {
 .btn-sm,
 .btn-close,
 .btn-save {
+  width: fit-content;
   align-items: center;
   display: flex;
   gap: 10px;
@@ -876,8 +877,9 @@ td.actions a.del {
   display: flex;
   gap: 10px;
 }
-.classroom-form > div:first-child,
+.classroom-form > div,
 .classroom-edit-form > div:first-child {
+  flex-direction: column;
   display: flex;
   gap: 14px;
   margin-bottom: 14px;
@@ -887,7 +889,6 @@ td.actions a.del {
   display: flex;
   flex-direction: column;
   gap: 8px;
-
   color: #bcd1ff;
 }
 .form-input,
