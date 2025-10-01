@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 등록</title>
+    <style>
+        /* 간단한 경고/에러 스타일 */
+        .alert { padding:12px 14px; border-radius:6px; margin:12px 0; }
+        .alert-danger { background:#ffe9e9; border:1px solid #f2b5b5; color:#b00020; }
+        .alert-success { background:#e9fff2; border:1px solid #b5f2c8; color:#0a7a2f; }
+        .is-invalid { border-color:#d93025 !important; outline:none; }
+        .invalid-feedback { color:#d93025; font-size:12px; margin-top:4px; display:block; }
+        .req::after { content:" *"; color:#d93025; }
+        .card { border:1px solid #e5e7eb; border-radius:10px; padding:16px; margin:14px 0; }
+        .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+        .row > * { min-width: 220px; }
+        .hint { font-size:12px; color:#666; margin-top:4px; display:block; }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <!-- 서버 바인딩: 폼 객체 -->
+    <form th:action="@{/instructor/courses/add}" th:object="${form}" method="post" enctype="multipart/form-data">
+        <!-- CSRF -->
+        <input type="hidden" th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <!-- 헤더 -->
+        <div class="header">
+            <h2>강의 등록</h2>
+        </div>
+
+        <!-- 전역 경고/성공 메시지 -->
+        <div class="alert alert-danger" th:if="${#fields.hasErrors()}">
+            <strong>입력값을 확인하세요.</strong>
+            <ul style="margin:6px 0 0 18px;">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+        <div class="alert alert-success" th:if="${toast}" th:text="${toast}"></div>
+
+        <!-- 기본 정보 카드 -->
+        <div class="card">
+            <h3>기본 정보</h3>
+
+            <label class="req" for="courseType">과정구분</label>
+            <select id="courseType" name="courseType" required>
+                <option value="VOD">VOD</option>
+                <option value="개인강의">개인강의</option>
+                <option value="다수강의">다수강의</option>
+            </select>
+
+            <label class="req" for="courseName">과정명</label>
+            <input id="courseName" type="text"
+                   th:field="*{courseName}" placeholder="강의 이름 입력" required
+                   th:classappend="${#fields.hasErrors('courseName')} ? ' is-invalid'">
+            <small class="invalid-feedback" th:if="${#fields.hasErrors('courseName')}"
+                   th:errors="*{courseName}"></small>
+
+            <label for="mainImage">메인 이미지</label>
+            <input id="mainImage" name="mainImage" type="file" accept="image/*"/>
+            <img id="preview" alt="이미지 미리보기" src="" style="max-width:320px; display:none;"/>
+            <span class="hint">권장: JPG/PNG, 2MB 이하</span>
+        </div>
+
+        <!-- 수업 정보 카드 -->
+        <div class="card">
+            <h3>수업 정보</h3>
+
+            <div class="row">
+                <div>
+                    <label class="req" for="fee">교육비</label>
+                    <div class="row">
+                        <input id="fee" type="number" min="0"
+                               th:field="*{fee}" required
+                               th:classappend="${#fields.hasErrors('fee')} ? ' is-invalid'">
+                        <span>원</span>
+                    </div>
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('fee')}"
+                           th:errors="*{fee}"></small>
+                </div>
+
+                <!-- ★ 변경: 텍스트 입력 → 달력(시작일/종료일) + hidden period -->
+                <div>
+                    <label class="req" for="periodStart">교육기간</label>
+                    <div class="row" style="align-items:center;">
+                        <input id="periodStart" type="date" required>
+                        <span>~</span>
+                        <input id="periodEnd" type="date" required>
+                    </div>
+
+                    <!-- 서버로는 기존 period 필드 그대로 전송 -->
+                    <input id="period" type="hidden"
+                           th:field="*{period}"
+                           th:classappend="${#fields.hasErrors('period')} ? ' is-invalid'">
+
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('period')}"
+                           th:errors="*{period}"></small>
+                    <span class="hint">시작일과 종료일을 선택하면 자동으로 기간이 설정됩니다. (예: 2025-01-01 ~ 2025-02-01)</span>
+                </div>
+                <!-- ★ 변경 끝 -->
+
+                <div>
+                    <label for="dailyTime">1일 교육시간</label>
+                    <input id="dailyTime" name="dailyTime" type="number" min="1">
+                    <span id="dailyTimeNote" class="hint" style="display:none;">VOD 선택시 비활성화</span>
+                </div>
+            </div>
+
+            <label>교육대상</label>
+            <div id="targetField"></div>
+        </div>
+
+        <!-- VOD 전용: 동영상 업로드 카드 -->
+        <div class="card" id="vodVideoGroup" style="display:none;">
+            <h3>VOD 동영상</h3>
+
+            <label class="req" for="videoFile">동영상 파일</label>
+            <input id="videoFile" name="videoFile" type="file" accept="video/*">
+            <span class="hint">권장 포맷: MP4(H.264/AAC) · 최대 500MB (환경에 맞게 제한)</span>
+
+            <!-- 선택: 미리보기 -->
+            <video id="videoPreview" controls style="max-width:420px; display:none; margin-top:8px;"></video>
+        </div>
+
+        <!-- 상세 정보 카드 -->
+        <div class="card">
+            <h3>상세 정보</h3>
+
+            <label class="req" for="description">과정설명</label>
+            <input id="description" type="text"
+                   th:field="*{description}" placeholder="과정 제목" required
+                   th:classappend="${#fields.hasErrors('description')} ? ' is-invalid'">
+            <small class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"></small>
+
+            <label for="goal">학습목표</label>
+            <textarea id="goal" name="goal" rows="3"></textarea>
+
+            <label for="examFile">시험 파일</label>
+                <input id="examFile" type="file" name="file" accept=".csv">
+        </div>
+
+        <!-- 등록 버튼 -->
+        <div style="text-align:right; margin-top:10px;">
+            <button class="btn-submit" type="submit">등록</button>
+        </div>
+    </form>
+
+    <script>
+        (function () {
+            const courseType     = document.getElementById('courseType');
+            const dailyTime      = document.getElementById('dailyTime');
+            const dailyTimeNote  = document.getElementById('dailyTimeNote');
+            const mainImage      = document.getElementById('mainImage');
+            const preview        = document.getElementById('preview');
+
+            // VOD 전용
+            const vodVideoGroup  = document.getElementById('vodVideoGroup');
+            const videoFile      = document.getElementById('videoFile');
+            const videoPreview   = document.getElementById('videoPreview');
+
+            // ★ 변경: 기간 달력 요소 & 숨김 필드
+            const periodHidden   = document.getElementById('period');
+            const periodStart    = document.getElementById('periodStart');
+            const periodEnd      = document.getElementById('periodEnd');
+
+            function pad(n){ return String(n).padStart(2,'0'); }
+            function toYMD(date){
+                const d = new Date(date);
+                if (isNaN(d)) return '';
+                return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+            }
+
+            // 기존 period 값이 있으면 시작/종료일로 분해해 채워주기
+            function syncDatesFromPeriod() { // ★
+                const val = (periodHidden?.value || '').trim();
+                if (!val) return;
+                const parts = val.split('~').map(s => s.trim());
+                if (parts.length === 2) {
+                    periodStart.value = parts[0] || '';
+                    periodEnd.value   = parts[1] || '';
+                    if (periodStart.value) periodEnd.min = periodStart.value;
+                }
+            }
+
+            // 시작/종료일을 합쳐 hidden period 에 셋팅
+            function syncPeriodFromDates() { // ★
+                const s = periodStart.value;
+                const e = periodEnd.value;
+                // 유효성: 둘 다 있어야 period 구성
+                if (s && e) {
+                    // 범위 검증
+                    if (e < s) {
+                        periodEnd.setCustomValidity('종료일은 시작일 이후여야 합니다.');
+                    } else {
+                        periodEnd.setCustomValidity('');
+                    }
+                    periodHidden.value = `${s} ~ ${e}`;
+                } else {
+                    periodHidden.value = '';
+                }
+            }
+
+            // 달력 상호 제약: 종료일의 min을 시작일에 맞추기
+            periodStart?.addEventListener('change', () => {
+                if (periodEnd) {
+                    periodEnd.min = periodStart.value || '';
+                    if (periodEnd.value && periodEnd.value < periodEnd.min) {
+                        periodEnd.value = periodEnd.min;
+                    }
+                }
+                syncPeriodFromDates();
+            });
+            periodEnd?.addEventListener('change', syncPeriodFromDates);
+
+            // 폼 제출 전에 최종 동기화
+            document.querySelector('form')?.addEventListener('submit', (e) => {
+                syncPeriodFromDates();
+                // 필수 검사: hidden period가 비어있으면 기본 검증에 걸리도록
+                if (!periodHidden.value) {
+                    // 기본 required는 start/end에 걸리지만, 혹시 사용자 조작으로 비면 막기
+                    e.preventDefault();
+                    alert('교육기간(시작일/종료일)을 선택해주세요.');
+                }
+            });
+
+            // 초기값 동기화
+            syncDatesFromPeriod();
+            syncPeriodFromDates();
+
+            /** 과정 유형에 따른 토글 */
+            function toggleByCourseType() {
+                const isVOD = courseType?.value === 'VOD';
+
+                // 1일 교육시간: VOD면 비활성화
+                if (dailyTime) {
+                    dailyTime.disabled = isVOD;
+                    if (isVOD) dailyTime.value = '';
+                }
+                if (dailyTimeNote) dailyTimeNote.style.display = isVOD ? 'inline' : 'none';
+
+                // VOD 전용 동영상 업로드 영역 표시/숨김 + 필수 여부
+                if (vodVideoGroup) vodVideoGroup.style.display = isVOD ? 'block' : 'none';
+                if (videoFile) {
+                    videoFile.required = !!isVOD;
+                    if (!isVOD) {
+                        videoFile.value = '';
+                        if (videoPreview) {
+                            videoPreview.pause?.();
+                            videoPreview.removeAttribute('src');
+                            videoPreview.style.display = 'none';
+                        }
+                    }
+                }
+            }
+
+            courseType?.addEventListener('change', toggleByCourseType);
+            toggleByCourseType();
+
+            // 이미지 미리보기
+            mainImage?.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) { if (preview) preview.style.display = 'none'; return; }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    if (preview) { preview.src = reader.result; preview.style.display = 'block'; }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // 동영상 미리보기 (선택)
+            videoFile?.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) {
+                    if (videoPreview) {
+                        videoPreview.pause?.();
+                        videoPreview.removeAttribute('src');
+                        videoPreview.style.display = 'none';
+                    }
+                    return;
+                }
+                const url = URL.createObjectURL(file);
+                if (videoPreview) {
+                    videoPreview.src = url;
+                    videoPreview.style.display = 'block';
+                    videoPreview.onloadeddata = () => URL.revokeObjectURL(url);
+                }
+            });
+
+            /** 시험 파일 자동 업로드 */
+            const examFile = document.getElementById("examFile");
+
+            examFile?.addEventListener("change", async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    const res = await fetch("/api/upload", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    if (!res.ok) throw new Error("업로드 실패");
+                    const result = await res.text(); // 서버에서 JSON이면 .json()으로
+
+                    alert("시험 파일 업로드 성공: " + result);
+                } catch (err) {
+                    console.error(err);
+                    alert("시험 파일 업로드 중 오류가 발생했습니다.");
+                }
+            });
+        })();
+    </script>
+</div>
+</body>
+</html>

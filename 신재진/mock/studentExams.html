@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시험목록 | MyLMS</title>
+    <link rel="stylesheet" href="css/studentExams.css">
+</head>
+<body>
+<div th:fragment="content">
+    <div class="board-container">
+        <div class="board-header">
+            <div class="board-title">시험목록</div>
+            <div class="filters search">
+                <input type="text" placeholder="시험명 검색">
+                <select>
+                    <option value="시험명">시험명</option>
+                    <option value="점수">점수</option>
+                </select>
+                <button>검색</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th style="width:8%;">NO</th>
+                <th style="width:40%;">제목</th>
+                <th style="width:20%;">시험응시일</th>
+                <th style="width:12%;">점수</th>
+                <th style="width:20%;">파일받기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="exam, iterStat : ${exams}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${exam.courseTitle}"></td>
+                <td th:text="${#temporals.format(exam.takenAt.toLocalDateTime(), 'yyyy-MM-dd')}"></td>
+                <td th:text="${exam.totalScore + '점'}"></td>
+                <td>
+                    <!-- 파일 경로가 DB에 없으니, 성적표 PDF 생성 엔드포인트 연결 -->
+                    <a th:href="@{'/student/exams/' + ${exam.resultId} + '/download'}">
+                        <button class="download-button">다운로드</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
