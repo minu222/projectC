@@ -2,172 +2,135 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DW Academy - 게시글 관리</title>
+    <title>DW Academy</title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}" />
   </head>
 
   <body>
-    <div class="container">
-      <main class="main">
-        <div class="content-box">
-          <div class="header"><h2>게시글 관리</h2></div>
+    <div th:replace="adminpages/menu :: menu"></div>
+    <main class="main">
+      <div class="content-box">
+        <div class="header"><h2>게시글 관리</h2></div>
 
-          <!-- 검색/액션 (시맨틱 유지, JS 없이 동작은 서버측 처리) -->
-          <form class="search-area" method="get" th:action="@{/posts}">
-            <div class="search-left">
-              <label for="category">분류:</label>
-              <select id="category" name="category">
-                <option value="">전체</option>
-                <option value="notice" th:selected="${category=='notice'}">
-                  공지
-                </option>
-                <option value="event" th:selected="${category=='event'}">
-                  이벤트
-                </option>
-                <option value="faq" th:selected="${category=='faq'}">
-                  FAQ
-                </option>
-              </select>
+        <form
+          class="search-area"
+          method="get"
+          th:action="@{/admin/posts-manage}"
+        >
+          <div class="search-left">
+            <label for="category">분류:</label>
+            <select id="category" name="category">
+              <option value="" th:selected="${category == null}">전체</option>
+              <option value="FREE" th:selected="${category=='FREE'}">
+                자유
+              </option>
+              <option value="NOTICE" th:selected="${category=='NOTICE'}">
+                공지
+              </option>
+            </select>
 
-              <label for="state">상태:</label>
-              <select id="state" name="state">
-                <option value="">전체</option>
-                <option value="PUBLISHED" th:selected="${state=='PUBLISHED'}">
-                  게시
-                </option>
-                <option value="HIDDEN" th:selected="${state=='HIDDEN'}">
-                  숨김
-                </option>
-                <option value="DRAFT" th:selected="${state=='DRAFT'}">
-                  임시
-                </option>
-              </select>
+            <label for="ptype">검색:</label>
+            <select id="ptype" name="type">
+              <option value="title" th:selected="${type=='title'}">제목</option>
+              <option value="author" th:selected="${type=='author'}">
+                작성자
+              </option>
+            </select>
 
-              <label for="ptype">검색:</label>
-              <select id="ptype" name="type">
-                <option value="title" th:selected="${type=='title'}">
-                  제목
-                </option>
-                <option value="author" th:selected="${type=='author'}">
-                  작성자
-                </option>
-              </select>
-
-              <input
-                id="pkeyword"
-                name="keyword"
-                placeholder="검색어 입력"
-                type="text"
-                th:value="${keyword}"
-              />
-              <button type="submit" class="rjator">
-                <i class="fa-solid fa-magnifying-glass"></i> 검색
-              </button>
-            </div>
-
-            <div class="search-actions">
-              <!-- JS 없이 비주얼만 유지 -->
-              <a class="btn-delete" href="#" onclick="return false;">
-                <i class="fa-solid fa-trash"></i> 선택 삭제
-              </a>
-              <a class="btn-write" th:href="@{/posts/new}">
-                <i class="fa-regular fa-square-plus"></i> 새 글 작성
-              </a>
-            </div>
-          </form>
-
-          <!-- 목록 -->
-          <div class="table-wrap">
-            <div class="table-scroller">
-              <table aria-label="게시글 목록">
-                <thead>
-                  <tr>
-                    <th>
-                      <input
-                        id="checkAllPosts"
-                        type="checkbox"
-                        aria-label="전체 선택(시각적)"
-                      />
-                    </th>
-                    <th>번호</th>
-                    <th>분류</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>등록일</th>
-                    <th class="num">조회수</th>
-                    <th>상태</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <!-- 서버 데이터 -->
-                  <tr th:each="p, i: ${posts}">
-                    <td>
-                      <input
-                        class="row-check post"
-                        type="checkbox"
-                        th:value="${p.id}"
-                      />
-                    </td>
-                    <td class="center" th:text="${i.count}">1</td>
-                    <td th:text="${p.category}">공지</td>
-                    <td>
-                      <a
-                        class="title-link"
-                        th:href="@{/posts/{id}(id=${p.id})}"
-                        th:text="${p.title}"
-                        >공지사항 안내</a
-                      >
-                    </td>
-                    <td th:text="${p.author}">관리자</td>
-                    <td th:text="${p.createdAt}">2025-09-10</td>
-                    <td class="num" th:text="${p.views}">120</td>
-                    <td>
-                      <span class="state pub" th:if="${p.state=='PUBLISHED'}"
-                        ><i class="fa-solid fa-bullhorn"></i> 게시</span
-                      >
-                      <span class="state hid" th:if="${p.state=='HIDDEN'}"
-                        ><i class="fa-regular fa-eye-slash"></i> 숨김</span
-                      >
-                      <span class="state drf" th:if="${p.state=='DRAFT'}"
-                        ><i class="fa-regular fa-pen-to-square"></i> 임시</span
-                      >
-                    </td>
-                  </tr>
-
-                  <!-- 정적 예시 -->
-                  <tr>
-                    <td>
-                      <input
-                        class="row-check post"
-                        type="checkbox"
-                        value="501"
-                      />
-                    </td>
-                    <td class="center">1</td>
-                    <td>공지</td>
-                    <td><a class="title-link" href="#">9월 휴강 안내</a></td>
-                    <td>관리자</td>
-                    <td>2025-09-07</td>
-                    <td class="num">87</td>
-                    <td>
-                      <span class="state pub"
-                        ><i class="fa-solid fa-bullhorn"></i> 게시</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <input
+              id="pkeyword"
+              name="keyword"
+              type="text"
+              placeholder="검색어 입력"
+              th:value="${keyword}"
+            />
+            <button type="submit" class="rjator">
+              <i class="fa-solid fa-magnifying-glass"></i> 검색
+            </button>
           </div>
-          <!-- /목록 -->
-        </div>
-      </main>
-    </div>
+
+          <div class="search-actions">
+            <a class="btn-write" th:href="@{/admin/posts-manage/new}">
+              <i class="fa-regular fa-square-plus"></i> 새 글 작성
+            </a>
+          </div>
+        </form>
+
+        <!-- 선택 삭제 form -->
+        <form
+          th:action="@{/admin/posts-manage/delete}"
+          method="post"
+          id="deleteForm"
+        >
+          <button
+            type="submit"
+            onclick="return confirm('선택한 게시글을 삭제하시겠습니까?')"
+          >
+            선택 삭제
+          </button>
+
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    id="checkAll"
+                    onclick="toggleAll(this)"
+                  />
+                </th>
+                <th>번호</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>카테고리</th>
+                <th>좋아요수</th>
+                <th>조회수</th>
+                <th>댓글수</th>
+                <th>작성자</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="p, i : ${posts}">
+                <td>
+                  <input
+                    type="checkbox"
+                    name="postIds"
+                    th:value="${p.postId}"
+                    class="row-check"
+                  />
+                </td>
+                <td th:text="${i.index + 1}">1</td>
+                <td>
+                  <a
+                    th:href="@{/admin/posts-manage/{id}(id=${p.postId})}"
+                    th:text="${p.title}"
+                    >제목</a
+                  >
+                </td>
+                <td th:text="${p.content}">내용</td>
+                <td th:text="${p.category}">카테고리</td>
+                <td th:text="${p.likes}">좋아요수</td>
+                <td th:text="${p.views}">조회수</td>
+                <td th:text="${p.commentsCount}">댓글수</td>
+                <td th:text="${p.authorName}">작성자</td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+        <!-- /목록 -->
+      </div>
+    </main>
+
+    <script>
+      function toggleAll(source) {
+        const checkboxes = document.querySelectorAll(".row-check");
+        checkboxes.forEach((cb) => (cb.checked = source.checked));
+      }
+    </script>
   </body>
 </html>

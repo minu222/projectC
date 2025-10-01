@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,292 +8,285 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="/menu.css" />
   </head>
-
   <body>
-    <!-- 상단바(필요 없으면 이 블록 삭제하고 :root --topbar-h:0 으로) -->
-    <header class="topbar">
-      <div>DW Academy</div>
-      <button class="menu-toggle" type="button" id="btnToggleSidebar">
-        <i class="fa-solid fa-bars"></i> 메뉴
-      </button>
-    </header>
+    <div th:fragment="menu">
+      <header class="topbar">
+        <div>DW Academy</div>
+        <button class="menu-toggle" type="button" id="btnToggleSidebar">
+          <i class="fa-solid fa-bars"></i> 메뉴
+        </button>
+      </header>
+      <aside class="sidebar" role="navigation" aria-label="주 메뉴">
+        <ul class="menu">
+          <li>
+            <a class="link" th:href="@{/admin/home}">
+              <i class="fa-solid fa-house"></i> 홈
+            </a>
+          </li>
 
-    <!-- 고정 사이드바 -->
-    <aside class="sidebar" role="navigation" aria-label="주 메뉴">
-      <ul class="menu">
-        <li>
-          <a class="link" href="./Home.html">
-            <i class="fa-solid fa-house"></i> 홈
-          </a>
-        </li>
+          <!-- 회원 정보 -->
+          <li>
+            <label class="submenu-toggle" for="toggle-members">
+              <i class="fas fa-users"></i> 회원 정보
+            </label>
+            <input type="checkbox" id="toggle-members" class="submenu-check" />
+            <ul class="submenu">
+              <li>
+                <label class="submenu-toggle" for="toggle-members-mgmt">
+                  <i class="fas fa-user-cog"></i> 회원 관리
+                </label>
+                <input
+                  type="checkbox"
+                  id="toggle-members-mgmt"
+                  class="submenu-check"
+                />
+                <ul class="submenu">
+                  <li>
+                    <a th:href="@{/admin/instructors}">
+                      <i class="fas fa-chalkboard-teacher"></i> 강사 정보
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/students}">
+                      <i class="fas fa-user-graduate"></i> 학생 정보
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/info-trash}">
+                      <i class="fas fa-trash-alt"></i> 정보 휴지통
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/admin/member-details}">
+                      <i class="fas fa-id-card"></i> 회원 상세 정보
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
 
-        <!-- 회원 정보 -->
-        <li>
-          <label class="submenu-toggle" for="toggle-members">
-            <i class="fas fa-users"></i> 회원 정보
-          </label>
-          <input type="checkbox" id="toggle-members" class="submenu-check" />
-          <ul class="submenu">
-            <li>
-              <label class="submenu-toggle" for="toggle-members-mgmt">
-                <i class="fas fa-user-cog"></i> 회원 관리
-              </label>
-              <input
-                type="checkbox"
-                id="toggle-members-mgmt"
-                class="submenu-check"
-              />
-              <ul class="submenu">
-                <li>
-                  <a href="/instructor-info/index.html"
-                    ><i class="fas fa-chalkboard-teacher"></i> 강사 정보</a
-                  >
-                </li>
-                <li>
-                  <a href="/student-info/index.html"
-                    ><i class="fas fa-user-graduate"></i> 학생 정보</a
-                  >
-                </li>
-                <li>
-                  <a href="/info-trash/index.html"
-                    ><i class="fas fa-trash-alt"></i> 정보 휴지통</a
-                  >
-                </li>
-                <li>
-                  <a href="/member-details/index.html"
-                    ><i class="fas fa-id-card"></i> 회원 상세 정보</a
-                  >
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+          <!-- 발송 관리 -->
+          <li>
+            <label class="submenu-toggle" for="toggle-mailing">
+              <i class="fas fa-paper-plane"></i> 발송 관리
+            </label>
+            <input type="checkbox" id="toggle-mailing" class="submenu-check" />
+            <ul class="submenu">
+              <li>
+                <a th:href="@{/email/compose-instructor-email}">
+                  <i class="fas fa-envelope"></i> 강사 메일 쓰기
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/email/email-send-history}">
+                  <i class="fas fa-envelope-open-text"></i> 이메일 발송 내역
+                </a>
+              </li>
+            </ul>
+          </li>
 
-        <!-- 발송 관리 -->
-        <li>
-          <label class="submenu-toggle" for="toggle-mailing">
-            <i class="fas fa-paper-plane"></i> 발송 관리
-          </label>
-          <input type="checkbox" id="toggle-mailing" class="submenu-check" />
-          <ul class="submenu">
-            <li>
-              <a href="#" data-open-mail
-                ><i class="fas fa-envelope"></i> 강사 메일 쓰기</a
-              >
-            </li>
-            <li>
-              <a href="/email-send-history/index.html"
-                ><i class="fas fa-envelope-open-text"></i> 이메일 발송 내역</a
-              >
-            </li>
-          </ul>
-        </li>
+          <!-- 교육과정 -->
+          <li>
+            <label class="submenu-toggle" for="toggle-courses">
+              <i class="fas fa-book-open"></i> 교육과정
+            </label>
+            <input type="checkbox" id="toggle-courses" class="submenu-check" />
+            <ul class="submenu">
+              <li>
+                <a th:href="@{/admin/classrooms-registration}">
+                  <i class="fas fa-plus-square"></i> 강의실 등록
+                </a>
+              </li>
+              <!--                <li>-->
+              <!--                    <a th:href="@{/admin/classroom-edit}">-->
+              <!--                        <i class="fas fa-edit"></i> 강의실 수정-->
+              <!--                    </a>-->
+              <!--                </li>-->
+              <li>
+                <a th:href="@{/admin/classrooms-list}">
+                  <i class="fas fa-edit"></i> 강의실 목록
+                </a>
+              </li>
+              <!--                <li>-->
+              <!--                    <a th:href="@{/admin/lecture-delete}">-->
+              <!--                        <i class="fas fa-trash"></i> 강의실 삭제-->
+              <!--                    </a>-->
+              <!--                </li>-->
+              <li>
+                <a th:href="@{/admin/classroom-student-info}">
+                  <i class="fas fa-users"></i> 강의실 학생 정보
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/admin/course-materials-management}">
+                  <i class="fas fa-folder-open"></i> 수업 자료 관리
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/admin/mock-exams}">
+                  <i class="fas fa-file-alt"></i> 시험 문제 관리
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/admin/attendance-management}">
+                  <i class="fas fa-calendar-check"></i> 출석 관리
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/admin/posts-manage}"
+                  ><i class="fas fa-edit"></i> 게시글 관리</a
+                >
+              </li>
+            </ul>
+          </li>
 
-        <!-- 교육과정 -->
-        <li>
-          <label class="submenu-toggle" for="toggle-courses">
-            <i class="fas fa-book-open"></i> 교육과정
-          </label>
-          <input type="checkbox" id="toggle-courses" class="submenu-check" />
-          <ul class="submenu">
-            <li>
-              <a href="/classroom-registration/index.html"
-                ><i class="fas fa-plus-square"></i> 강의실 등록</a
-              >
-            </li>
-            <li>
-              <a href="/classroom-edit/index.html"
-                ><i class="fas fa-edit"></i> 강의실 수정</a
-              >
-            </li>
-            <li>
-              <a href="/lecture-delete/index.html"
-                ><i class="fas fa-trash"></i> 강의실 삭제</a
-              >
-            </li>
-            <li>
-              <a href="/classroom-student-info/index.html"
-                ><i class="fas fa-users"></i> 강의실 학생 정보</a
-              >
-            </li>
-            <li>
-              <a href="/course-materials-management/index.html"
-                ><i class="fas fa-folder-open"></i> 수업 자료 관리</a
-              >
-            </li>
-            <li>
-              <a href="/exam-questions-management/index.html"
-                ><i class="fas fa-file-alt"></i> 시험 문제 관리</a
-              >
-            </li>
-            <li>
-              <a href="/attendance-management/index.html"
-                ><i class="fas fa-calendar-check"></i> 출석 관리</a
-              >
-            </li>
-            <li>
-              <a href="/classroom-list/index.html"
-                ><i class="fas fa-folder-open"></i> 강의실 목록</a
-              >
-            </li>
-            <li>
-              <a href="/posts-manage/index.html"
-                ><i class="fas fa-edit"></i> 게시글 관리</a
-              >
-            </li>
-          </ul>
-        </li>
+          <li>
+            <label class="submenu-toggle" for="toggle-payments">
+              <i class="fas fa-credit-card"></i> 결제 관리
+            </label>
+            <input type="checkbox" id="toggle-payments" class="submenu-check" />
+            <ul class="submenu">
+              <li>
+                <a th:href="@{/order/order-list}">
+                  <i class="fas fa-list"></i> 주문 목록
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/order/payment-management}">
+                  <i class="fas fa-money-check-alt"></i> 결제 관리
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/order/coupon-management}">
+                  <i class="fas fa-ticket-alt"></i> 쿠폰 관리
+                </a>
+              </li>
+            </ul>
+          </li>
 
-        <!-- 결제 관리 -->
-        <li>
-          <label class="submenu-toggle" for="toggle-payments">
-            <i class="fas fa-credit-card"></i> 결제 관리
-          </label>
-          <input type="checkbox" id="toggle-payments" class="submenu-check" />
-          <ul class="submenu">
-            <li>
-              <a href="/order-list/index.html"
-                ><i class="fas fa-list"></i> 주문 목록</a
-              >
-            </li>
-            <li>
-              <a href="/payment-management/index.html"
-                ><i class="fas fa-money-check-alt"></i> 결제 관리</a
-              >
-            </li>
-            <li>
-              <a href="/coupon-management/index.html"
-                ><i class="fas fa-ticket-alt"></i> 쿠폰 관리</a
-              >
-            </li>
-          </ul>
-        </li>
+          <!-- 매출 관리 -->
+          <li>
+            <label class="submenu-toggle" for="toggle-revenue">
+              <i class="fas fa-chart-line"></i> 매출 관리
+            </label>
+            <input type="checkbox" id="toggle-revenue" class="submenu-check" />
+            <ul class="submenu">
+              <li>
+                <a th:href="@{/sales/annual-revenue-stats}">
+                  <i class="fas fa-calendar"></i> 연별 매출 통계
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/sales/monthly-revenue-stats}">
+                  <i class="fas fa-calendar-alt"></i> 월별 매출 통계
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/sales/course-revenue-stats}">
+                  <i class="fas fa-chalkboard"></i> 과정 매출 통계
+                </a>
+              </li>
+              <li>
+                <a th:href="@{/sales/tax-management}">
+                  <i class="fas fa-file-invoice-dollar"></i> 세금 관리
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
 
-        <!-- 매출 관리 -->
-        <li>
-          <label class="submenu-toggle" for="toggle-revenue">
-            <i class="fas fa-chart-line"></i> 매출 관리
-          </label>
-          <input type="checkbox" id="toggle-revenue" class="submenu-check" />
-          <ul class="submenu">
-            <li>
-              <a href="/annual-revenue-stats/index.html"
-                ><i class="fas fa-calendar"></i> 연별 매출 통계</a
-              >
-            </li>
-            <li>
-              <a href="/monthly-revenue-stats/index.html"
-                ><i class="fas fa-calendar-alt"></i> 월별 매출 통계</a
-              >
-            </li>
-            <li>
-              <a href="/course-revenue-stats/index.html"
-                ><i class="fas fa-chalkboard"></i> 과정 매출 통계</a
-              >
-            </li>
-            <li>
-              <a href="/tax-management/index.html"
-                ><i class="fas fa-file-invoice-dollar"></i> 세금 관리</a
-              >
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </aside>
+      <!--  <&#45;&#45;메일쓰기&ndash;&gt;-->
+      <!--  <div-->
+      <!--          class="popup-overlay"-->
+      <!--          id="mailPopup"-->
+      <!--          role="dialog"-->
+      <!--          aria-modal="true"-->
+      <!--          aria-label="메일 쓰기"-->
+      <!--          hidden-->
+      <!--  >-->
+      <!--      <div class="popup">-->
+      <!--          <div class="popup-header">-->
+      <!--              메일 쓰기-->
+      <!--              <button type="button" class="popup-close" aria-label="닫기">-->
+      <!--                  &times;-->
+      <!--              </button>-->
+      <!--          </div>-->
+      <!--          <div class="popup-body">-->
+      <!--              <div class="form-group">-->
+      <!--                  <label class="form-label">받는사람</label>-->
+      <!--                  <div class="receiver-box">-->
+      <!--                      <div id="receiverList" class="receiver-list"></div>-->
+      <!--                      <input-->
+      <!--                              type="text"-->
+      <!--                              id="receiverInput"-->
+      <!--                              placeholder="이메일 입력 후 Enter"-->
+      <!--                      />-->
+      <!--                      <button-->
+      <!--                              type="button"-->
+      <!--                              class="address-book-btn"-->
+      <!--                              id="openAddressBook"-->
+      <!--                      >-->
+      <!--                          <i class="fa-solid fa-book"></i> 주소록-->
+      <!--                      </button>-->
+      <!--                  </div>-->
+      <!--              </div>-->
 
-    <!-- (선택) 우측에 뭔가 보여줄 메인 공간 데모 -->
+      <!--              <div class="form-group">-->
+      <!--                  <label class="form-label">제목</label>-->
+      <!--                  <div class="title-box">-->
+      <!--                      <input type="text" id="mailTitle" placeholder="제목 입력" />-->
+      <!--                      <select id="templateSelect">-->
+      <!--                          <option value="">템플릿 선택</option>-->
+      <!--                          <option>공지사항 안내</option>-->
+      <!--                          <option>업데이트 안내</option>-->
+      <!--                          <option>이벤트 초대</option>-->
+      <!--                      </select>-->
+      <!--                  </div>-->
+      <!--              </div>-->
 
-    <!-- 메일쓰기 팝업 -->
-    <div
-      class="popup-overlay"
-      id="mailPopup"
-      role="dialog"
-      aria-modal="true"
-      aria-label="메일 쓰기"
-      hidden
-    >
-      <div class="popup">
-        <div class="popup-header">
-          메일 쓰기
-          <button type="button" class="popup-close" aria-label="닫기">
-            &times;
-          </button>
-        </div>
-        <div class="popup-body">
-          <div class="form-group">
-            <label class="form-label">받는사람</label>
-            <div class="receiver-box">
-              <div id="receiverList" class="receiver-list"></div>
-              <input
-                type="text"
-                id="receiverInput"
-                placeholder="이메일 입력 후 Enter"
-              />
-              <button
-                type="button"
-                class="address-book-btn"
-                id="openAddressBook"
-              >
-                <i class="fa-solid fa-book"></i> 주소록
-              </button>
-            </div>
-          </div>
+      <!--              <div class="form-group">-->
+      <!--                  <label class="form-label">파일첨부</label>-->
+      <!--                  <div id="fileDrop" class="file-drop-area">-->
+      <!--                      파일을 끌어오거나 클릭하여 업로드하세요.-->
+      <!--                  </div>-->
+      <!--              </div>-->
 
-          <div class="form-group">
-            <label class="form-label">제목</label>
-            <div class="title-box">
-              <input type="text" id="mailTitle" placeholder="제목 입력" />
-              <select id="templateSelect">
-                <option value="">템플릿 선택</option>
-                <option>공지사항 안내</option>
-                <option>업데이트 안내</option>
-                <option>이벤트 초대</option>
-              </select>
-            </div>
-          </div>
+      <!--              <div class="form-group">-->
+      <!--                  <label class="form-label">내용</label>-->
+      <!--                  <div class="editor-toolbar">-->
+      <!--                      <select id="fontSizeSel">-->
+      <!--                          <option value="3">14px</option>-->
+      <!--                          <option value="4">18px</option>-->
+      <!--                          <option value="5">24px</option>-->
+      <!--                      </select>-->
+      <!--                      <button type="button" data-cmd="bold"><b>B</b></button>-->
+      <!--                      <button type="button" data-cmd="italic"><i>I</i></button>-->
+      <!--                      <button type="button" data-cmd="underline"><u>U</u></button>-->
+      <!--                      <button type="button" data-cmd="insertUnorderedList">-->
+      <!--                          <i class="fa fa-list-ul"></i>-->
+      <!--                      </button>-->
+      <!--                      <button type="button" data-cmd="insertOrderedList">-->
+      <!--                          <i class="fa fa-list-ol"></i>-->
+      <!--                      </button>-->
+      <!--                      <button type="button" id="linkBtn">-->
+      <!--                          <i class="fa fa-link"></i>-->
+      <!--                      </button>-->
+      <!--                      <button type="button" id="imgBtn">-->
+      <!--                          <i class="fa fa-image"></i>-->
+      <!--                      </button>-->
+      <!--                  </div>-->
+      <!--                  <div class="editor" id="mailEditor" contenteditable="true">-->
+      <!--                      여기에 내용을 입력하세요...-->
+      <!--                  </div>-->
+      <!--              </div>-->
 
-          <div class="form-group">
-            <label class="form-label">파일첨부</label>
-            <div id="fileDrop" class="file-drop-area">
-              파일을 끌어오거나 클릭하여 업로드하세요.
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">내용</label>
-            <div class="editor-toolbar">
-              <select id="fontSizeSel">
-                <option value="3">14px</option>
-                <option value="4">18px</option>
-                <option value="5">24px</option>
-              </select>
-              <button type="button" data-cmd="bold"><b>B</b></button>
-              <button type="button" data-cmd="italic"><i>I</i></button>
-              <button type="button" data-cmd="underline"><u>U</u></button>
-              <button type="button" data-cmd="insertUnorderedList">
-                <i class="fa fa-list-ul"></i>
-              </button>
-              <button type="button" data-cmd="insertOrderedList">
-                <i class="fa fa-list-ol"></i>
-              </button>
-              <button type="button" id="linkBtn">
-                <i class="fa fa-link"></i>
-              </button>
-              <button type="button" id="imgBtn">
-                <i class="fa fa-image"></i>
-              </button>
-            </div>
-            <div class="editor" id="mailEditor" contenteditable="true">
-              여기에 내용을 입력하세요...
-            </div>
-          </div>
-
-          <button class="btn-submit" id="sendBtn">메일 보내기</button>
-        </div>
-      </div>
+      <!--              <button class="btn-submit" id="sendBtn">메일 보내기</button>-->
+      <!--          </div>-->
+      <!--      </div>-->
+      <!--  </div>-->
     </div>
 
     <script>
