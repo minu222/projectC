@@ -3,8 +3,16 @@
     margin: 0;
     padding: 0;
 }
-
-.rjator{color: black;}
+.thisbox {
+    gap: 20px;
+    align-items: center;
+    display: flex;
+}
+.rjator {
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: black;
+}
 
 button,
 .btn,
@@ -848,26 +856,26 @@ td.actions a.del {
 =================================== */
 .classroom-form,
 .classroom-edit-form {
-    display:flex;
-flex-direction: column;
+    display: flex;
+    flex-direction: column;
     padding: 18px;
     border-radius: 14px;
     background: var(--card);
     border: 1px solid rgba(84, 129, 255, 0.26);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 36px rgba(61, 122, 255, 0.08);
 }
-.classroom-form > div{
+.classroom-form > div {
     display: flex;
     gap: 10px;
-
-
 }
 .lastbox {
     gap: 40px;
     display: flex;
 }
-.classroom-form > div > div{display: flex;
-    gap: 10px;}
+.classroom-form > div > div {
+    display: flex;
+    gap: 10px;
+}
 .classroom-form > div:first-child,
 .classroom-edit-form > div:first-child {
     display: flex;
@@ -909,14 +917,18 @@ flex-direction: column;
 .classroom-form textarea,
 .classroom-edit-form textarea,
 .textarea {
-
     resize: none;
     line-height: 1.5;
 }
-#boxxx2{width: 70vw;}
+#boxxx2 {
+    width: 70vw;
+}
 .full-row {
     grid-column: 1 / -1;
-}#boxxx{display: block;}
+}
+#boxxx {
+    display: block;
+}
 .form-actions,
 .actions-row {
     display: flex;
