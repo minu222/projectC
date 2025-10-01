@@ -7,8 +7,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       rel="stylesheet"
     />
-<link rel="stylesheet" href="/style.css" />
-   <link rel="stylesheet" href="/menu.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/menu.css" />
   </head>
 
   <body>
@@ -18,11 +18,14 @@
         <h2>시험 문제 관리</h2>
 
         <!-- 검색/문항 추가 -->
-        <div class="search-box exam-search">
+        <div
+          class="search-box exam-search"
+          style="justify-content: space-between"
+        >
           <form
             th:action="@{/admin/mock-exams}"
             method="get"
-            style="display: inline"
+            style="display: flex; gap: 10px"
           >
             <input
               type="text"
@@ -67,6 +70,7 @@
                 >
                   <button
                     type="submit"
+                    style="background-color: transparent"
                     onclick="return confirm('삭제하시겠습니까?')"
                   >
                     삭제
