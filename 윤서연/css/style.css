@@ -137,6 +137,11 @@ body {
     ),
     linear-gradient(180deg, #0a0f1d 0%, var(--bg-0) 60%);
 }
+
+.thisbox3 > tr > th {
+  background: #111a36;
+}
+
 body::before {
   content: "";
   position: fixed;
