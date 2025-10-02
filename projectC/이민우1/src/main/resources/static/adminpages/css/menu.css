@@ -101,7 +101,6 @@ body {
 
 /* 메인 영역: 사이드바 너비만큼 밀어주기 */
 .main {
-    margin-left: var(--sbw);
     min-height: calc(100vh - var(--topbar-h));
 }
 
