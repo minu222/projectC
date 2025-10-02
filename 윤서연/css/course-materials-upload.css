@@ -1,0 +1,144 @@
+/* 기본 레이아웃 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+}
+
+/* 메인 영역 */
+.main {
+    flex: 1;
+    padding: 30px;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+/* 컨텐츠 박스 */
+.content-box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.content-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.form-group input[type="file"],
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-group input[type="file"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* 체크박스 */
+.form-group label input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #3b82f6; /* 체크박스 색상 */
+}
+
+/* 폼 버튼 */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-submit, .btn-cancel {
+    padding: 12px 25px;
+    font-size: 14px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-submit {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+.btn-submit:hover {
+    background-color: #2563eb;
+}
+
+.btn-cancel {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.btn-cancel:hover {
+    background-color: #d1d5db;
+}
+
+/* 메시지 알림 */
+.alert {
+    margin-top: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.alert-danger {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .main {
+        padding: 20px;
+    }
+
+    .content-box {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-submit, .btn-cancel {
+        width: 100%;
+    }
+}

@@ -116,8 +116,6 @@ body {
     width: var(--fixed-min-width) !important;
     min-width: var(--fixed-min-width) !important;
     max-width: var(--fixed-min-width) !important;
-
-    margin: 0;
 }
 :root {
     --bg-0: #0a1224;
