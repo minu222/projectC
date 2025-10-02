@@ -7,7 +7,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
             rel="stylesheet"
     />
-    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+   <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
     <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
 </head>
 
@@ -38,14 +38,14 @@
 
             <div class="search-actions">
                 <a class="btn-write" th:href="@{/admin/posts-manage/new}">
-                    <i class="fa-regular fa-square-plus"></i> 새 글 작성
+                    <i class="fa-regular fa-square-plus "></i> 새 글 작성
                 </a>
             </div>
         </form>
 
         <!-- 선택 삭제 form -->
         <form th:action="@{/admin/posts-manage/delete}" method="post" id="deleteForm">
-            <button type="submit" onclick="return confirm('선택한 게시글을 삭제하시겠습니까?')">선택 삭제</button>
+            <button type="submit" onclick="return confirm('선택한 게시글을 삭제하시겠습니까?')" class="rjator" style="margin-bottom: 10px;">선택 삭제</button>
 
             <table>
                 <thead>
