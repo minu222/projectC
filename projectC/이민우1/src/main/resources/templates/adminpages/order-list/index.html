@@ -19,7 +19,7 @@
 
             <div class="search-box orders-search">
                 <form th:action="@{/order/order-list}" method="get">
-                    <input type="text" name="keyword" placeholder="주문번호/이름" th:value="${keyword}">
+                    <input type="text" name="keyword" placeholder="주문번호(뒷자리)/이름" th:value="${keyword}">
                     <select name="status">
                         <option value="">전체</option>
                         <option value="paid" th:selected="${status == 'paid'}">결제완료</option>

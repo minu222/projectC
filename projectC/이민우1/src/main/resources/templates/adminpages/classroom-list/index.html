@@ -75,10 +75,20 @@ DW Academy - 강의실 목록 (No JS, Fixed Layout)
             </div>
         </form>
 
-        <!-- 선택 삭제 폼 -->
+
         <form method="post" id="classroomForm">
             <div class="table-wrap">
                 <div class="table-scroller">
+                    <!-- 전체 선택 삭제 버튼 -->
+                    <div class="search-actions" style="margin-top: 12px">
+                        <button
+                                type="submit"
+                                th:formaction="@{/admin/classrooms/delete-selected}"
+                                class="btn-delete"
+                        >
+                            선택 삭제
+                        </button>
+                    </div>
                     <table aria-label="강의실 목록">
                         <colgroup>
                             <col class="chk" />
@@ -172,17 +182,6 @@ DW Academy - 강의실 목록 (No JS, Fixed Layout)
                         </tr>
                         </tbody>
                     </table>
-
-                    <!-- 전체 선택 삭제 버튼 -->
-                    <div class="search-actions" style="margin-top: 12px">
-                        <button
-                                type="submit"
-                                th:formaction="@{/admin/classrooms/delete-selected}"
-                                class="btn-delete"
-                        >
-                            선택 삭제
-                        </button>
-                    </div>
                 </div>
             </div>
         </form>

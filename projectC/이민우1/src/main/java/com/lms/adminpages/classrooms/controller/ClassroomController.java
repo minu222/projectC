@@ -208,10 +208,10 @@ public class ClassroomController {
 //    -----------------------------------------
 
 
-    //출석관리
+ /*   //출석관리
     @GetMapping("/attendance-management")
     public String attendanceClassroom() {
         return "adminpages/attendance-management/index";
     }
-
+*/
 }
