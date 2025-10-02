@@ -81,25 +81,25 @@
           </tbody>
 
           <!-- 서버 렌더링 예시
-              <tr th:each="q, i : ${questions}">
-                <td class="col-no" th:text="${i.count}">1</td>
-                <td class="col-question" th:text="${q.title}" th:title="${q.title}">문항 제목</td>
-                <td>
-                  <span class="chip"
-                        th:classappend="${q.type=='객관식'} ? ' blue' : ' gray'"
-                        th:text="${q.type}">객관식</span>
-                </td>
-                <td>
-                  <span class="chip"
-                        th:classappend="${q.level=='상'} ? ' red' : (${q.level=='중'} ? ' orange' : ' green')"
-                        th:text="${q.level}">중</span>
-                </td>
-                <td class="actions">
-                  <a class="edit" th:href="@{/exams/{id}/edit(id=${q.id})}">수정</a>
-                  <a class="del" th:href="@{/exams/{id}/delete(id=${q.id})}">삭제</a>
-                </td>
-              </tr>
-              -->
+                <tr th:each="q, i : ${questions}">
+                  <td class="col-no" th:text="${i.count}">1</td>
+                  <td class="col-question" th:text="${q.title}" th:title="${q.title}">문항 제목</td>
+                  <td>
+                    <span class="chip"
+                          th:classappend="${q.type=='객관식'} ? ' blue' : ' gray'"
+                          th:text="${q.type}">객관식</span>
+                  </td>
+                  <td>
+                    <span class="chip"
+                          th:classappend="${q.level=='상'} ? ' red' : (${q.level=='중'} ? ' orange' : ' green')"
+                          th:text="${q.level}">중</span>
+                  </td>
+                  <td class="actions">
+                    <a class="edit" th:href="@{/exams/{id}/edit(id=${q.id})}">수정</a>
+                    <a class="del" th:href="@{/exams/{id}/delete(id=${q.id})}">삭제</a>
+                  </td>
+                </tr>
+                -->
         </table>
       </div>
     </main>
