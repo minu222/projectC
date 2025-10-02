@@ -22,7 +22,7 @@
         <!-- CSRF -->
         <input type="hidden" th:if="${_csrf != null}"
                th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <input type="hidden" name="instructorId" value="157"/>
+        <input type="hidden" name="instructorId" th:value="${instructorId}"/>
         <div class="header">
             <h2>강의 등록</h2>
         </div>
