@@ -1,83 +1,228 @@
+<!-- templates/admin/mock-exams-server-only.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>DW Academy</title>
+    <title>DW Academy - 시험 문제 관리 (서버 전용)</title>
     <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
             rel="stylesheet"
     />
-    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
-    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}" />
 </head>
-
 <body>
 <div th:replace="adminpages/menu :: menu"></div>
-    <main class="main">
-        <div class="content-box">
-            <h2 th:text="${mockExam.examId == null} ? '시험 문제 등록' : '시험 문제 수정'">시험 문제 등록/수정</h2>
 
-            <form th:action="@{/admin/mock-exams/save}" method="post">
-                <input type="hidden" name="examId" th:value="${mockExam.examId}" />
+<main class="main">
+    <div class="content-box card">
+        <header class="card-header">
+            <h2 class="card-title">시험 문제 관리</h2>
 
-                <div class="form-group">
-                    <label>제목</label>
-                    <textarea name="courseTitle" th:text="${mockExam.courseTitle}" required></textarea>
+            <div class="actions">
+                <!-- 새 문제: 서버에서 빈 항목 생성하거나 빈 폼으로 연결 -->
+                <a
+                        th:href="@{/admin/mock-exams/new}"
+                        class="btn-line"
+                        role="button"
+                >
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i> 새 문제
+                </a>
+            </div>
+        </header>
+
+        <section class="card-body">
+            <!-- 전체 저장(일괄 저장) -->
+            <form
+                    th:action="@{/admin/mock-exams/save-all}"
+                    method="post"
+                    class="classroom-form"
+            >
+                <!-- 반복: mockExams는 서버에서 전달된 List -->
+                <div
+                        th:if="${#lists.isEmpty(mockExams)}"
+                        class="muted"
+                        style="padding: 12px"
+                >
+                    등록된 문제가 없습니다. 새 문제 버튼을 눌러 추가하세요.
                 </div>
 
-                <div class="form-group">
-                    <label>문제</label>
-                    <textarea name="question" th:text="${mockExam.question}" required></textarea>
+                <div
+                        th:each="exam, st : ${mockExams}"
+                        class="card"
+                        style="margin-bottom: 16px; padding: 12px"
+                >
+                    <!-- 배열 바인딩 이름: exams[index].field -->
+                    <input
+                            type="hidden"
+                            th:name="'exams[' + ${st.index} + '].examId'"
+                            th:value="${exam.examId}"
+                    />
+
+                    <div class="form-row">
+                        <label th:for="${'courseTitle_' + ${st.index}}"
+                        >제목
+                            <textarea
+                                    th:id="${'courseTitle_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].courseTitle'"
+                                    class="form-textarea"
+                                    th:text="${exam.courseTitle}"
+                            ></textarea>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label th:for="${'question_' + ${st.index}}"
+                        >문제
+                            <textarea
+                                    th:id="${'question_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].question'"
+                                    class="form-textarea"
+                                    th:text="${exam.question}"
+                            ></textarea>
+                        </label>
+                    </div>
+
+                    <div
+                            class="form-grid"
+                            style="grid-template-columns: 1fr 1fr; gap: 12px"
+                    >
+                        <label th:for="${'option1_' + ${st.index}}"
+                        >1번
+                            <textarea
+                                    th:id="${'option1_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].option1'"
+                                    class="form-textarea"
+                                    th:text="${exam.option1}"
+                            ></textarea>
+                        </label>
+
+                        <label th:for="${'option2_' + ${st.index}}"
+                        >2번
+                            <textarea
+                                    th:id="${'option2_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].option2'"
+                                    class="form-textarea"
+                                    th:text="${exam.option2}"
+                            ></textarea>
+                        </label>
+
+                        <label th:for="${'option3_' + ${st.index}}"
+                        >3번
+                            <textarea
+                                    th:id="${'option3_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].option3'"
+                                    class="form-textarea"
+                                    th:text="${exam.option3}"
+                            ></textarea>
+                        </label>
+
+                        <label th:for="${'option4_' + ${st.index}}"
+                        >4번
+                            <textarea
+                                    th:id="${'option4_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].option4'"
+                                    class="form-textarea"
+                                    th:text="${exam.option4}"
+                            ></textarea>
+                        </label>
+                    </div>
+
+                    <div
+                            class="form-grid"
+                            style="
+                  grid-template-columns: 1fr 1fr 1fr;
+                  gap: 12px;
+                  margin-top: 8px;
+                "
+                    >
+                        <label th:for="${'answer_' + ${st.index}}"
+                        >정답
+                            <input
+                                    th:id="${'answer_' + ${st.index}}"
+                                    type="text"
+                                    class="form-input"
+                                    th:name="'exams[' + ${st.index} + '].answer'"
+                                    th:value="${exam.answer}"
+                            />
+                        </label>
+
+                        <label th:for="${'score_' + ${st.index}}"
+                        >점수
+                            <input
+                                    th:id="${'score_' + ${st.index}}"
+                                    type="number"
+                                    min="0"
+                                    class="form-input"
+                                    th:name="'exams[' + ${st.index} + '].score'"
+                                    th:value="${exam.score}"
+                            />
+                        </label>
+
+                        <label th:for="${'instr_' + ${st.index}}"
+                        >강사
+                            <select
+                                    th:id="${'instr_' + ${st.index}}"
+                                    th:name="'exams[' + ${st.index} + '].instructorId'"
+                                    class="select"
+                            >
+                                <option value="">강사 선택</option>
+                                <option
+                                        th:each="inst : ${instructors}"
+                                        th:value="${inst.user_id}"
+                                        th:text="${inst.nickname}"
+                                        th:selected="${inst.user_id == exam.instructorId}"
+                                ></option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- 문제별 서버 삭제 (폼으로 POST) -->
+                    <div class="form-actions" style="margin-top: 8px">
+                        <form
+                                th:action="@{/admin/mock-exams/delete/{id}(id=${exam.examId})}"
+                                method="post"
+                                th:if="${exam.examId != null}"
+                                style="display: inline"
+                        >
+                            <!-- 만약 Spring에서 DELETE method을 사용한다면 hidden _method 필드 추가(옵션) -->
+                            <input type="hidden" name="_method" value="delete" />
+                            <button
+                                    type="submit"
+                                    class="btn-line"
+                                    onclick="return confirm('정말 이 문제를 삭제하시겠습니까?');"
+                            >
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i> 문제
+                                삭제
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>1번</label>
-                    <textarea name="option1" th:text="${mockExam.option1}" required></textarea>
-                </div>
+                <!-- 저장 버튼 -->
+                <div class="form-actions" style="margin-top: 12px">
+                    <button type="submit" class="btn">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i> 저장
+                        (모두)
+                    </button>
 
-                <div class="form-group">
-                    <label>2번</label>
-                    <textarea name="option2" th:text="${mockExam.option2}" required></textarea>
-                </div>
+                    <!-- 새 문제로 이동(서버에서 빈 항목을 추가하거나 빈 폼을 보여주도록 구현) -->
+                    <a
+                            th:href="@{/admin/mock-exams/new}"
+                            class="btn-line"
+                            role="button"
+                    >
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> 새 문제
+                    </a>
 
-                <div class="form-group">
-                    <label>3번</label>
-                    <textarea name="option3" th:text="${mockExam.option3}" required></textarea>
+                    <!-- 목록으로 돌아가기 -->
+                    <a th:href="@{/admin/mock-exams}" class="btn-line" role="button">
+                        <i class="fa-solid fa-list" aria-hidden="true"></i> 목록
+                    </a>
                 </div>
-
-                <div class="form-group">
-                    <label>4번</label>
-                    <textarea name="option4" th:text="${mockExam.option4}" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>정답</label>
-                    <input type="text" name="answer" th:value="${mockExam.answer}" required/>
-                </div>
-
-                <div class="form-group">
-                    <label>점수</label>
-                    <input type="number" name="score" th:value="${mockExam.score}" required/>
-                </div>
-
-                <div class="form-group">
-                    <label>강사</label>
-                    <select name="instructorId" required>
-                        <option value="">강사를 선택하세요</option>
-                        <option th:each="inst : ${instructors}"
-                                th:value="${inst.user_id}"
-                                th:text="${inst.nickname}"
-                                th:selected="${inst.user_id == mockExam.instructorId}">
-                        </option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-submit" th:text="${mockExam.examId == null} ? '등록' : '수정'"></button>
             </form>
-
-
-        </div>
-    </main>
-</div>
+        </section>
+    </div>
+</main>
 </body>
 </html>
